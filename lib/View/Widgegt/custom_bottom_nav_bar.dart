@@ -42,18 +42,18 @@ class CustomBottomNavBar extends StatelessWidget {
 
     if (isSelected) {
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(24),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
               iconPath,
-              height: 20,
-              width: 20,
+              height: 18,
+              width: 18,
               colorFilter: const ColorFilter.mode(Color(0xFF1A227F), BlendMode.srcIn),
             ),
             const SizedBox(width: 8),
@@ -61,8 +61,8 @@ class CustomBottomNavBar extends StatelessWidget {
               label,
               style: const TextStyle(
                 color: Color(0xFF1A227F),
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
               ),
             ),
           ],
@@ -78,7 +78,7 @@ class CustomBottomNavBar extends StatelessWidget {
             iconPath,
             height: 24,
             width: 24,
-            colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.7), BlendMode.srcIn),
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           ),
         ),
       );
