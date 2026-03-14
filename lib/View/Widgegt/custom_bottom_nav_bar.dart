@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import '../../Utils/AppIcons/app_icons.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
@@ -16,7 +15,7 @@ class CustomBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: const BoxDecoration(
         color: Color(0xFF1A227F),
         borderRadius: BorderRadius.only(
@@ -30,7 +29,7 @@ class CustomBottomNavBar extends StatelessWidget {
           _buildNavBarItem(0, AppIcons.homeNavBar, 'Home'),
           _buildNavBarItem(1, AppIcons.groupNavBar, 'Groups'),
           _buildNavBarItem(2, AppIcons.paymentNavBar, 'Payment'),
-          _buildNavBarItem(3, AppIcons.notificationNavBar, 'Notifications'),
+          _buildNavBarItem(3, AppIcons.notificationNavBar, 'Alerts'),
           _buildNavBarItem(4, AppIcons.profileNavBar, 'Profile'),
         ],
       ),
@@ -52,8 +51,8 @@ class CustomBottomNavBar extends StatelessWidget {
           children: [
             SvgPicture.asset(
               iconPath,
-              height: 18,
-              width: 18,
+              height: 16,
+              width: 16,
               colorFilter: const ColorFilter.mode(Color(0xFF1A227F), BlendMode.srcIn),
             ),
             const SizedBox(width: 8),
@@ -61,7 +60,7 @@ class CustomBottomNavBar extends StatelessWidget {
               label,
               style: const TextStyle(
                 color: Color(0xFF1A227F),
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
                 fontSize: 12,
               ),
             ),
