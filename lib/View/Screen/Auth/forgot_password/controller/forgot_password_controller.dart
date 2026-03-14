@@ -8,7 +8,9 @@ class ForgotPasswordController extends GetxController {
   void sendResetLink() {
     // Implement send reset link logic
     if (emailController.text.isNotEmpty) {
-      Get.snackbar("Success", "Reset link sent to ${emailController.text}");
+      Get.toNamed('/otp');
+    } else {
+      Get.snackbar("Error", "Please enter your email");
     }
   }
 
