@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildHeader() {
     return Container(
-      height: 249,
+      constraints: const BoxConstraints(minHeight: 249),
       padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
       decoration: const BoxDecoration(
         gradient: RadialGradient(
