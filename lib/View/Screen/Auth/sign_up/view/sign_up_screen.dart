@@ -28,15 +28,21 @@ class SignUpScreen extends StatelessWidget {
                   height: 64,
                   width: 64,
                   decoration: const BoxDecoration(
-                    color: Color(0xFFF1F5F9), // Light greyish background for icon
+                    color: Color(
+                      0xFFF1F5F9,
+                    ), // Light greyish background for icon
                     shape: BoxShape.circle,
                   ),
                   child: Center(
                     child: SvgPicture.asset(
-                      AppIcons.clIcons, // Placeholder if clIcons looks like wallet, or replace with Debit-Credit-card-Icon.svg
+                      AppIcons
+                          .appsIcons, // Placeholder if clIcons looks like wallet, or replace with Debit-Credit-card-Icon.svg
                       height: 32,
                       width: 32,
-                      colorFilter: const ColorFilter.mode(Color(0xFF1A227F), BlendMode.srcIn),
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFF1A227F),
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ),
@@ -101,17 +107,19 @@ class SignUpScreen extends StatelessWidget {
                   SizedBox(
                     height: 24,
                     width: 24,
-                    child: Obx(() => Checkbox(
-                      value: controller.isChecked.value,
-                      activeColor: const Color(0xFF1A227F),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
+                    child: Obx(
+                      () => Checkbox(
+                        value: controller.isChecked.value,
+                        activeColor: const Color(0xFF1A227F),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        side: const BorderSide(color: Color(0xFF94A3B8)),
+                        onChanged: (value) {
+                          controller.toggleCheckbox(value ?? false);
+                        },
                       ),
-                      side: const BorderSide(color: Color(0xFF94A3B8)),
-                      onChanged: (value) {
-                        controller.toggleCheckbox(value ?? false);
-                      },
-                    )),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -148,36 +156,40 @@ class SignUpScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Sign Up Button using Obx for progress bar
-              Obx(() => ElevatedButton(
-                onPressed: controller.isLoading.value ? null : () {
-                  controller.signUpUser();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1A227F),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: controller.isLoading.value 
-                  ? const SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : const Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+              Obx(
+                () => ElevatedButton(
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : () {
+                          controller.signUpUser();
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1A227F),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-              )),
+                  ),
+                  child: controller.isLoading.value
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                ),
+              ),
               const SizedBox(height: 24),
 
               // Login Text
@@ -185,10 +197,7 @@ class SignUpScreen extends StatelessWidget {
                 child: RichText(
                   text: const TextSpan(
                     text: 'Already have an account? ',
-                    style: TextStyle(
-                      color: Color(0xFF4A5565),
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Color(0xFF4A5565), fontSize: 14),
                     children: [
                       TextSpan(
                         text: 'Login',

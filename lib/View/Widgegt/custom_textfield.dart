@@ -5,6 +5,9 @@ class CustomTextField extends StatefulWidget {
   final String hintText;
   final bool isPassword;
   final TextEditingController? controller;
+  final Widget? prefixIcon;
+  final VoidCallback? onTap;
+  final bool readOnly;
 
   const CustomTextField({
     Key? key,
@@ -12,6 +15,9 @@ class CustomTextField extends StatefulWidget {
     required this.hintText,
     this.isPassword = false,
     this.controller,
+    this.prefixIcon,
+    this.onTap,
+    this.readOnly = false,
   }) : super(key: key);
 
   @override
@@ -44,12 +50,24 @@ class _CustomTextFieldState extends State<CustomTextField> {
         TextFormField(
           controller: widget.controller,
           obscureText: _obscureText,
+          readOnly: widget.readOnly,
+          onTap: widget.onTap,
           style: const TextStyle(
             color: Color(0xFF0F172A),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
           decoration: InputDecoration(
+            prefixIcon: widget.prefixIcon != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                    child: widget.prefixIcon,
+                  )
+                : null,
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 40,
+              minHeight: 40,
+            ),
             hintText: widget.hintText,
             hintStyle: const TextStyle(
               color: Color(0xFF94A3B8), // lighter grey for hint
