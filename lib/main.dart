@@ -1,6 +1,6 @@
+import 'package:derival81/View/Screen/Auth/sign_up/view/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'View/Screen/Auth/complete_profile/view/complete_profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1A227F)),
         useMaterial3: true,
       ),
-      home: CompleteProfileScreen(),
+      home: SignUpScreen(),
     );
   }
 }

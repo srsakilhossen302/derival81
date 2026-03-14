@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../../Utils/ToastMessage/custom_toast.dart';
+import '../../complete_profile/view/complete_profile_screen.dart';
 
 class SignUpController extends GetxController {
   // Text Editing Controllers for all input fields
@@ -38,35 +40,17 @@ class SignUpController extends GetxController {
         phoneController.text.isEmpty ||
         passwordController.text.isEmpty ||
         confirmPasswordController.text.isEmpty) {
-      Get.snackbar(
-        "Error",
-        "Please fill in all the fields",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+      CustomToast.showWarning("Required", "Please fill in all the fields");
       return;
     }
 
     if (passwordController.text != confirmPasswordController.text) {
-      Get.snackbar(
-        "Error",
-        "Passwords do not match",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+      CustomToast.showError("Error", "Passwords do not match");
       return;
     }
 
     if (!isChecked.value) {
-      Get.snackbar(
-        "Wait",
-        "Please agree to the Terms and Conditions",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orangeAccent,
-        colorText: Colors.white,
-      );
+      CustomToast.showWarning("Hold On! ✋", "Please agree to the Terms and Conditions before proceeding.");
       return;
     }
 
@@ -81,23 +65,20 @@ class SignUpController extends GetxController {
       await Future.delayed(const Duration(seconds: 2));
 
       // Assuming successful registration
-      Get.snackbar(
-        "Success",
-        "Account created successfully!",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: const Color(0xFF155DFC),
-        colorText: Colors.white,
-      );
+      CustomToast.showSuccess("Success", "Account created successfully!");
 
-      // Need to clear fields or navigate to next screen here
+      // Clear fields
+      fullNameController.clear();
+      emailController.clear();
+      phoneController.clear();
+      passwordController.clear();
+      confirmPasswordController.clear();
+
+      // Navigate to the Complete Profile screen
+      Get.offAll(() => CompleteProfileScreen());
+
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        "Something went wrong while signing up.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+      CustomToast.showError("Oh Snap!", "Something went wrong while signing up. Please try again.");
     } finally {
       isLoading.value = false;
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../../Utils/ToastMessage/custom_toast.dart';
 
 class CompleteProfileController extends GetxController {
   final TextEditingController dobController = TextEditingController();
@@ -59,13 +60,7 @@ class CompleteProfileController extends GetxController {
         cityController.text.isEmpty ||
         stateController.text.isEmpty ||
         zipController.text.isEmpty) {
-      Get.snackbar(
-        "Required",
-        "Please fill all the fields",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orangeAccent,
-        colorText: Colors.white,
-      );
+      CustomToast.showWarning("Required", "Please fill all the fields");
       return;
     }
 
@@ -74,23 +69,11 @@ class CompleteProfileController extends GetxController {
       // TODO: API Call to POST profile data
       await Future.delayed(const Duration(seconds: 2));
 
-      Get.snackbar(
-        "Success",
-        "Profile completed successfully!",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: const Color(0xFF155DFC),
-        colorText: Colors.white,
-      );
+      CustomToast.showSuccess("Success", "Profile completed successfully!");
 
       // Navigate to the next screen here
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        "Failed to update profile",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+      CustomToast.showError("Error", "Failed to update profile");
     } finally {
       isLoading.value = false;
     }
