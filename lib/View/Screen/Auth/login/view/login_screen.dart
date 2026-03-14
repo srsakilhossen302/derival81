@@ -1,3 +1,5 @@
+import 'package:derival81/View/Screen/Auth/forgot_password/view/forgot_password_screen.dart';
+import 'package:derival81/View/Screen/Auth/sign_up/view/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -84,7 +86,7 @@ class LoginScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () => Get.toNamed('/forgot-password'),
+                  onPressed: () => Get.to(() => ForgotPasswordScreen()),
                   child: const Text(
                     'Forgot Password?',
                     style: TextStyle(
@@ -113,10 +115,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   child: const Text(
                     'Log In',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -127,11 +126,11 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Already have an account? ',
+                    "Don't have an account? ",
                     style: TextStyle(color: Color(0xFF64748B), fontSize: 14),
                   ),
                   GestureDetector(
-                    onTap: () => Get.toNamed('/sign-up'),
+                    onTap: () => Get.to(() => SignUpScreen()),
                     child: const Text(
                       'Sign Up',
                       style: TextStyle(

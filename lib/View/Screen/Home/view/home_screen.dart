@@ -10,13 +10,21 @@ class HomeScreen extends StatelessWidget {
 
   final HomeController controller = Get.put(HomeController());
 
+  final List<Widget> _pages = [
+    const _HomeView(),
+    const Center(child: Text('Groups Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+    const Center(child: Text('Payment Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+    const Center(child: Text('Notifications Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+    const Center(child: Text('Profile Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: Stack(
         children: [
-          _buildBody(),
+          Obx(() => _pages[controller.selectedIndex.value]),
           Positioned(
             bottom: 0,
             left: 0,
@@ -30,13 +38,19 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildBody() {
+class _HomeView extends StatelessWidget {
+  const _HomeView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final HomeController controller = Get.find<HomeController>();
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildHeader(),
+          _buildHeader(controller),
           const SizedBox(height: 24),
           _buildQuickActions(),
           const SizedBox(height: 24),
@@ -47,7 +61,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(HomeController controller) {
     return Container(
       constraints: const BoxConstraints(minHeight: 249),
       padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../login/view/login_screen.dart';
 
 class SetPasswordController extends GetxController {
   final TextEditingController newPasswordController = TextEditingController();
@@ -10,7 +11,7 @@ class SetPasswordController extends GetxController {
   void savePassword() {
     if (newPasswordController.text == confirmPasswordController.text && newPasswordController.text.isNotEmpty) {
       Get.snackbar("Success", "Password updated successfully");
-      Get.offAllNamed('/login');
+      Get.offAll(() => LoginScreen());
     } else {
       Get.snackbar("Error", "Passwords do not match or are empty");
     }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../Utils/ToastMessage/custom_toast.dart';
-import '../../complete_profile/view/complete_profile_screen.dart';
+import '../../otp/view/otp_screen.dart';
 
 class SignUpController extends GetxController {
   // Text Editing Controllers for all input fields
@@ -57,10 +57,6 @@ class SignUpController extends GetxController {
     try {
       isLoading.value = true;
       
-      // TODO: Call your actual POST API here
-      // For example using http or specialized API service client
-      // final response = await ApiClient.postData(ApiUrl.signUp, data);
-
       // Simulating API network delay
       await Future.delayed(const Duration(seconds: 2));
 
@@ -74,8 +70,8 @@ class SignUpController extends GetxController {
       passwordController.clear();
       confirmPasswordController.clear();
 
-      // Navigate to the Complete Profile screen
-      Get.offAll(() => CompleteProfileScreen());
+      // Navigate to OTP screen
+      Get.to(() => OtpScreen(), arguments: 'signup');
 
     } catch (e) {
       CustomToast.showError("Oh Snap!", "Something went wrong while signing up. Please try again.");

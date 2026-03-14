@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../Widgegt/custom_textfield.dart';
 import '../controller/sign_up_controller.dart';
+import '../../login/view/login_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({Key? key}) : super(key: key);
@@ -28,15 +29,12 @@ class SignUpScreen extends StatelessWidget {
                   height: 64,
                   width: 64,
                   decoration: const BoxDecoration(
-                    color: Color(
-                      0xFFF1F5F9,
-                    ), // Light greyish background for icon
+                    color: Color(0xFFF1F5F9),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
                     child: SvgPicture.asset(
-                      AppIcons
-                          .appsIcons, // Placeholder if clIcons looks like wallet, or replace with Debit-Credit-card-Icon.svg
+                      AppIcons.appsIcons,
                       height: 32,
                       width: 32,
                       colorFilter: const ColorFilter.mode(
@@ -155,7 +153,7 @@ class SignUpScreen extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
-              // Sign Up Button using Obx for progress bar
+              // Sign Up Button
               Obx(
                 () => ElevatedButton(
                   onPressed: controller.isLoading.value
@@ -193,20 +191,23 @@ class SignUpScreen extends StatelessWidget {
               const SizedBox(height: 24),
 
               // Login Text
-              Center(
-                child: RichText(
-                  text: const TextSpan(
-                    text: 'Already have an account? ',
-                    style: TextStyle(color: Color(0xFF4A5565), fontSize: 14),
-                    children: [
-                      TextSpan(
-                        text: 'Login',
-                        style: TextStyle(
-                          color: Color(0xFF1A227F),
-                          fontWeight: FontWeight.w700,
+              GestureDetector(
+                onTap: () => Get.to(() => LoginScreen()),
+                child: Center(
+                  child: RichText(
+                    text: const TextSpan(
+                      text: 'Already have an account? ',
+                      style: TextStyle(color: Color(0xFF4A5565), fontSize: 14),
+                      children: [
+                        TextSpan(
+                          text: 'Login',
+                          style: TextStyle(
+                            color: Color(0xFF1A227F),
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -216,12 +217,12 @@ class SignUpScreen extends StatelessWidget {
               Row(
                 children: [
                   const Expanded(child: Divider(color: Color(0xFFE2E8F0))),
-                  Padding(
+                  const Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'OR CONTINUE WITH',
                       style: TextStyle(
-                        color: const Color(0xFF94A3B8), // muted grey
+                        color: Color(0xFF94A3B8),
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,
@@ -289,7 +290,7 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 32), // Bottom padding
+              const SizedBox(height: 32),
             ],
           ),
         ),

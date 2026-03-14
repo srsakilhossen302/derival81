@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../otp/view/otp_screen.dart';
 
 class ForgotPasswordController extends GetxController {
   final TextEditingController emailController = TextEditingController();
@@ -8,7 +9,7 @@ class ForgotPasswordController extends GetxController {
   void sendResetLink() {
     // Implement send reset link logic
     if (emailController.text.isNotEmpty) {
-      Get.toNamed('/otp');
+      Get.to(() => OtpScreen());
     } else {
       Get.snackbar("Error", "Please enter your email");
     }

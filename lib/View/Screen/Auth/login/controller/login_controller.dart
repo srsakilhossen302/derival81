@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../Home/view/home_screen.dart';
 
 class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
@@ -14,15 +15,15 @@ class LoginController extends GetxController {
 
   void login() {
     // Implement login logic
-    Get.offAllNamed('/home'); // Temporary navigation
+    Get.offAll(() => HomeScreen());
   }
 
   void loginWithGoogle() {
-    // Implement Google login
+    // Implement google login
   }
 
   void loginWithFacebook() {
-    // Implement Facebook login
+    // Implement facebook login
   }
 
   @override
