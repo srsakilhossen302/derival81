@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
+import '../../../Widgegt/custom_bottom_nav_bar.dart';
 import '../controller/home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -16,7 +17,15 @@ class HomeScreen extends StatelessWidget {
       body: Stack(
         children: [
           _buildBody(),
-          _buildBottomNavBar(),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Obx(() => CustomBottomNavBar(
+                  currentIndex: controller.selectedIndex.value,
+                  onTap: (index) => controller.changeTabIndex(index),
+                )),
+          ),
         ],
       ),
     );
@@ -32,7 +41,7 @@ class HomeScreen extends StatelessWidget {
           _buildQuickActions(),
           const SizedBox(height: 24),
           _buildMyGroupsSection(),
-          const SizedBox(height: 100), // Space for bottom nav
+          const SizedBox(height: 120), // Extra space for custom nav bar
         ],
       ),
     );
@@ -47,8 +56,8 @@ class HomeScreen extends StatelessWidget {
           center: Alignment(0.5, -0.6),
           radius: 1.2,
           colors: [
-            Color(0xFF6773FF), // Light blue glow
-            Color(0xFF1A227F), // Deep blue base
+            Color(0xFF6773FF),
+            Color(0xFF1A227F),
           ],
         ),
         borderRadius: BorderRadius.only(
@@ -121,7 +130,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24), // Gap from design
+          const SizedBox(height: 24),
           Row(
             children: [
               Expanded(
@@ -246,8 +255,8 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             label,
-            style: TextStyle(
-              color: const Color(0xFF4A5565),
+            style: const TextStyle(
+              color: Color(0xFF4A5565),
               fontWeight: FontWeight.w600,
               fontSize: 14,
             ),
@@ -329,77 +338,5 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _buildBottomNavBar() {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        decoration: const BoxDecoration(
-          color: Color(0xFF1A227F),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavBarItem(0, AppIcons.homeNavBar, 'Home'),
-            _buildNavBarItem(1, AppIcons.groupNavBar, ''),
-            _buildNavBarItem(2, AppIcons.paymentNavBar, ''),
-            _buildNavBarItem(3, AppIcons.notificationNavBar, ''),
-            _buildNavBarItem(4, AppIcons.profileNavBar, ''),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavBarItem(int index, String iconPath, String label) {
-    return Obx(() {
-      bool isSelected = controller.selectedIndex.value == index;
-      if (isSelected && label.isNotEmpty) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                iconPath,
-                height: 20,
-                width: 20,
-                colorFilter: const ColorFilter.mode(Color(0xFF1A227F), BlendMode.srcIn),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: Color(0xFF1A227F),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        );
-      } else {
-        return GestureDetector(
-          onTap: () => controller.changeTabIndex(index),
-          child: SvgPicture.asset(
-            iconPath,
-            height: 24,
-            width: 24,
-            colorFilter: const ColorFilter.mode(Colors.white70, BlendMode.srcIn),
-          ),
-        );
-      }
-    });
   }
 }
