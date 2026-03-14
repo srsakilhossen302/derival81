@@ -8,9 +8,7 @@ class OtpController extends GetxController {
   void confirmOtp() {
     // Implement confirm OTP logic
     if (otpController.text.length == 4) {
-      Get.snackbar("Success", "OTP Verified");
-      // Navigate to Reset Password screen (or similar)
-      // Get.toNamed('/new-password');
+      Get.toNamed('/set-password');
     } else {
       Get.snackbar("Error", "Please enter a valid 4-digit OTP");
     }
