@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import '../../../Utils/AppIcons/app_icons.dart';
-import '../../Widgegt/custom_textfield.dart';
-import '../../../global/controller/sign_up_controller.dart';
+import '../../../../../Utils/AppIcons/app_icons.dart';
+import '../../../../Widgegt/custom_textfield.dart';
+import '../controller/sign_up_controller.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({Key? key}) : super(key: key);
