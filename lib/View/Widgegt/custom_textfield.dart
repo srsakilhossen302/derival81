@@ -6,6 +6,7 @@ class CustomTextField extends StatefulWidget {
   final bool isPassword;
   final TextEditingController? controller;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final VoidCallback? onTap;
   final bool readOnly;
 
@@ -16,6 +17,7 @@ class CustomTextField extends StatefulWidget {
     this.isPassword = false,
     this.controller,
     this.prefixIcon,
+    this.suffixIcon,
     this.onTap,
     this.readOnly = false,
   }) : super(key: key);
@@ -87,19 +89,20 @@ class _CustomTextFieldState extends State<CustomTextField> {
               borderRadius: BorderRadius.circular(16),
               borderSide: const BorderSide(color: Color(0xFF1A227F)), // Focus border
             ),
-            suffixIcon: widget.isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                      color: const Color(0xFF94A3B8),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                  )
-                : null,
+            suffixIcon: widget.suffixIcon ??
+                (widget.isPassword
+                    ? IconButton(
+                        icon: Icon(
+                          _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                          color: const Color(0xFF94A3B8),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                      )
+                    : null),
           ),
         ),
         const SizedBox(height: 16),
