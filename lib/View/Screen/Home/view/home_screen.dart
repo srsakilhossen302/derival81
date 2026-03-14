@@ -195,7 +195,7 @@ class HomeScreen extends StatelessWidget {
               Expanded(
                 child: _buildActionCard(
                   label: 'Create Group',
-                  icon: Icons.add,
+                  iconPath: AppIcons.plasIcons,
                   color: const Color(0xFF1A227F),
                   bgColor: const Color(0xFFEEF2FF),
                 ),
@@ -204,7 +204,7 @@ class HomeScreen extends StatelessWidget {
               Expanded(
                 child: _buildActionCard(
                   label: 'Join Group',
-                  icon: Icons.group_add_outlined,
+                  iconPath: AppIcons.groupsIcons,
                   color: const Color(0xFF00A63E),
                   bgColor: const Color(0xFFF0FDF4),
                 ),
@@ -218,7 +218,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildActionCard({
     required String label,
-    required IconData icon,
+    required String iconPath,
     required Color color,
     required Color bgColor,
   }) {
@@ -236,7 +236,12 @@ class HomeScreen extends StatelessWidget {
               color: color,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: Colors.white, size: 28),
+            child: SvgPicture.asset(
+              iconPath,
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              height: 28,
+              width: 28,
+            ),
           ),
           const SizedBox(height: 12),
           Text(
