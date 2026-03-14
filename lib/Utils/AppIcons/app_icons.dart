@@ -8,8 +8,14 @@ class AppIcons {
   static const String dwIcons = "$basePath/Dw-icons.svg";
   static const String facebookIcons = "$basePath/Facebook-Icons.svg";
   static const String googleIcons = "$basePath/Google-Icons.svg";
+  static const String groupNavBar = "$basePath/Group-icon-navBar.svg";
+  static const String homeNavBar = "$basePath/Home-icon-navBar.svg";
   static const String locationIcons = "$basePath/Location-icons.svg";
+  static const String notificationNavBar = "$basePath/Notification-icon-navBar.svg";
+  static const String paymentNavBar = "$basePath/Payment-icon-navBar.svg";
   static const String plasIcons = "$basePath/Plas-Icons.svg";
+  static const String profileNavBar = "$basePath/Profile-icon-navBar.svg";
   static const String profileIcons = "$basePath/Profile-icons.svg";
   static const String rtIcons = "$basePath/R-T Icons.svg";
+  static const String groupsIcons = "$basePath/groups-icons.svg";
 }

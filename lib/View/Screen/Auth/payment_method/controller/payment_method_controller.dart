@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../Home/view/home_screen.dart';
 
 class PaymentMethodController extends GetxController {
   var isLinkingBank = false.obs;
@@ -66,10 +67,10 @@ class PaymentMethodController extends GetxController {
   }
 
   void skipForNow() {
-    // Logic for skip
+    Get.offAll(() => HomeScreen());
   }
 
   void continueToDashboard() {
-    // Navigate to dashboard
+    Get.offAll(() => HomeScreen());
   }
 }
