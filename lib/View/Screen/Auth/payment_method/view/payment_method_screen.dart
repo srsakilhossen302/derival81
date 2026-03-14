@@ -84,6 +84,8 @@ class PaymentMethodScreen extends StatelessWidget {
                     Obx(() {
                       if (controller.isLinkingBank.value) {
                         return _buildBankLinkForm();
+                      } else if (controller.isAddingCard.value) {
+                        return _buildCardLinkForm();
                       } else {
                         return _buildInitialOptions();
                       }
@@ -214,6 +216,83 @@ class PaymentMethodScreen extends StatelessWidget {
                   ),
                 ),
                 child: const Text('Link Account'),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () => controller.cancelLinking(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE2E8F0),
+                  foregroundColor: const Color(0xFF4A5565),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text('Cancel'),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCardLinkForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Text(
+          'Add Card',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF0F172A),
+          ),
+        ),
+        const SizedBox(height: 24),
+        CustomTextField(
+          label: 'Card Number',
+          hintText: '1234 5678 9012 3456',
+          controller: controller.cardNumberController,
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: CustomTextField(
+                label: 'Expiry Date',
+                hintText: 'MM/YY',
+                controller: controller.expiryController,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: CustomTextField(
+                label: 'CVV',
+                hintText: '123',
+                controller: controller.cvvController,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () => controller.submitCardLink(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1A227F),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text('Add Card'),
               ),
             ),
             const SizedBox(width: 16),

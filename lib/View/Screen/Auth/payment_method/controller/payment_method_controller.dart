@@ -7,11 +7,17 @@ class PaymentMethodController extends GetxController {
 
   final TextEditingController routingController = TextEditingController();
   final TextEditingController accountController = TextEditingController();
+  final TextEditingController cardNumberController = TextEditingController();
+  final TextEditingController expiryController = TextEditingController();
+  final TextEditingController cvvController = TextEditingController();
 
   @override
   void onClose() {
     routingController.dispose();
     accountController.dispose();
+    cardNumberController.dispose();
+    expiryController.dispose();
+    cvvController.dispose();
     super.onClose();
   }
 
@@ -30,10 +36,17 @@ class PaymentMethodController extends GetxController {
     isAddingCard.value = false;
     routingController.clear();
     accountController.clear();
+    cardNumberController.clear();
+    expiryController.clear();
+    cvvController.clear();
   }
 
   void submitBankLink() {
     // Logic to submit bank linking
+  }
+
+  void submitCardLink() {
+    // Logic to submit card linking
   }
 
   void skipForNow() {
