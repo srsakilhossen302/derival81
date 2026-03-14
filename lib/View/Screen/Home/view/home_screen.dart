@@ -40,20 +40,25 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 60, 24, 32),
+      height: 249,
+      padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF4A5565), Color(0xFF1A227F)],
+        gradient: RadialGradient(
+          center: Alignment(0.5, -0.6),
+          radius: 1.2,
+          colors: [
+            Color(0xFF6773FF), // Light blue glow
+            Color(0xFF1A227F), // Deep blue base
+          ],
         ),
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,7 +121,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24), // Gap from design
           Row(
             children: [
               Expanded(
@@ -141,10 +146,10 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildHeaderStatCard({required String label, required String value}) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
