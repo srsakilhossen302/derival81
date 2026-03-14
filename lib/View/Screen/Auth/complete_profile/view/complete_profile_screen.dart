@@ -115,17 +115,12 @@ class CompleteProfileScreen extends StatelessWidget {
                           Container(
                             height: 30,
                             width: 30,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF1A227F), // Main blue color
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 2), // Added white border to match design
-                            ),
+                            decoration: const BoxDecoration(),
                             child: Center(
                               child: SvgPicture.asset(
                                 AppIcons.dwIcons,
-                                height: 14,
-                                width: 14,
-                                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                                height: 18,
+                                width: 18,
                               ),
                             ),
                           ),
