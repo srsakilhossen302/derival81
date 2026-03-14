@@ -43,7 +43,7 @@ class CompleteProfileScreen extends StatelessWidget {
                     ),
                     child: Center(
                       child: SvgPicture.asset(
-                        AppIcons.clIcons, // Reusing from the sign up screen
+                        AppIcons.appsIcons, // Reusing from the sign up screen
                         height: 32,
                         width: 32,
                         colorFilter: const ColorFilter.mode(Color(0xFF1A227F), BlendMode.srcIn),
@@ -101,11 +101,12 @@ class CompleteProfileScreen extends StatelessWidget {
                                       : null,
                                 ),
                                 child: controller.imagePath.value.isEmpty
-                                    ? const Center(
-                                        child: Icon(
-                                          Icons.person_outline, // Fallback icon
-                                          size: 40,
-                                          color: Color(0xFF94A3B8),
+                                    ? Center(
+                                        child: SvgPicture.asset(
+                                          AppIcons.profileIcons,
+                                          height: 40,
+                                          width: 40,
+                                          colorFilter: const ColorFilter.mode(Color(0xFF94A3B8), BlendMode.srcIn),
                                         ),
                                       )
                                     : null,
@@ -118,11 +119,12 @@ class CompleteProfileScreen extends StatelessWidget {
                               color: Color(0xFF1A227F), // Main blue color
                               shape: BoxShape.circle,
                             ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.file_upload_outlined,
-                                size: 16,
-                                color: Colors.white,
+                            child: Center(
+                              child: SvgPicture.asset(
+                                AppIcons.dwIcons,
+                                height: 16,
+                                width: 16,
+                                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                               ),
                             ),
                           ),
