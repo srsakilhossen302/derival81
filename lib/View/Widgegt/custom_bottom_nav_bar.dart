@@ -14,13 +14,19 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double bottomPadding = MediaQuery.of(context).padding.bottom;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 16,
+        bottom: bottomPadding > 0 ? bottomPadding + 8 : 16,
+      ),
       decoration: const BoxDecoration(
         color: Color(0xFF1A227F),
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(32),
+          topRight: Radius.circular(32),
         ),
       ),
       child: Row(
@@ -51,8 +57,8 @@ class CustomBottomNavBar extends StatelessWidget {
           children: [
             SvgPicture.asset(
               iconPath,
-              height: 16,
-              width: 16,
+              height: 18,
+              width: 18,
               colorFilter: const ColorFilter.mode(Color(0xFF1A227F), BlendMode.srcIn),
             ),
             const SizedBox(width: 8),
@@ -77,7 +83,7 @@ class CustomBottomNavBar extends StatelessWidget {
             iconPath,
             height: 24,
             width: 24,
-            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.7), BlendMode.srcIn),
           ),
         ),
       );
