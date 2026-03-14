@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../Utils/ToastMessage/custom_toast.dart';
+import '../../payment_method/view/payment_method_screen.dart';
 
 class CompleteProfileController extends GetxController {
   final TextEditingController dobController = TextEditingController();
@@ -71,7 +72,8 @@ class CompleteProfileController extends GetxController {
 
       CustomToast.showSuccess("Success", "Profile completed successfully!");
 
-      // Navigate to the next screen here
+      // Navigate to Payment Method Screen
+      Get.to(() => PaymentMethodScreen());
     } catch (e) {
       CustomToast.showError("Error", "Failed to update profile");
     } finally {
@@ -80,6 +82,7 @@ class CompleteProfileController extends GetxController {
   }
 
   void skipForNow() {
-    // Navigate straight to dashboard or next screen
+    // Navigate straight to Payment Method Screen
+    Get.to(() => PaymentMethodScreen());
   }
 }

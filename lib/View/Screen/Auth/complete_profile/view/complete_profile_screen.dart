@@ -113,14 +113,13 @@ class CompleteProfileScreen extends StatelessWidget {
                               )),
                           // Upload Icon Button
                           Container(
-                            height: 30,
-                            width: 30,
+                            height: 25,
+                            width: 25,
                             decoration: const BoxDecoration(),
                             child: Center(
                               child: SvgPicture.asset(
                                 AppIcons.dwIcons,
-                                height: 18,
-                                width: 18,
+
                               ),
                             ),
                           ),
