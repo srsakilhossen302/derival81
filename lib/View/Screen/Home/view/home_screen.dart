@@ -205,8 +205,8 @@ class HomeScreen extends StatelessWidget {
                 child: _buildActionCard(
                   label: 'Join Group',
                   icon: Icons.group_add_outlined,
-                  color: const Color(0xFF10B981),
-                  bgColor: const Color(0xFFECFDF5),
+                  color: const Color(0xFF00A63E),
+                  bgColor: const Color(0xFFF0FDF4),
                 ),
               ),
             ],
