@@ -15,40 +15,44 @@ class CompleteProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF0F172A)),
-          onPressed: () => Get.back(),
-        ),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Top Icon
-              Center(
-                child: Container(
-                  height: 64,
-                  width: 64,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF1F5F9), // Light greyish background for icon
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      AppIcons.clIcons, // Reusing from the sign up screen
-                      height: 32,
-                      width: 32,
-                      colorFilter: const ColorFilter.mode(Color(0xFF1A227F), BlendMode.srcIn),
+              // Custom Header Row
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Color(0xFF0F172A)),
+                      onPressed: () => Get.back(),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                     ),
                   ),
-                ),
+                  Container(
+                    height: 64,
+                    width: 64,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFF1F5F9), // Light greyish background for icon
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppIcons.clIcons, // Reusing from the sign up screen
+                        height: 32,
+                        width: 32,
+                        colorFilter: const ColorFilter.mode(Color(0xFF1A227F), BlendMode.srcIn),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
 
               // Title
               const Text(
