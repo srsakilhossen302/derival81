@@ -5,6 +5,14 @@ class PaymentMethodController extends GetxController {
   var isLinkingBank = false.obs;
   var isAddingCard = false.obs;
 
+  // Track if methods are added
+  var isBankAdded = false.obs;
+  var isCardAdded = false.obs;
+
+  // Display values
+  var bankLast4 = "".obs;
+  var cardLast4 = "".obs;
+
   final TextEditingController routingController = TextEditingController();
   final TextEditingController accountController = TextEditingController();
   final TextEditingController cardNumberController = TextEditingController();
@@ -42,14 +50,26 @@ class PaymentMethodController extends GetxController {
   }
 
   void submitBankLink() {
-    // Logic to submit bank linking
+    if (routingController.text.isNotEmpty && accountController.text.length >= 4) {
+      isBankAdded.value = true;
+      bankLast4.value = accountController.text.substring(accountController.text.length - 4);
+      cancelLinking();
+    }
   }
 
   void submitCardLink() {
-    // Logic to submit card linking
+    if (cardNumberController.text.length >= 4) {
+      isCardAdded.value = true;
+      cardLast4.value = cardNumberController.text.substring(cardNumberController.text.length - 4);
+      cancelLinking();
+    }
   }
 
   void skipForNow() {
     // Logic for skip
+  }
+
+  void continueToDashboard() {
+    // Navigate to dashboard
   }
 }
