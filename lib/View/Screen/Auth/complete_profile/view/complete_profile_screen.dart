@@ -46,7 +46,6 @@ class CompleteProfileScreen extends StatelessWidget {
                         AppIcons.appsIcons, // Reusing from the sign up screen
                         height: 32,
                         width: 32,
-                        colorFilter: const ColorFilter.mode(Color(0xFF1A227F), BlendMode.srcIn),
                       ),
                     ),
                   ),
