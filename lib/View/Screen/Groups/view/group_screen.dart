@@ -7,6 +7,8 @@ import '../controller/group_controller.dart';
 import '../model/group_model.dart';
 import 'create_group_screen.dart';
 
+import 'group_details_screen.dart';
+
 class GroupScreen extends StatelessWidget {
   const GroupScreen({Key? key}) : super(key: key);
 
@@ -54,7 +56,10 @@ class GroupScreen extends StatelessWidget {
                         );
                       }
                       final group = controller.groups[index - 2];
-                      return _buildGroupCard(group);
+                      return GestureDetector(
+                        onTap: () => Get.to(() => GroupDetailsScreen(group: group)),
+                        child: _buildGroupCard(group),
+                      );
                     },
                   )),
           ),

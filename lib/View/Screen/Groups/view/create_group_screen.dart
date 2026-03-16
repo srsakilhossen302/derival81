@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../controller/create_group_controller.dart';
 import '../controller/group_controller.dart';
 import '../model/group_model.dart';
+import 'group_details_screen.dart';
 
 class CreateGroupScreen extends StatelessWidget {
   const CreateGroupScreen({Key? key}) : super(key: key);
@@ -314,21 +315,20 @@ class CreateGroupScreen extends StatelessWidget {
                   text: 'Create Group',
                   onPressed: () {
                     if (controller.groupNameController.text.isNotEmpty) {
-                      groupController.groups.add(
-                        GroupModel(
-                          id: DateTime.now().toString(),
-                          name: controller.groupNameController.text,
-                          description: controller.descriptionController.text,
-                          status: 'Active',
-                          membersCount: 1, // Start with 1 member
-                          totalMembers: int.tryParse(controller.groupSizeController.text) ?? 10,
-                          amount: double.tryParse(controller.amountController.text) ?? 500.0,
-                          position: 1, // Initial position
-                          nextDate: "5/1/2026", // Mock date
-                          progress: 0.1, // Initial progress
-                        ),
+                      final newGroup = GroupModel(
+                        id: DateTime.now().toString(),
+                        name: controller.groupNameController.text,
+                        description: controller.descriptionController.text,
+                        status: 'Active',
+                        membersCount: 1, // Start with 1 member
+                        totalMembers: int.tryParse(controller.groupSizeController.text) ?? 10,
+                        amount: double.tryParse(controller.amountController.text) ?? 500.0,
+                        position: 1, // Initial position
+                        nextDate: "5/1/2026", // Mock date
+                        progress: 0.1, // Initial progress
                       );
-                      Get.back();
+                      groupController.groups.add(newGroup);
+                      Get.off(() => GroupDetailsScreen(group: newGroup));
                     }
                   },
                 ),
