@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../controller/group_controller.dart';
+import '../model/group_model.dart';
+import 'create_group_screen.dart';
 
 class GroupScreen extends StatelessWidget {
   const GroupScreen({Key? key}) : super(key: key);
@@ -18,20 +20,113 @@ class GroupScreen extends StatelessWidget {
         children: [
           _buildHeader(),
           Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-              child: Column(
-                children: [
-                  _buildFilters(controller),
-                  SizedBox(height: 24.h),
-                  _buildActionButtons(),
-                  SizedBox(height: 40.h),
-                  _buildEmptyState(),
-                ],
+            child: Obx(() => controller.groups.isEmpty
+                ? SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+                    child: Column(
+                      children: [
+                        _buildFilters(controller),
+                        SizedBox(height: 24.h),
+                        _buildActionButtons(),
+                        SizedBox(height: 40.h),
+                        _buildEmptyState(),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+                    itemCount: controller.groups.length + 2, // +2 for filters and actions
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return Column(
+                          children: [
+                            _buildFilters(controller),
+                            SizedBox(height: 24.h),
+                          ],
+                        );
+                      }
+                      if (index == 1) {
+                        return Column(
+                          children: [
+                            _buildActionButtons(),
+                            SizedBox(height: 24.h),
+                          ],
+                        );
+                      }
+                      final group = controller.groups[index - 2];
+                      return _buildGroupCard(group);
+                    },
+                  )),
+          ),
+          SizedBox(height: 100.h), // Space for bottom nav bar
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGroupCard(GroupModel group) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.h),
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12.r),
+            decoration: const BoxDecoration(
+              color: Color(0xFFEEF2FF),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.groups, color: const Color(0xFF1A227F), size: 24.sp),
+          ),
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  group.name,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF0F172A),
+                  ),
+                ),
+                Text(
+                  '${group.membersCount} members • \$${group.totalAmount}',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: const Color(0xFF64748B),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF0FDF4),
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: Text(
+              group.status,
+              style: TextStyle(
+                color: const Color(0xFF22C55E),
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
-          SizedBox(height: 100.h), // Space for bottom nav bar
         ],
       ),
     );
@@ -84,7 +179,10 @@ class GroupScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.white, fontSize: 16.sp),
                     decoration: InputDecoration(
                       hintText: 'Search groups...',
-                      hintStyle: TextStyle(color: Colors.white70, fontSize: 16.sp),
+                      hintStyle: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16.sp,
+                      ),
                       border: InputBorder.none,
                     ),
                   ),
@@ -133,12 +231,15 @@ class GroupScreen extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: _buildActionButton(
-            label: 'Create New',
-            icon: Icons.add,
-            bgColor: const Color(0xFFEEF2FF),
-            iconColor: const Color(0xFF1A227F),
-            border: Border.all(color: const Color(0xFF1A227F).withOpacity(0.2)),
+          child: GestureDetector(
+            onTap: () => Get.to(() => const CreateGroupScreen()),
+            child: _buildActionButton(
+              label: 'Create New',
+              icon: Icons.add,
+              bgColor: const Color(0xFFEEF2FF),
+              iconColor: const Color(0xFF1A227F),
+              border: Border.all(color: const Color(0xFF1A227F).withOpacity(0.2)),
+            ),
           ),
         ),
         SizedBox(width: 16.w),
@@ -230,7 +331,7 @@ class GroupScreen extends StatelessWidget {
           ),
           SizedBox(height: 24.h),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => Get.to(() => const CreateGroupScreen()),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF1A227F),
               foregroundColor: Colors.white,

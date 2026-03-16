@@ -6,22 +6,31 @@ import '../../../Widgegt/custom_bottom_nav_bar.dart';
 import '../controller/home_controller.dart';
 import '../../Notification/view/notification_screen.dart';
 import '../../Groups/view/group_screen.dart';
-
-
+import '../../Groups/controller/group_controller.dart';
+import '../../Groups/view/create_group_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
   final HomeController controller = Get.put(HomeController());
+  final GroupController groupController = Get.put(GroupController());
 
   final List<Widget> _pages = [
     const _HomeView(),
     const GroupScreen(),
-
-    const Center(child: Text('Payment Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+    const Center(
+      child: Text(
+        'Payment Page',
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+    ),
     const NotificationScreen(),
-
-    const Center(child: Text('Profile Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+    const Center(
+      child: Text(
+        'Profile Page',
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+    ),
   ];
 
   @override
@@ -35,10 +44,12 @@ class HomeScreen extends StatelessWidget {
             bottom: 0,
             left: 0,
             right: 0,
-            child: Obx(() => CustomBottomNavBar(
-                  currentIndex: controller.selectedIndex.value,
-                  onTap: (index) => controller.changeTabIndex(index),
-                )),
+            child: Obx(
+              () => CustomBottomNavBar(
+                currentIndex: controller.selectedIndex.value,
+                onTap: (index) => controller.changeTabIndex(index),
+              ),
+            ),
           ),
         ],
       ),
@@ -52,6 +63,8 @@ class _HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeController controller = Get.find<HomeController>();
+    final GroupController groupController = Get.find<GroupController>();
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -60,7 +73,7 @@ class _HomeView extends StatelessWidget {
           const SizedBox(height: 24),
           _buildQuickActions(),
           const SizedBox(height: 24),
-          _buildMyGroupsSection(),
+          _buildMyGroupsSection(groupController),
           const SizedBox(height: 120), // Extra space for custom nav bar
         ],
       ),
@@ -75,10 +88,7 @@ class _HomeView extends StatelessWidget {
         gradient: RadialGradient(
           center: Alignment(0.5, -0.6),
           radius: 1.2,
-          colors: [
-            Color(0xFF6773FF),
-            Color(0xFF1A227F),
-          ],
+          colors: [Color(0xFF6773FF), Color(0xFF1A227F)],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24),
@@ -97,19 +107,18 @@ class _HomeView extends StatelessWidget {
                 children: [
                   const Text(
                     'Welcome back,',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
+                    style: TextStyle(color: Colors.white70, fontSize: 16),
+                  ),
+                  Obx(
+                    () => Text(
+                      controller.userName.value,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  Obx(() => Text(
-                        controller.userName.value,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )),
                 ],
               ),
               Stack(
@@ -124,7 +133,10 @@ class _HomeView extends StatelessWidget {
                       AppIcons.groupsIcons,
                       height: 24,
                       width: 24,
-                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                   Positioned(
@@ -185,10 +197,7 @@ class _HomeView extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 14,
-            ),
+            style: const TextStyle(color: Colors.white70, fontSize: 14),
           ),
           const SizedBox(height: 8),
           Text(
@@ -222,11 +231,14 @@ class _HomeView extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _buildActionCard(
-                  label: 'Create Group',
-                  iconPath: AppIcons.plasIcons,
-                  color: const Color(0xFF1A227F),
-                  bgColor: const Color(0xFFEEF2FF),
+                child: GestureDetector(
+                  onTap: () => Get.to(() => const CreateGroupScreen()),
+                  child: _buildActionCard(
+                    label: 'Create Group',
+                    iconPath: AppIcons.plasIcons,
+                    color: const Color(0xFF1A227F),
+                    bgColor: const Color(0xFFEEF2FF),
+                  ),
                 ),
               ),
               const SizedBox(width: 16),
@@ -261,13 +273,13 @@ class _HomeView extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             child: SvgPicture.asset(
               iconPath,
-              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
               height: 28,
               width: 28,
             ),
@@ -286,7 +298,7 @@ class _HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildMyGroupsSection() {
+  Widget _buildMyGroupsSection(GroupController groupController) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -311,50 +323,104 @@ class _HomeView extends StatelessWidget {
               ),
             ],
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: const Color(0xFFF1F5F9)),
-            ),
-            child: Column(
-              children: [
-                SvgPicture.asset(
-                  AppIcons.groupsIcons,
-                  height: 48,
-                  width: 48,
-                  colorFilter: ColorFilter.mode(
-                    const Color(0xFF94A3B8).withOpacity(0.5),
-                    BlendMode.srcIn,
-                  ),
+          Obx(() {
+            if (groupController.groups.isEmpty) {
+              return Container(
+                padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0xFFF1F5F9)),
                 ),
-                const SizedBox(height: 16),
-                const Text(
-                  "You haven't joined any groups yet",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF64748B),
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1A227F),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                child: Column(
+                  children: [
+                    SvgPicture.asset(
+                      AppIcons.groupsIcons,
+                      height: 48,
+                      width: 48,
+                      colorFilter: ColorFilter.mode(
+                        const Color(0xFF94A3B8).withOpacity(0.5),
+                        BlendMode.srcIn,
+                      ),
                     ),
-                  ),
-                  child: const Text('Create Your First Group'),
+                    const SizedBox(height: 16),
+                    const Text(
+                      "You haven't joined any groups yet",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Color(0xFF64748B), fontSize: 14),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () => Get.to(() => const CreateGroupScreen()),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1A227F),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text('Create Your First Group'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              );
+            } else {
+              return Column(
+                children: groupController.groups.map((group) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: const Color(0xFFF1F5F9)),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFEEF2FF),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.groups,
+                            color: Color(0xFF1A227F),
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              group.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              '${group.membersCount} members',
+                              style: const TextStyle(
+                                color: Color(0xFF64748B),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              );
+            }
+          }),
         ],
       ),
     );
