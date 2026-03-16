@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter/services.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../controller/group_controller.dart';
 import '../model/group_model.dart';
-import 'package:share_plus/share_plus.dart';
 import 'group_chat_screen.dart';
+import '../../../Widgegt/invite_dialog.dart';
+
 
 class GroupDetailsScreen extends StatelessWidget {
   final GroupModel group;
@@ -594,157 +594,6 @@ class GroupDetailsScreen extends StatelessWidget {
   }
 
   void _showInviteDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24.r),
-          ),
-          child: Container(
-            padding: EdgeInsets.all(24.r),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Invite Members',
-                  style: TextStyle(
-                    fontSize: 22.sp,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF0F172A),
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  'Share this code with people you want to invite:',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: const Color(0xFF64748B),
-                  ),
-                ),
-                SizedBox(height: 24.h),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 24.h),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8FAFC),
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'YRSS496ZBG',
-                        style: TextStyle(
-                          fontSize: 32.sp,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF1A227F),
-                          letterSpacing: 2,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      GestureDetector(
-                        onTap: () {
-                          Clipboard.setData(const ClipboardData(text: 'YRSS496ZBG'));
-                          Get.snackbar(
-                            '',
-                            '',
-                            titleText: Row(
-                              children: [
-                                Icon(Icons.check_circle, color: const Color(0xFF166534), size: 18.sp),
-                                SizedBox(width: 8.w),
-                                Expanded(
-                                  child: Text(
-                                    'Invite message copied to clipboard!',
-                                    style: TextStyle(
-                                      color: const Color(0xFF166534),
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            messageText: const SizedBox.shrink(),
-                            backgroundColor: const Color(0xFFF0FDF4),
-                            snackPosition: SnackPosition.TOP,
-                            margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                            borderRadius: 12.r,
-                            duration: const Duration(seconds: 2),
-                            isDismissible: true,
-                            padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 12.h),
-                            borderColor: const Color(0xFFBBF7D0),
-                            borderWidth: 1,
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.copy, size: 18.sp, color: const Color(0xFF64748B)),
-                            SizedBox(width: 8.w),
-                            Text(
-                              'Copy Code',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: const Color(0xFF64748B),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 24.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Share.share('Join my savings group "${group.name}" using the invite code: YRSS496ZBG');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1A227F),
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(vertical: 16.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          'Share',
-                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16.w),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFE2E8F0),
-                          foregroundColor: const Color(0xFF475569),
-                          padding: EdgeInsets.symmetric(vertical: 16.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          'Close',
-                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    InviteDialog.show(context, groupName: group.name, inviteCode: 'YRSS496ZBG');
   }
 }
