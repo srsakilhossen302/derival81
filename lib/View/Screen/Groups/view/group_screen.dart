@@ -67,10 +67,10 @@ class GroupScreen extends StatelessWidget {
   Widget _buildGroupCard(GroupModel group) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
@@ -79,56 +79,102 @@ class GroupScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: EdgeInsets.all(12.r),
-            decoration: const BoxDecoration(
-              color: Color(0xFFEEF2FF),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.groups, color: const Color(0xFF1A227F), size: 24.sp),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  group.name,
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF0F172A),
-                  ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                group.name,
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF0F172A),
                 ),
-                Text(
-                  '${group.membersCount} members • \$${group.totalAmount}',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: const Color(0xFF64748B),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF0FDF4),
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Text(
-              group.status,
-              style: TextStyle(
-                color: const Color(0xFF22C55E),
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
               ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFDCFCE7),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Text(
+                  group.status,
+                  style: TextStyle(
+                    color: const Color(0xFF166534),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            group.description,
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: const Color(0xFF64748B),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Row(
+            children: [
+              _buildCardDetail(Icons.groups_outlined, '${group.membersCount}/${group.totalMembers} members'),
+              SizedBox(width: 24.w),
+              _buildCardDetail(Icons.calendar_today_outlined, 'Position ${group.position}'),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '\$${group.amount.toInt()}/monthly',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF0F172A),
+                ),
+              ),
+              Text(
+                'Next: ${group.nextDate}',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: const Color(0xFF64748B),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4.r),
+            child: LinearProgressIndicator(
+              value: group.progress,
+              backgroundColor: const Color(0xFFE2E8F0),
+              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1A227F)),
+              minHeight: 8.h,
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCardDetail(IconData icon, String label) {
+    return Row(
+      children: [
+        Icon(icon, size: 18.sp, color: const Color(0xFF64748B)),
+        SizedBox(width: 8.w),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: const Color(0xFF64748B),
+          ),
+        ),
+      ],
     );
   }
 

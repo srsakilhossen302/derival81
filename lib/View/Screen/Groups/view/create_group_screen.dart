@@ -318,9 +318,14 @@ class CreateGroupScreen extends StatelessWidget {
                         GroupModel(
                           id: DateTime.now().toString(),
                           name: controller.groupNameController.text,
+                          description: controller.descriptionController.text,
                           status: 'Active',
-                          membersCount: int.tryParse(controller.groupSizeController.text) ?? 1,
-                          totalAmount: (double.tryParse(controller.amountController.text) ?? 0) * (int.tryParse(controller.groupSizeController.text) ?? 1),
+                          membersCount: 1, // Start with 1 member
+                          totalMembers: int.tryParse(controller.groupSizeController.text) ?? 10,
+                          amount: double.tryParse(controller.amountController.text) ?? 500.0,
+                          position: 1, // Initial position
+                          nextDate: "5/1/2026", // Mock date
+                          progress: 0.1, // Initial progress
                         ),
                       );
                       Get.back();
