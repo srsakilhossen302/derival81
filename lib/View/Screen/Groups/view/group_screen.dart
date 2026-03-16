@@ -1,0 +1,252 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../Utils/AppIcons/app_icons.dart';
+import '../controller/group_controller.dart';
+
+class GroupScreen extends StatelessWidget {
+  const GroupScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final GroupController controller = Get.put(GroupController());
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8FAFC),
+      body: Column(
+        children: [
+          _buildHeader(),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+              child: Column(
+                children: [
+                  _buildFilters(controller),
+                  SizedBox(height: 24.h),
+                  _buildActionButtons(),
+                  SizedBox(height: 40.h),
+                  _buildEmptyState(),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 100.h), // Space for bottom nav bar
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(24.w, 60.h, 24.w, 24.h),
+      decoration: BoxDecoration(
+        gradient: const RadialGradient(
+          center: Alignment(0.5, -0.6),
+          radius: 1.2,
+          colors: [
+            Color(0xFF6773FF),
+            Color(0xFF1A227F),
+          ],
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(32.r),
+          bottomRight: Radius.circular(32.r),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'My Groups',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 32.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 20.h),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            height: 56.h,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(30.r),
+              border: Border.all(color: Colors.white.withOpacity(0.3)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.search, color: Colors.white70, size: 24.sp),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: TextField(
+                    style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                    decoration: InputDecoration(
+                      hintText: 'Search groups...',
+                      hintStyle: TextStyle(color: Colors.white70, fontSize: 16.sp),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilters(GroupController controller) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: controller.filters.map((filter) {
+          return Obx(() {
+            bool isSelected = controller.selectedFilter.value == filter;
+            return GestureDetector(
+              onTap: () => controller.setFilter(filter),
+              child: Container(
+                margin: EdgeInsets.only(right: 12.w),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: isSelected ? const Color(0xFF1A227F) : const Color(0xFFE2E8F0),
+                  borderRadius: BorderRadius.circular(24.r),
+                ),
+                child: Text(
+                  filter,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : const Color(0xFF475569),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ),
+            );
+          });
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildActionButton(
+            label: 'Create New',
+            icon: Icons.add,
+            bgColor: const Color(0xFFEEF2FF),
+            iconColor: const Color(0xFF1A227F),
+            border: Border.all(color: const Color(0xFF1A227F).withOpacity(0.2)),
+          ),
+        ),
+        SizedBox(width: 16.w),
+        Expanded(
+          child: _buildActionButton(
+            label: 'Join Group',
+            iconPath: AppIcons.groupsIcons,
+            bgColor: const Color(0xFFF0FDF4),
+            iconColor: const Color(0xFF22C55E),
+            border: Border.all(color: const Color(0xFF22C55E).withOpacity(0.2)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionButton({
+    required String label,
+    IconData? icon,
+    String? iconPath,
+    required Color bgColor,
+    required Color iconColor,
+    BoxBorder? border,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 16.h),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(16.r),
+        border: border,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) Icon(icon, color: iconColor, size: 24.sp),
+          if (iconPath != null)
+            SvgPicture.asset(
+              iconPath,
+              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              height: 20.h,
+            ),
+          SizedBox(width: 8.w),
+          Text(
+            label,
+            style: TextStyle(
+              color: const Color(0xFF475569),
+              fontWeight: FontWeight.w600,
+              fontSize: 14.sp,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 20.w),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          SvgPicture.asset(
+            AppIcons.groupsIcons,
+            height: 80.h,
+            colorFilter: ColorFilter.mode(
+              const Color(0xFF94A3B8).withOpacity(0.3),
+              BlendMode.srcIn,
+            ),
+          ),
+          SizedBox(height: 20.h),
+          Text(
+            "You haven't joined any groups yet",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: const Color(0xFF64748B),
+              fontSize: 16.sp,
+            ),
+          ),
+          SizedBox(height: 24.h),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1A227F),
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              elevation: 0,
+            ),
+            child: Text(
+              'Create Your First Group',
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

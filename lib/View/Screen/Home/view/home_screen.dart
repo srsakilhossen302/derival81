@@ -5,6 +5,8 @@ import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../../Widgegt/custom_bottom_nav_bar.dart';
 import '../controller/home_controller.dart';
 import '../../Notification/view/notification_screen.dart';
+import '../../Groups/view/group_screen.dart';
+
 
 
 class HomeScreen extends StatelessWidget {
@@ -14,7 +16,8 @@ class HomeScreen extends StatelessWidget {
 
   final List<Widget> _pages = [
     const _HomeView(),
-    const Center(child: Text('Groups Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+    const GroupScreen(),
+
     const Center(child: Text('Payment Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
     const NotificationScreen(),
 
