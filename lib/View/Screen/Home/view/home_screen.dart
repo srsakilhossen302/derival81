@@ -9,6 +9,7 @@ import '../../Groups/view/group_screen.dart';
 import '../../Groups/controller/group_controller.dart';
 import '../../Groups/view/create_group_screen.dart';
 import '../../Groups/view/active_group_details_screen.dart';
+import '../../Groups/view/join_group_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -244,11 +245,14 @@ class _HomeView extends StatelessWidget {
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: _buildActionCard(
-                  label: 'Join Group',
-                  iconPath: AppIcons.groupsIcons,
-                  color: const Color(0xFF00A63E),
-                  bgColor: const Color(0xFFF0FDF4),
+                child: GestureDetector(
+                  onTap: () => Get.to(() => const JoinGroupScreen()),
+                  child: _buildActionCard(
+                    label: 'Join Group',
+                    iconPath: AppIcons.groupsIcons,
+                    color: const Color(0xFF00A63E),
+                    bgColor: const Color(0xFFF0FDF4),
+                  ),
                 ),
               ),
             ],

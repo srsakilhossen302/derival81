@@ -7,6 +7,7 @@ import '../controller/group_controller.dart';
 import '../model/group_model.dart';
 import 'create_group_screen.dart';
 import 'active_group_details_screen.dart';
+import 'join_group_screen.dart';
 
 class GroupScreen extends StatelessWidget {
   const GroupScreen({Key? key}) : super(key: key);
@@ -294,12 +295,15 @@ class GroupScreen extends StatelessWidget {
         ),
         SizedBox(width: 16.w),
         Expanded(
-          child: _buildActionButton(
-            label: 'Join Group',
-            iconPath: AppIcons.groupsIcons,
-            bgColor: const Color(0xFFF0FDF4),
-            iconColor: const Color(0xFF22C55E),
-            border: Border.all(color: const Color(0xFF22C55E).withOpacity(0.2)),
+          child: GestureDetector(
+            onTap: () => Get.to(() => const JoinGroupScreen()),
+            child: _buildActionButton(
+              label: 'Join Group',
+              iconPath: AppIcons.groupsIcons,
+              bgColor: const Color(0xFFF0FDF4),
+              iconColor: const Color(0xFF22C55E),
+              border: Border.all(color: const Color(0xFF22C55E).withOpacity(0.2)),
+            ),
           ),
         ),
       ],
