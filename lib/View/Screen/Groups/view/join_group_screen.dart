@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class JoinGroupScreen extends StatelessWidget {
-  const JoinGroupScreen({Key? key}) : super(key: key);
+  JoinGroupScreen({Key? key}) : super(key: key);
+
+  final RxBool showSearchResult = false.obs;
+  final TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +21,7 @@ class JoinGroupScreen extends StatelessWidget {
               child: Column(
                 children: [
                   _buildJoinCard(),
+                  Obx(() => showSearchResult.value ? _buildSearchResult() : const SizedBox.shrink()),
                 ],
               ),
             ),
@@ -125,6 +129,7 @@ class JoinGroupScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: TextField(
+                          controller: searchController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'ENTER CODE',
@@ -145,26 +150,33 @@ class JoinGroupScreen extends StatelessWidget {
               SizedBox(width: 12.w),
               Expanded(
                 flex: 1,
-                child: Container(
-                  height: 52.h,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1A227F),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.search, color: Colors.white, size: 20.sp),
-                      SizedBox(width: 8.w),
-                      Text(
-                        'Search',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
+                child: GestureDetector(
+                  onTap: () {
+                    if (searchController.text.isNotEmpty) {
+                      showSearchResult.value = true;
+                    }
+                  },
+                  child: Container(
+                    height: 52.h,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1A227F),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.search, color: Colors.white, size: 20.sp),
+                        SizedBox(width: 8.w),
+                        Text(
+                          'Search',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -200,40 +212,176 @@ class JoinGroupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDemoCode(String groupName, String code) {
+  Widget _buildSearchResult() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      margin: EdgeInsets.only(top: 20.h),
+      padding: EdgeInsets.all(24.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFF60A5FA), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF60A5FA).withOpacity(0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Text(
-              groupName,
-              style: TextStyle(
-                color: const Color(0xFF0F172A),
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
+          Row(
+            children: [
+              Icon(Icons.check_circle_outline, color: const Color(0xFF10B981), size: 24.sp),
+              SizedBox(width: 12.w),
+              Text(
+                'Family Savings Circle',
+                style: TextStyle(
+                  color: const Color(0xFF0F172A),
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            ],
+          ),
+          SizedBox(height: 8.h),
+          Padding(
+            padding: EdgeInsets.only(left: 36.w),
+            child: Text(
+              'Monthly savings for family members',
+              style: TextStyle(
+                color: const Color(0xFF64748B),
+                fontSize: 14.sp,
+              ),
             ),
           ),
-          SizedBox(width: 8.w),
-          Text(
-            code,
-            style: TextStyle(
-              color: const Color(0xFF1A227F),
-              fontSize: 11.sp,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
+          SizedBox(height: 20.h),
+          Padding(
+            padding: EdgeInsets.only(left: 36.w),
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 20.w,
+              runSpacing: 8.h,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.groups_outlined, size: 16.sp, color: const Color(0xFF94A3B8)),
+                    SizedBox(width: 6.w),
+                    Text(
+                      '7/10 members',
+                      style: TextStyle(color: const Color(0xFF64748B), fontSize: 13.sp),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.attach_money, size: 16.sp, color: const Color(0xFF94A3B8)),
+                    SizedBox(width: 4.w),
+                    Text(
+                      '\$500/monthly',
+                      style: TextStyle(color: const Color(0xFF64748B), fontSize: 13.sp),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 16.h),
+          const Divider(color: Color(0xFFF1F5F9)),
+          SizedBox(height: 12.h),
+          Padding(
+            padding: EdgeInsets.only(left: 36.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Admin',
+                  style: TextStyle(
+                    color: const Color(0xFF94A3B8),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  'John Doe',
+                  style: TextStyle(
+                    color: const Color(0xFF0F172A),
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 24.h),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF10B981),
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 14.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                'Join This Group',
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDemoCode(String groupName, String code) {
+    return GestureDetector(
+      onTap: () {
+        searchController.text = code;
+        showSearchResult.value = true;
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                groupName,
+                style: TextStyle(
+                  color: const Color(0xFF0F172A),
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Text(
+              code,
+              style: TextStyle(
+                color: const Color(0xFF1A227F),
+                fontSize: 11.sp,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

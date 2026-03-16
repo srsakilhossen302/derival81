@@ -246,7 +246,7 @@ class _HomeView extends StatelessWidget {
               const SizedBox(width: 16),
               Expanded(
                 child: GestureDetector(
-                  onTap: () => Get.to(() => const JoinGroupScreen()),
+                  onTap: () => Get.to(() => JoinGroupScreen()),
                   child: _buildActionCard(
                     label: 'Join Group',
                     iconPath: AppIcons.groupsIcons,

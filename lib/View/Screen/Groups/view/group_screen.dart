@@ -296,7 +296,7 @@ class GroupScreen extends StatelessWidget {
         SizedBox(width: 16.w),
         Expanded(
           child: GestureDetector(
-            onTap: () => Get.to(() => const JoinGroupScreen()),
+            onTap: () => Get.to(() => JoinGroupScreen()),
             child: _buildActionButton(
               label: 'Join Group',
               iconPath: AppIcons.groupsIcons,
