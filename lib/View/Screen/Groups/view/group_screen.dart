@@ -6,8 +6,7 @@ import '../../../../Utils/AppIcons/app_icons.dart';
 import '../controller/group_controller.dart';
 import '../model/group_model.dart';
 import 'create_group_screen.dart';
-
-import 'group_details_screen.dart';
+import 'active_group_details_screen.dart';
 
 class GroupScreen extends StatelessWidget {
   const GroupScreen({Key? key}) : super(key: key);
@@ -57,7 +56,7 @@ class GroupScreen extends StatelessWidget {
                       }
                       final group = controller.groups[index - 2];
                       return GestureDetector(
-                        onTap: () => Get.to(() => GroupDetailsScreen(group: group)),
+                        onTap: () => Get.to(() => ActiveGroupDetailsScreen(group: group)),
                         child: _buildGroupCard(group),
                       );
                     },

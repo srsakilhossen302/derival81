@@ -8,8 +8,7 @@ import '../../Notification/view/notification_screen.dart';
 import '../../Groups/view/group_screen.dart';
 import '../../Groups/controller/group_controller.dart';
 import '../../Groups/view/create_group_screen.dart';
-
-import '../../Groups/view/group_details_screen.dart';
+import '../../Groups/view/active_group_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -375,7 +374,7 @@ class _HomeView extends StatelessWidget {
               return Column(
                 children: groupController.groups.map((group) {
                   return GestureDetector(
-                    onTap: () => Get.to(() => GroupDetailsScreen(group: group)),
+                    onTap: () => Get.to(() => ActiveGroupDetailsScreen(group: group)),
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 16),
                       padding: const EdgeInsets.all(20),

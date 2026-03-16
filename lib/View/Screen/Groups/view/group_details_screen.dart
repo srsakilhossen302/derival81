@@ -307,7 +307,7 @@ class GroupDetailsScreen extends StatelessWidget {
           SizedBox(height: 20.h),
           _buildQueueHighlightBox(),
           SizedBox(height: 16.h),
-          _buildMemberItem(),
+          _buildMemberItem(1, 'Ibrahim', isYou: true, isFirst: true),
         ],
       ),
     );
@@ -357,7 +357,7 @@ class GroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMemberItem() {
+  Widget _buildMemberItem(int rank, String name, {bool isYou = false, bool isFirst = false, bool isCompleted = false}) {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
@@ -375,10 +375,7 @@ class GroupDetailsScreen extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Center(
-              child: Text(
-                '1',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.sp),
-              ),
+              child: Text(rank.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.sp)),
             ),
           ),
           SizedBox(width: 12.w),
@@ -389,24 +386,28 @@ class GroupDetailsScreen extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'Ibrahim',
+                      name,
                       style: TextStyle(
                         color: const Color(0xFF0F172A),
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 4.w),
-                    SvgPicture.asset(AppIcons.mukutIcon, height: 16.h),
-                    SizedBox(width: 4.w),
-                    Text(
-                      '(You)',
-                      style: TextStyle(
-                        color: const Color(0xFF6366F1),
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
+                    if (isFirst) ...[
+                      SizedBox(width: 4.w),
+                      SvgPicture.asset(AppIcons.mukutIcon, height: 16.h),
+                    ],
+                    if (isYou) ...[
+                      SizedBox(width: 4.w),
+                      Text(
+                        '(You)',
+                        style: TextStyle(
+                          color: const Color(0xFF6366F1),
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
+                    ],
                   ],
                 ),
                 SizedBox(height: 4.h),
