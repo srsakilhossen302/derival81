@@ -28,8 +28,8 @@ class CreateGroupScreen extends StatelessWidget {
                 child: controller.currentStep.value == 1
                     ? _buildBasicInfoForm(controller)
                     : controller.currentStep.value == 2
-                        ? _buildContributionSettingsForm(controller, groupController)
-                        : _buildStep3Placeholder(),
+                        ? _buildContributionSettingsForm(controller)
+                        : _buildReviewDetailsForm(controller, groupController),
               );
             }),
           ),
@@ -179,7 +179,7 @@ class CreateGroupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContributionSettingsForm(CreateGroupController controller, GroupController groupController) {
+  Widget _buildContributionSettingsForm(CreateGroupController controller) {
     return Container(
       padding: EdgeInsets.all(24.r),
       decoration: BoxDecoration(
@@ -222,7 +222,7 @@ class CreateGroupScreen extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           Text(
-            'Each member will contribute \$0 monthly', // Placeholder logic as in image
+            'Each member will contribute \$0 monthly',
             style: TextStyle(
               fontSize: 14.sp,
               color: const Color(0xFF94A3B8),
@@ -241,8 +241,78 @@ class CreateGroupScreen extends StatelessWidget {
               Expanded(
                 child: _buildPrimaryButton(
                   text: 'Continue',
+                  onPressed: () => controller.goToNextStep(),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReviewDetailsForm(CreateGroupController controller, GroupController groupController) {
+    return Container(
+      padding: EdgeInsets.all(24.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Review Details',
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF0F172A),
+            ),
+          ),
+          SizedBox(height: 24.h),
+          _buildReviewItem('Group Name', controller.groupNameController.text),
+          _buildReviewItem('Description', controller.descriptionController.text),
+          _buildReviewItem('Contribution A', '\$${controller.amountController.text} / monthly'),
+          _buildReviewItem('Contribution F', '\$${(double.tryParse(controller.amountController.text) ?? 0) * (int.tryParse(controller.groupSizeController.text) ?? 1)}'),
+          _buildReviewItem('Group Size', '${controller.groupSizeController.text} Members'),
+          SizedBox(height: 24.h),
+          Container(
+            padding: EdgeInsets.all(16.r),
+            decoration: BoxDecoration(
+              color: const Color(0xFFEEF2FF),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.lightbulb_outline, color: const Color(0xFF6366F1), size: 20.sp),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Text(
+                    'As the group admin, you\'ll be able to manage members and invite others using a unique invite code.',
+                    style: TextStyle(
+                      color: const Color(0xFF475569),
+                      fontSize: 13.sp,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 32.h),
+          Row(
+            children: [
+              Expanded(
+                child: _buildSecondaryButton(
+                  text: 'Back',
+                  onPressed: () => controller.goBack(),
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: _buildPrimaryButton(
+                  text: 'Create Group',
                   onPressed: () {
-                    // Final creation on step 2 for now, or just go to 3
                     if (controller.groupNameController.text.isNotEmpty) {
                       groupController.groups.add(
                         GroupModel(
@@ -250,7 +320,7 @@ class CreateGroupScreen extends StatelessWidget {
                           name: controller.groupNameController.text,
                           status: 'Active',
                           membersCount: int.tryParse(controller.groupSizeController.text) ?? 1,
-                          totalAmount: double.tryParse(controller.amountController.text) ?? 0.0,
+                          totalAmount: (double.tryParse(controller.amountController.text) ?? 0) * (int.tryParse(controller.groupSizeController.text) ?? 1),
                         ),
                       );
                       Get.back();
@@ -265,14 +335,37 @@ class CreateGroupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStep3Placeholder() {
-    return Container(
-      padding: EdgeInsets.all(24.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24.r),
+  Widget _buildReviewItem(String label, String value) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: const Color(0xFF64748B),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: const Color(0xFF0F172A),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
       ),
-      child: const Center(child: Text('Step 3: Summary & Invitation')),
     );
   }
 
