@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../Utils/AppIcons/app_icons.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -17,16 +18,16 @@ class CustomBottomNavBar extends StatelessWidget {
     double bottomPadding = MediaQuery.of(context).padding.bottom;
     return Container(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
-        bottom: bottomPadding > 0 ? bottomPadding + 8 : 16,
+        left: 16.w,
+        right: 16.w,
+        top: 16.h,
+        bottom: bottomPadding > 0 ? bottomPadding + 8.h : 16.h,
       ),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1A227F),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A227F),
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(32),
-          topRight: Radius.circular(32),
+          topLeft: Radius.circular(32.r),
+          topRight: Radius.circular(32.r),
         ),
       ),
       child: Row(
@@ -47,30 +48,30 @@ class CustomBottomNavBar extends StatelessWidget {
 
     if (isSelected) {
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(30.r),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
               iconPath,
-              height: 18,
-              width: 18,
+              height: 20.h,
+              width: 20.w,
               colorFilter: const ColorFilter.mode(
                 Color(0xFF1A227F),
                 BlendMode.srcIn,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 6.w),
             Text(
               label,
-              style: const TextStyle(
-                color: Color(0xFF1A227F),
+              style: TextStyle(
+                color: const Color(0xFF1A227F),
                 fontWeight: FontWeight.w700,
-                fontSize: 12,
+                fontSize: 14.sp,
               ),
             ),
           ],
@@ -81,13 +82,13 @@ class CustomBottomNavBar extends StatelessWidget {
         onTap: () => onTap(index),
         behavior: HitTestBehavior.opaque,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8.r),
           child: SvgPicture.asset(
             iconPath,
-            height: 24,
-            width: 24,
-            colorFilter: ColorFilter.mode(
-              Colors.white.withOpacity(0.7),
+            height: 24.h,
+            width: 24.w,
+            colorFilter: const ColorFilter.mode(
+              Colors.white,
               BlendMode.srcIn,
             ),
           ),
