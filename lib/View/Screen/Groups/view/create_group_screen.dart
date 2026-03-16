@@ -17,22 +17,28 @@ class CreateGroupScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF8FAFC),
       body: Column(
         children: [
-          _buildHeader(),
+          _buildHeader(controller),
           SizedBox(height: 24.h),
           _buildStepper(controller),
           SizedBox(height: 24.h),
           Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: _buildBasicInfoForm(controller, groupController),
-            ),
+            child: Obx(() {
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: controller.currentStep.value == 1
+                    ? _buildBasicInfoForm(controller)
+                    : controller.currentStep.value == 2
+                        ? _buildContributionSettingsForm(controller, groupController)
+                        : _buildStep3Placeholder(),
+              );
+            }),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(CreateGroupController controller) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(12.w, 50.h, 24.w, 24.h),
@@ -53,7 +59,7 @@ class CreateGroupScreen extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            onPressed: () => Get.back(),
+            onPressed: () => controller.goBack(),
             icon: const Icon(Icons.arrow_back, color: Colors.white),
           ),
           SizedBox(width: 8.w),
@@ -73,13 +79,23 @@ class CreateGroupScreen extends StatelessWidget {
   Widget _buildStepper(CreateGroupController controller) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 40.w),
-      child: Row(
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          _buildStepCircle(1, controller),
-          _buildStepLine(),
-          _buildStepCircle(2, controller),
-          _buildStepLine(),
-          _buildStepCircle(3, controller),
+          Row(
+            children: [
+              Expanded(child: _buildStepLine(1, controller)),
+              Expanded(child: _buildStepLine(2, controller)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildStepCircle(1, controller),
+              _buildStepCircle(2, controller),
+              _buildStepCircle(3, controller),
+            ],
+          ),
         ],
       ),
     );
@@ -110,16 +126,17 @@ class CreateGroupScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildStepLine() {
-    return Expanded(
-      child: Container(
+  Widget _buildStepLine(int step, CreateGroupController controller) {
+    return Obx(() {
+      bool isCompleted = controller.currentStep.value > step;
+      return Container(
         height: 2.h,
-        color: const Color(0xFFE2E8F0),
-      ),
-    );
+        color: isCompleted ? const Color(0xFF1A227F) : const Color(0xFFE2E8F0),
+      );
+    });
   }
 
-  Widget _buildBasicInfoForm(CreateGroupController controller, GroupController groupController) {
+  Widget _buildBasicInfoForm(CreateGroupController controller) {
     return Container(
       padding: EdgeInsets.all(24.r),
       decoration: BoxDecoration(
@@ -153,41 +170,109 @@ class CreateGroupScreen extends StatelessWidget {
             maxLines: 4,
           ),
           SizedBox(height: 32.h),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                // Mock group creation logic
-                if (controller.groupNameController.text.isNotEmpty) {
-                  groupController.groups.add(
-                    GroupModel(
-                      id: DateTime.now().toString(),
-                      name: controller.groupNameController.text,
-                      status: 'Active',
-                      membersCount: 1,
-                      totalAmount: 0.0,
-                    ),
-                  );
-                  Get.back(); // Return to previous screen
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1A227F),
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(vertical: 16.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                elevation: 0,
-              ),
-              child: Text(
-                'Continue',
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-              ),
-            ),
+          _buildPrimaryButton(
+            text: 'Continue',
+            onPressed: () => controller.goToNextStep(),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildContributionSettingsForm(CreateGroupController controller, GroupController groupController) {
+    return Container(
+      padding: EdgeInsets.all(24.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Contribution Settings',
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF0F172A),
+            ),
+          ),
+          SizedBox(height: 24.h),
+          _buildTextField(
+            label: 'Contribution Amount (\$)',
+            hint: '500',
+            icon: Icons.attach_money,
+            controller: controller.amountController,
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 24.h),
+          _buildTextField(
+            label: 'Contribution Frequency',
+            hint: 'Monthly',
+            icon: Icons.calendar_today_outlined,
+            controller: controller.frequencyController,
+          ),
+          SizedBox(height: 24.h),
+          _buildTextField(
+            label: 'Group Size (Total Members)',
+            hint: '10',
+            icon: Icons.numbers,
+            controller: controller.groupSizeController,
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            'Each member will contribute \$0 monthly', // Placeholder logic as in image
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: const Color(0xFF94A3B8),
+            ),
+          ),
+          SizedBox(height: 32.h),
+          Row(
+            children: [
+              Expanded(
+                child: _buildSecondaryButton(
+                  text: 'Back',
+                  onPressed: () => controller.goBack(),
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: _buildPrimaryButton(
+                  text: 'Continue',
+                  onPressed: () {
+                    // Final creation on step 2 for now, or just go to 3
+                    if (controller.groupNameController.text.isNotEmpty) {
+                      groupController.groups.add(
+                        GroupModel(
+                          id: DateTime.now().toString(),
+                          name: controller.groupNameController.text,
+                          status: 'Active',
+                          membersCount: int.tryParse(controller.groupSizeController.text) ?? 1,
+                          totalAmount: double.tryParse(controller.amountController.text) ?? 0.0,
+                        ),
+                      );
+                      Get.back();
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStep3Placeholder() {
+    return Container(
+      padding: EdgeInsets.all(24.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24.r),
+      ),
+      child: const Center(child: Text('Step 3: Summary & Invitation')),
     );
   }
 
@@ -197,6 +282,7 @@ class CreateGroupScreen extends StatelessWidget {
     required IconData icon,
     required TextEditingController controller,
     int maxLines = 1,
+    TextInputType keyboardType = TextInputType.text,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,6 +304,7 @@ class CreateGroupScreen extends StatelessWidget {
           child: TextField(
             controller: controller,
             maxLines: maxLines,
+            keyboardType: keyboardType,
             decoration: InputDecoration(
               prefixIcon: Icon(icon, color: const Color(0xFF94A3B8)),
               hintText: hint,
@@ -228,6 +315,50 @@ class CreateGroupScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildPrimaryButton({required String text, required VoidCallback onPressed}) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF1A227F),
+          foregroundColor: Colors.white,
+          padding: EdgeInsets.symmetric(vertical: 16.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          elevation: 0,
+        ),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSecondaryButton({required String text, required VoidCallback onPressed}) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFE2E8F0),
+          foregroundColor: const Color(0xFF475569),
+          padding: EdgeInsets.symmetric(vertical: 16.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          elevation: 0,
+        ),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+        ),
+      ),
     );
   }
 }
