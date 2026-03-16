@@ -37,6 +37,7 @@ dependencies:
   flutter_svg: ^2.0.10
   get: ^4.6.6
   pinput: ^6.0.2
+  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:

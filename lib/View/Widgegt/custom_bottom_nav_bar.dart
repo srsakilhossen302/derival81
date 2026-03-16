@@ -59,7 +59,10 @@ class CustomBottomNavBar extends StatelessWidget {
               iconPath,
               height: 18,
               width: 18,
-              colorFilter: const ColorFilter.mode(Color(0xFF1A227F), BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                Color(0xFF1A227F),
+                BlendMode.srcIn,
+              ),
             ),
             const SizedBox(width: 8),
             Text(
@@ -83,7 +86,10 @@ class CustomBottomNavBar extends StatelessWidget {
             iconPath,
             height: 24,
             width: 24,
-            colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.7), BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(
+              Colors.white.withOpacity(0.7),
+              BlendMode.srcIn,
+            ),
           ),
         ),
       );

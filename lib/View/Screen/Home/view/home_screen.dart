@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../../Widgegt/custom_bottom_nav_bar.dart';
 import '../controller/home_controller.dart';
+import '../../Notification/view/notification_screen.dart';
+
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -14,7 +16,8 @@ class HomeScreen extends StatelessWidget {
     const _HomeView(),
     const Center(child: Text('Groups Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
     const Center(child: Text('Payment Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
-    const Center(child: Text('Notifications Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+    const NotificationScreen(),
+
     const Center(child: Text('Profile Page', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
   ];
 
