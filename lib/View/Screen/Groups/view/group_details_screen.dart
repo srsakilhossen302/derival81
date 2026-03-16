@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../Utils/AppIcons/app_icons.dart';
 import '../model/group_model.dart';
 
 class GroupDetailsScreen extends StatelessWidget {
@@ -78,11 +80,11 @@ class GroupDetailsScreen extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _buildHeaderBtn(Icons.share_outlined, 'Invite'),
+                child: _buildHeaderBtn(AppIcons.inviteIcons, 'Invite'),
               ),
               SizedBox(width: 12.w),
               Expanded(
-                child: _buildHeaderBtn(Icons.chat_bubble_outline, 'Chat'),
+                child: _buildHeaderBtn(AppIcons.chatIcons, 'Chat'),
               ),
             ],
           ),
@@ -91,7 +93,7 @@ class GroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderBtn(IconData icon, String label) {
+  Widget _buildHeaderBtn(String iconPath, String label) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 14.h),
       decoration: BoxDecoration(
@@ -101,7 +103,11 @@ class GroupDetailsScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: Colors.white, size: 20.sp),
+          SvgPicture.asset(
+            iconPath,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            height: 20.h,
+          ),
           SizedBox(width: 8.w),
           Text(
             label,
@@ -163,7 +169,7 @@ class GroupDetailsScreen extends StatelessWidget {
             'Contribution',
             '\$${group.amount.toInt()}',
             'per monthly',
-            Icons.attach_money,
+            iconPath: AppIcons.dollerIcon,
           ),
         ),
         SizedBox(width: 16.w),
@@ -172,7 +178,7 @@ class GroupDetailsScreen extends StatelessWidget {
             'Members',
             '${group.membersCount}/${group.totalMembers}',
             null,
-            Icons.groups_outlined,
+            iconPath: AppIcons.groupsIcons,
             progress: group.progress,
           ),
         ),
@@ -180,7 +186,14 @@ class GroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, String? subtitle, IconData icon, {double? progress}) {
+  Widget _buildStatCard(
+    String title,
+    String value,
+    String? subtitle, {
+    IconData? icon,
+    String? iconPath,
+    double? progress,
+  }) {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
@@ -192,7 +205,15 @@ class GroupDetailsScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: const Color(0xFF94A3B8), size: 20.sp),
+              if (iconPath != null)
+                SvgPicture.asset(
+                  iconPath,
+                  height: 18.h,
+                  width: 18.w,
+                  colorFilter: const ColorFilter.mode(Color(0xFF94A3B8), BlendMode.srcIn),
+                )
+              else if (icon != null)
+                Icon(icon, color: const Color(0xFF94A3B8), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 title,
@@ -364,7 +385,7 @@ class GroupDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 4.w),
-                    Icon(Icons.workspace_premium, color: Colors.amber, size: 16.sp),
+                    SvgPicture.asset(AppIcons.mukutIcon, height: 16.h),
                     SizedBox(width: 4.w),
                     Text(
                       '(You)',
@@ -412,15 +433,15 @@ class GroupDetailsScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20.h),
-          _buildAdminBtn('View Invite Code', const Color(0xFFEEF2FF), const Color(0xFF1A227F), null),
+          _buildAdminBtn('View Invite Code', const Color(0xFFEEF2FF), const Color(0xFF1A227F), icon: null),
           SizedBox(height: 12.h),
-          _buildAdminBtn('Delete Group', const Color(0xFFFEF2F2), const Color(0xFFEF4444), Icons.delete_outline),
+          _buildAdminBtn('Delete Group', const Color(0xFFFEF2F2), const Color(0xFFEF4444), iconPath: AppIcons.deleteGroupIcons),
         ],
       ),
     );
   }
 
-  Widget _buildAdminBtn(String label, Color bgColor, Color textColor, IconData? icon) {
+  Widget _buildAdminBtn(String label, Color bgColor, Color textColor, {IconData? icon, String? iconPath}) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(vertical: 16.h),
@@ -431,7 +452,14 @@ class GroupDetailsScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (icon != null) ...[
+          if (iconPath != null) ...[
+            SvgPicture.asset(
+              iconPath,
+              colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
+              height: 20.h,
+            ),
+            SizedBox(width: 8.w),
+          ] else if (icon != null) ...[
             Icon(icon, color: textColor, size: 20.sp),
             SizedBox(width: 8.w),
           ],

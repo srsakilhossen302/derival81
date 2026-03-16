@@ -18,4 +18,11 @@ class AppIcons {
   static const String profileIcons = "$basePath/Profile-icons.svg";
   static const String rtIcons = "$basePath/R-T Icons.svg";
   static const String groupsIcons = "$basePath/groups-icons.svg";
+  
+  // New Icons added for Group Details
+  static const String chatIcons = "$basePath/Chat-Icons.svg";
+  static const String deleteGroupIcons = "$basePath/Delete-Group-Icons.svg";
+  static const String inviteIcons = "$basePath/Invite-Icons.svg";
+  static const String dollerIcon = "$basePath/doller.svg";
+  static const String mukutIcon = "$basePath/mukut.svg";
 }
