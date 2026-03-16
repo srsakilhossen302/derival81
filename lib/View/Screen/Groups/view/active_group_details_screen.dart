@@ -16,7 +16,7 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF8FAFC),
       body: Column(
         children: [
-          _buildHeader(),
+          _buildHeader(context),
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.all(20.r),
@@ -37,7 +37,7 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(12.w, 50.h, 24.w, 32.h),
@@ -78,11 +78,19 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _buildHeaderBtn(AppIcons.inviteIcons, 'Invite'),
+                child: _buildHeaderBtn(
+                  AppIcons.inviteIcons,
+                  'Invite',
+                  onTap: () => _showInviteDialog(context),
+                ),
               ),
               SizedBox(width: 12.w),
               Expanded(
-                child: _buildHeaderBtn(AppIcons.chatIcons, 'Chat'),
+                child: _buildHeaderBtn(
+                  AppIcons.chatIcons,
+                  'Chat',
+                  onTap: () {},
+                ),
               ),
             ],
           ),
@@ -91,31 +99,34 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderBtn(String iconPath, String label) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 14.h),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            iconPath,
-            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-            height: 20.h,
-          ),
-          SizedBox(width: 8.w),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 16.sp,
+  Widget _buildHeaderBtn(String iconPath, String label, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 14.h),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              iconPath,
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              height: 20.h,
             ),
-          ),
-        ],
+            SizedBox(width: 8.w),
+            Text(
+              label,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 16.sp,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -355,6 +366,165 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showInviteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14.r),
+          ),
+          child: Container(
+            width: 361.w,
+            height: 288.h,
+            padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 20.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14.r),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Invite Members',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF0F172A),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  'Share this code with people you want to invite:',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: const Color(0xFF64748B),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F5F9).withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        'FAM2026XYZ',
+                        style: TextStyle(
+                          fontSize: 28.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF1A227F),
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      GestureDetector(
+                        onTap: () {
+                          Get.snackbar(
+                            '',
+                            '',
+                            titleText: Row(
+                              children: [
+                                Icon(Icons.check_circle, color: const Color(0xFF166534), size: 18.sp),
+                                SizedBox(width: 8.w),
+                                Expanded(
+                                  child: Text(
+                                    'Invite message copied to clipboard!',
+                                    style: TextStyle(
+                                      color: const Color(0xFF166534),
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            messageText: const SizedBox.shrink(),
+                            backgroundColor: const Color(0xFFF0FDF4),
+                            snackPosition: SnackPosition.TOP,
+                            margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                            borderRadius: 12.r,
+                            duration: const Duration(seconds: 2),
+                            isDismissible: true,
+                            padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 12.h),
+                            borderColor: const Color(0xFFBBF7D0),
+                            borderWidth: 1,
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.copy_outlined, size: 16.sp, color: const Color(0xFF64748B)),
+                            SizedBox(width: 6.w),
+                            Text(
+                              'Copy Code',
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                color: const Color(0xFF64748B),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1A227F),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Share',
+                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFE2E8F0).withOpacity(0.8),
+                          foregroundColor: const Color(0xFF475569),
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Close',
+                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
