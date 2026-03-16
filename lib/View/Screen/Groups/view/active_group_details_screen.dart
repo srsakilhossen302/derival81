@@ -380,8 +380,8 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
           ),
           child: Container(
             width: 361.w,
-            height: 288.h,
-            padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 20.h),
+            constraints: BoxConstraints(minHeight: 288.h),
+            padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14.r),
@@ -478,7 +478,7 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Spacer(),
+                SizedBox(height: 24.h),
                 Row(
                   children: [
                     Expanded(
