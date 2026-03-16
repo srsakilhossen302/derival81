@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
+import '../controller/group_controller.dart';
 import '../model/group_model.dart';
 
 class GroupDetailsScreen extends StatelessWidget {
@@ -452,7 +453,13 @@ class GroupDetailsScreen extends StatelessWidget {
             onTap: () => _showInviteDialog(context),
           ),
           SizedBox(height: 12.h),
-          _buildAdminBtn('Delete Group', const Color(0xFFFEF2F2), const Color(0xFFEF4444), iconPath: AppIcons.deleteGroupIcons),
+          _buildAdminBtn(
+            'Delete Group',
+            const Color(0xFFFEF2F2),
+            const Color(0xFFEF4444),
+            iconPath: AppIcons.deleteGroupIcons,
+            onTap: () => _showDeleteDialog(context),
+          ),
         ],
       ),
     );
@@ -493,6 +500,92 @@ class GroupDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24.r),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(24.r),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Delete Group?',
+                  style: TextStyle(
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF0F172A),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  'This action cannot be undone. All group data will be permanently deleted.',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: const Color(0xFF64748B),
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Actual delete logic
+                          final groupController = Get.find<GroupController>();
+                          groupController.groups.removeWhere((g) => g.id == group.id);
+                          Get.back(); // Close dialog
+                          Get.back(); // Go back to GroupScreen
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFEF4444),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFE2E8F0),
+                          foregroundColor: const Color(0xFF475569),
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
