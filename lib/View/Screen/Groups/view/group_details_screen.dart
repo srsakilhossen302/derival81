@@ -16,7 +16,7 @@ class GroupDetailsScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF8FAFC),
       body: Column(
         children: [
-          _buildHeader(),
+          _buildHeader(context),
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.all(20.r),
@@ -28,7 +28,7 @@ class GroupDetailsScreen extends StatelessWidget {
                   SizedBox(height: 20.h),
                   _buildTurnQueue(),
                   SizedBox(height: 20.h),
-                  _buildAdminControls(),
+                  _buildAdminControls(context),
                   SizedBox(height: 40.h),
                 ],
               ),
@@ -39,7 +39,7 @@ class GroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(12.w, 50.h, 24.w, 32.h),
@@ -80,11 +80,19 @@ class GroupDetailsScreen extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _buildHeaderBtn(AppIcons.inviteIcons, 'Invite'),
+                child: _buildHeaderBtn(
+                  AppIcons.inviteIcons,
+                  'Invite',
+                  onTap: () => _showInviteDialog(context),
+                ),
               ),
               SizedBox(width: 12.w),
               Expanded(
-                child: _buildHeaderBtn(AppIcons.chatIcons, 'Chat'),
+                child: _buildHeaderBtn(
+                  AppIcons.chatIcons,
+                  'Chat',
+                  onTap: () {},
+                ),
               ),
             ],
           ),
@@ -93,31 +101,34 @@ class GroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderBtn(String iconPath, String label) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 14.h),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            iconPath,
-            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-            height: 20.h,
-          ),
-          SizedBox(width: 8.w),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 16.sp,
+  Widget _buildHeaderBtn(String iconPath, String label, {required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 14.h),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              iconPath,
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              height: 20.h,
             ),
-          ),
-        ],
+            SizedBox(width: 8.w),
+            Text(
+              label,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 16.sp,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -413,7 +424,7 @@ class GroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAdminControls() {
+  Widget _buildAdminControls(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.r),
@@ -433,7 +444,13 @@ class GroupDetailsScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20.h),
-          _buildAdminBtn('View Invite Code', const Color(0xFFEEF2FF), const Color(0xFF1A227F), icon: null),
+          _buildAdminBtn(
+            'View Invite Code',
+            const Color(0xFFEEF2FF),
+            const Color(0xFF1A227F),
+            icon: null,
+            onTap: () => _showInviteDialog(context),
+          ),
           SizedBox(height: 12.h),
           _buildAdminBtn('Delete Group', const Color(0xFFFEF2F2), const Color(0xFFEF4444), iconPath: AppIcons.deleteGroupIcons),
         ],
@@ -441,38 +458,159 @@ class GroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAdminBtn(String label, Color bgColor, Color textColor, {IconData? icon, String? iconPath}) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 16.h),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (iconPath != null) ...[
-            SvgPicture.asset(
-              iconPath,
-              colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
-              height: 20.h,
+  Widget _buildAdminBtn(String label, Color bgColor, Color textColor, {IconData? icon, String? iconPath, VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 16.h),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (iconPath != null) ...[
+              SvgPicture.asset(
+                iconPath,
+                colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
+                height: 20.h,
+              ),
+              SizedBox(width: 8.w),
+            ] else if (icon != null) ...[
+              Icon(icon, color: textColor, size: 20.sp),
+              SizedBox(width: 8.w),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                color: textColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.sp,
+              ),
             ),
-            SizedBox(width: 8.w),
-          ] else if (icon != null) ...[
-            Icon(icon, color: textColor, size: 20.sp),
-            SizedBox(width: 8.w),
           ],
-          Text(
-            label,
-            style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 16.sp,
+        ),
+      ),
+    );
+  }
+
+  void _showInviteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24.r),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(24.r),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Invite Members',
+                  style: TextStyle(
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF0F172A),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  'Share this code with people you want to invite:',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: const Color(0xFF64748B),
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 24.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        'YRSS496ZBG',
+                        style: TextStyle(
+                          fontSize: 32.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF1A227F),
+                          letterSpacing: 2,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.copy, size: 18.sp, color: const Color(0xFF64748B)),
+                          SizedBox(width: 8.w),
+                          Text(
+                            'Copy Code',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: const Color(0xFF64748B),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1A227F),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Share',
+                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFE2E8F0),
+                          foregroundColor: const Color(0xFF475569),
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Close',
+                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
