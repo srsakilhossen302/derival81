@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.6
   pinput: ^6.0.2
   flutter_screenutil: ^5.9.3
+  share_plus: ^12.0.1
 
 dev_dependencies:
   flutter_test:

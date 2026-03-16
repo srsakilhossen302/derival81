@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../model/group_model.dart';
+import 'package:share_plus/share_plus.dart';
+import 'group_chat_screen.dart';
 
 class ActiveGroupDetailsScreen extends StatelessWidget {
   final GroupModel group;
@@ -89,7 +92,7 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
                 child: _buildHeaderBtn(
                   AppIcons.chatIcons,
                   'Chat',
-                  onTap: () {},
+                  onTap: () => Get.to(() => GroupChatScreen(group: group)),
                 ),
               ),
             ],
@@ -428,6 +431,7 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
                       SizedBox(height: 4.h),
                       GestureDetector(
                         onTap: () {
+                          Clipboard.setData(const ClipboardData(text: 'FAM2026XYZ'));
                           Get.snackbar(
                             '',
                             '',
@@ -483,7 +487,9 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Share.share('Join my savings group "${group.name}" using the invite code: FAM2026XYZ');
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF1A227F),
                           foregroundColor: Colors.white,
