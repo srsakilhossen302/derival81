@@ -8,6 +8,7 @@ import '../model/group_model.dart';
 import 'create_group_screen.dart';
 import 'active_group_details_screen.dart';
 import 'join_group_screen.dart';
+import 'all_groups_screen.dart';
 
 class GroupScreen extends StatelessWidget {
   const GroupScreen({Key? key}) : super(key: key);
@@ -37,8 +38,8 @@ class GroupScreen extends StatelessWidget {
                   )
                 : ListView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-                    itemCount: controller.groups.length + 2, // +2 for filters and actions
                     itemBuilder: (context, index) {
+                      final displayGroups = controller.groups.take(2).toList();
                       if (index == 0) {
                         return Column(
                           children: [
@@ -55,12 +56,42 @@ class GroupScreen extends StatelessWidget {
                           ],
                         );
                       }
-                      final group = controller.groups[index - 2];
+                      if (index == 2) {
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 16.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'My Groups',
+                                style: TextStyle(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF0F172A),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () => Get.to(() => const AllGroupsScreen()),
+                                child: Text(
+                                  'See All →',
+                                  style: TextStyle(
+                                    color: const Color(0xFF1A227F),
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      final group = displayGroups[index - 3];
                       return GestureDetector(
                         onTap: () => Get.to(() => ActiveGroupDetailsScreen(group: group)),
                         child: _buildGroupCard(group),
                       );
                     },
+                    itemCount: controller.groups.take(2).length + 3,
                   )),
           ),
           SizedBox(height: 100.h), // Space for bottom nav bar

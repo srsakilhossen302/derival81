@@ -10,6 +10,7 @@ import '../../Groups/controller/group_controller.dart';
 import '../../Groups/view/create_group_screen.dart';
 import '../../Groups/view/active_group_details_screen.dart';
 import '../../Groups/view/join_group_screen.dart';
+import '../../Groups/view/all_groups_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -320,10 +321,13 @@ class _HomeView extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () => Get.to(() => const AllGroupsScreen()),
                 child: const Text(
-                  'See All',
-                  style: TextStyle(color: Color(0xFF1A227F)),
+                  'See All →',
+                  style: TextStyle(
+                    color: Color(0xFF1A227F),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
@@ -331,7 +335,10 @@ class _HomeView extends StatelessWidget {
           Obx(() {
             if (groupController.groups.isEmpty) {
               return Container(
-                padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 40,
+                  horizontal: 20,
+                ),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -376,9 +383,10 @@ class _HomeView extends StatelessWidget {
               );
             } else {
               return Column(
-                children: groupController.groups.map((group) {
+                children: groupController.groups.take(2).map((group) {
                   return GestureDetector(
-                    onTap: () => Get.to(() => ActiveGroupDetailsScreen(group: group)),
+                    onTap: () =>
+                        Get.to(() => ActiveGroupDetailsScreen(group: group)),
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 16),
                       padding: const EdgeInsets.all(20),
@@ -408,7 +416,10 @@ class _HomeView extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFDCFCE7),
                                   borderRadius: BorderRadius.circular(20),
@@ -437,22 +448,36 @@ class _HomeView extends StatelessWidget {
                             children: [
                               Row(
                                 children: [
-                                  const Icon(Icons.groups_outlined, size: 16, color: Color(0xFF64748B)),
+                                  const Icon(
+                                    Icons.groups_outlined,
+                                    size: 16,
+                                    color: Color(0xFF64748B),
+                                  ),
                                   const SizedBox(width: 6),
                                   Text(
                                     '${group.membersCount}/${group.totalMembers} members',
-                                    style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF64748B),
+                                    ),
                                   ),
                                 ],
                               ),
                               const SizedBox(width: 20),
                               Row(
                                 children: [
-                                  const Icon(Icons.calendar_today_outlined, size: 16, color: Color(0xFF64748B)),
+                                  const Icon(
+                                    Icons.calendar_today_outlined,
+                                    size: 16,
+                                    color: Color(0xFF64748B),
+                                  ),
                                   const SizedBox(width: 6),
                                   Text(
                                     'Position ${group.position}',
-                                    style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF64748B),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -485,7 +510,9 @@ class _HomeView extends StatelessWidget {
                             child: LinearProgressIndicator(
                               value: group.progress,
                               backgroundColor: const Color(0xFFE2E8F0),
-                              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1A227F)),
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                Color(0xFF1A227F),
+                              ),
                               minHeight: 6,
                             ),
                           ),
