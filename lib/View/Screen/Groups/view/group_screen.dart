@@ -236,7 +236,7 @@ class GroupScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'My Groups',
+            'my_groups.',
             style: TextStyle(
               color: Colors.white,
               fontSize: 32.sp,
