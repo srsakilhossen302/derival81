@@ -19,7 +19,10 @@ class PaymentMethodScreen extends StatelessWidget {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 16.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -30,7 +33,10 @@ class PaymentMethodScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Color(0xFF0F172A)),
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Color(0xFF0F172A),
+                            ),
                             onPressed: () => Get.back(),
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
@@ -81,24 +87,27 @@ class PaymentMethodScreen extends StatelessWidget {
                     const SizedBox(height: 32),
 
                     // Success Cards Section (Visible only when added)
-                    Obx(() => Column(
-                          children: [
-                            if (controller.isBankAdded.value)
-                              _buildSuccessCard(
-                                icon: AppIcons.bankIcons,
-                                title: 'Bank Account',
-                                subtitle: '****${controller.bankLast4.value}',
-                              ),
-                            if (controller.isCardAdded.value)
-                              _buildSuccessCard(
-                                icon: AppIcons.debitCreditCardIcon,
-                                title: 'Credit Card',
-                                subtitle: '****${controller.cardLast4.value}',
-                              ),
-                            if (controller.isBankAdded.value || controller.isCardAdded.value)
-                              const SizedBox(height: 8),
-                          ],
-                        )),
+                    Obx(
+                      () => Column(
+                        children: [
+                          if (controller.isBankAdded.value)
+                            _buildSuccessCard(
+                              icon: AppIcons.bankIcons,
+                              title: 'Bank Account',
+                              subtitle: '****${controller.bankLast4.value}',
+                            ),
+                          if (controller.isCardAdded.value)
+                            _buildSuccessCard(
+                              icon: AppIcons.debitCreditCardIcon,
+                              title: 'Credit Card',
+                              subtitle: '****${controller.cardLast4.value}',
+                            ),
+                          if (controller.isBankAdded.value ||
+                              controller.isCardAdded.value)
+                            const SizedBox(height: 8),
+                        ],
+                      ),
+                    ),
 
                     // Reactive Body (Form or Initial Options)
                     Obx(() {
@@ -163,33 +172,46 @@ class PaymentMethodScreen extends StatelessWidget {
 
             // Bottom Actions (Conditional)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 16.0,
+              ),
               child: Column(
                 children: [
-                  Obx(() => (controller.isBankAdded.value || controller.isCardAdded.value)
-                      ? Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () => controller.continueToDashboard(),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF1A227F),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                  Obx(
+                    () =>
+                        (controller.isBankAdded.value ||
+                            controller.isCardAdded.value)
+                        ? Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () =>
+                                    controller.continueToDashboard(),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF1A227F),
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Continue to Dashboard',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                              child: const Text(
-                                'Continue to Dashboard',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                              ),
                             ),
-                          ),
-                        )
-                      : const SizedBox.shrink()),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -205,7 +227,10 @@ class PaymentMethodScreen extends StatelessWidget {
                       ),
                       child: const Text(
                         'Skip for now',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -229,20 +254,24 @@ class PaymentMethodScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF0FDF4), // Light green bg
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF22C55E), width: 1), // Green border
+        border: Border.all(
+          color: const Color(0xFF22C55E),
+          width: 1,
+        ), // Green border
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
+            decoration: const BoxDecoration(shape: BoxShape.circle),
             child: SvgPicture.asset(
               icon,
               height: 20,
               width: 20,
-              colorFilter: const ColorFilter.mode(Color(0xFF22C55E), BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                Color(0xFF22C55E),
+                BlendMode.srcIn,
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -268,11 +297,7 @@ class PaymentMethodScreen extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(
-            Icons.check_circle,
-            color: Color(0xFF22C55E),
-            size: 24,
-          ),
+          const Icon(Icons.check_circle, color: Color(0xFF22C55E), size: 24),
         ],
       ),
     );
@@ -298,7 +323,10 @@ class PaymentMethodScreen extends StatelessWidget {
               icon,
               height: 24,
               width: 24,
-              colorFilter: const ColorFilter.mode(Color(0xFF94A3B8), BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                Color(0xFF94A3B8),
+                BlendMode.srcIn,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -311,11 +339,7 @@ class PaymentMethodScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const Icon(
-              Icons.add,
-              color: Color(0xFF94A3B8),
-              size: 20,
-            ),
+            const Icon(Icons.add, color: Color(0xFF94A3B8), size: 20),
           ],
         ),
       ),

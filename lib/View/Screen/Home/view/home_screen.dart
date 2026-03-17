@@ -11,6 +11,8 @@ import '../../Groups/view/create_group_screen.dart';
 import '../../Groups/view/active_group_details_screen.dart';
 import '../../Groups/view/join_group_screen.dart';
 import '../../Groups/view/all_groups_screen.dart';
+import '../../Payment/view/payment_screen.dart';
+import '../../Profile/view/profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -21,19 +23,9 @@ class HomeScreen extends StatelessWidget {
   final List<Widget> _pages = [
     const _HomeView(),
     const GroupScreen(),
-    const Center(
-      child: Text(
-        'Payment Page',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
+    PaymentScreen(),
     const NotificationScreen(),
-    const Center(
-      child: Text(
-        'Profile Page',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
+    const ProfileScreen(),
   ];
 
   @override

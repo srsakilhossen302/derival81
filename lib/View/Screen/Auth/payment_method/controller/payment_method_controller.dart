@@ -51,9 +51,12 @@ class PaymentMethodController extends GetxController {
   }
 
   void submitBankLink() {
-    if (routingController.text.isNotEmpty && accountController.text.length >= 4) {
+    if (routingController.text.isNotEmpty &&
+        accountController.text.length >= 4) {
       isBankAdded.value = true;
-      bankLast4.value = accountController.text.substring(accountController.text.length - 4);
+      bankLast4.value = accountController.text.substring(
+        accountController.text.length - 4,
+      );
       cancelLinking();
     }
   }
@@ -61,7 +64,9 @@ class PaymentMethodController extends GetxController {
   void submitCardLink() {
     if (cardNumberController.text.length >= 4) {
       isCardAdded.value = true;
-      cardLast4.value = cardNumberController.text.substring(cardNumberController.text.length - 4);
+      cardLast4.value = cardNumberController.text.substring(
+        cardNumberController.text.length - 4,
+      );
       cancelLinking();
     }
   }
