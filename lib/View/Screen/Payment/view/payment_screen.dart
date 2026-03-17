@@ -5,6 +5,8 @@ import '../../../../Utils/AppIcons/app_icons.dart';
 import '../controller/payment_controller.dart';
 import '../model/payment_method_model.dart';
 
+import '../../PaymentHistory/view/payment_history_screen.dart';
+
 class PaymentScreen extends StatelessWidget {
   PaymentScreen({Key? key}) : super(key: key);
 
@@ -96,7 +98,7 @@ class PaymentScreen extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  // TODO: Navigate to payment history
+                  Get.to(() => PaymentHistoryScreen());
                 },
                 child: SvgPicture.asset(
                   AppIcons.paymentHistoryIcon,
