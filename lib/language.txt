@@ -1,0 +1,198 @@
+🚀 Full App Localization & Language Management Specification
+🌍 Supported Languages
+
+The application must support the following languages:
+
+English (default fallback)
+
+Spanish
+
+French
+
+Haitian Creole
+
+Each language should display its native name:
+
+English
+
+Español
+
+Français
+
+Kreyòl Ayisyen
+
+🚀 1. App Launch & Initialization Flow
+Step 1: Splash Screen
+
+Display app logo and branding (2–3 seconds)
+
+During this time:
+
+Load saved language from SharedPreferences
+
+Step 2: Language Check Logic
+
+If language exists in SharedPreferences:
+
+Apply the saved language
+
+Navigate to Login / Home Screen
+
+If no language is saved (first-time user):
+
+Navigate to Language Selection Screen
+
+🌐 2. First-Time Language Selection Screen
+UI Requirements:
+
+Title: “Select Your Language”
+
+List of languages with native names
+
+Optional: flag icons
+
+Clean, minimal UI
+
+Behavior:
+
+User selects a language
+
+Immediately:
+
+Save selected language to SharedPreferences
+
+Apply selected language globally
+
+Redirect to:
+
+Sign Up / Sign In Flow
+
+🔐 3. Authentication Flow (Login / Signup)
+
+All UI text must appear in the selected language
+
+No language re-selection required
+
+Continue normal authentication flow
+
+⚙️ 4. In-App Language Change (Settings)
+Path:
+
+Settings → Language
+
+UI:
+
+Same language list
+
+Highlight current selected language
+
+Behavior:
+
+On language change:
+
+Update SharedPreferences
+
+Apply language instantly (no app restart)
+
+Refresh UI dynamically across all screens
+
+💾 5. Language Persistence (SharedPreferences)
+Storage Key:
+key: "app_language"
+value: "en" | "es" | "fr" | "ht"
+Save Logic:
+
+Save language when:
+
+User selects language (first time)
+
+User changes language in settings
+
+Load Logic:
+
+On app start:
+
+Retrieve language from SharedPreferences
+
+Apply before rendering UI
+
+Behavior Summary:
+App Launch →
+Splash Screen →
+Check SharedPreferences →
+    If language exists →
+        Apply language →
+        Go to Login/Home
+    Else →
+        Show Language Selection →
+        User selects language →
+        Save language →
+        Apply language →
+        Continue to Auth Flow
+🧠 6. Localization System Architecture
+A. Translation Files
+
+Use structured translation files (JSON / ARB / Map)
+
+Example:
+
+{
+  "en": {
+    "welcome": "Welcome",
+    "login": "Login"
+  },
+  "es": {
+    "welcome": "Bienvenido",
+    "login": "Iniciar sesión"
+  }
+}
+B. Key-Based Translation
+
+All text must use keys
+
+Example:
+
+❌ Hardcoded: "Login"
+
+✅ Use: t("login")
+
+C. Runtime Language Switching
+
+Must support instant language switching
+
+No restart required
+
+D. Fallback System
+
+If translation missing:
+
+fallback to English
+
+🔄 7. Edge Cases Handling
+
+First launch → must show language selection
+
+Missing translation → fallback to English
+
+Corrupted/missing saved language → fallback to English
+
+Optional:
+
+Auto-detect device language (only suggestion, not mandatory)
+
+🎯 8. Developer Requirements
+
+No hardcoded UI text
+
+Centralized localization service
+
+Language must load before UI render
+
+Avoid UI flicker during language load
+
+Ensure scalability for adding more languages later
+
+✨ Final Summary (One-Line Logic)
+
+👉
+Select Language → Save in SharedPreferences → Auto-load on next app start → Allow change anytime from Settings → Apply instantly across app
