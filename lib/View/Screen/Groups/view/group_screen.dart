@@ -63,7 +63,7 @@ class GroupScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'My Groups',
+                                'my_groups'.tr,
                                 style: TextStyle(
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.bold,
@@ -236,7 +236,7 @@ class GroupScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'my_groups.',
+            'my_groups'.tr,
             style: TextStyle(
               color: Colors.white,
               fontSize: 32.sp,
