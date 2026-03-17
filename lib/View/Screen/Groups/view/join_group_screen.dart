@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../model/group_model.dart';
 import 'active_group_details_screen.dart';
-import 'group_details_screen.dart';
 
 class JoinGroupScreen extends StatelessWidget {
   JoinGroupScreen({Key? key}) : super(key: key);
@@ -337,7 +336,7 @@ class JoinGroupScreen extends StatelessWidget {
                   nextDate: '4/1/2026',
                   progress: 0.7,
                 );
-                Get.to(() => GroupDetailsScreen(group: group,));
+                Get.to(() => ActiveGroupDetailsScreen(group: group));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF10B981),
