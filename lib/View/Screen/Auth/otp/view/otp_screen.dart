@@ -70,10 +70,10 @@ class OtpScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Title
-              const Text(
-                'OTP',
+              Text(
+                'otp_title'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF0F172A),
@@ -82,10 +82,10 @@ class OtpScreen extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Subtitle
-              const Text(
-                'Enter your OTP for reset password',
+              Text(
+                'otp_subtitle'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Color(0xFF4A5565),
                   fontWeight: FontWeight.w400,
@@ -120,9 +120,9 @@ class OtpScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Text(
-                    'Confirm OTP',
-                    style: TextStyle(
+                  child: Text(
+                    'confirm_otp'.tr,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -137,11 +137,11 @@ class OtpScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.arrow_back, size: 18, color: Color(0xFF4A5565)),
+                    const Icon(Icons.arrow_back, size: 18, color: Color(0xFF4A5565)),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Back to Email',
-                      style: TextStyle(
+                    Text(
+                      'back_email'.tr,
+                      style: const TextStyle(
                         color: Color(0xFF4A5565),
                         fontWeight: FontWeight.w600,
                         fontSize: 16,

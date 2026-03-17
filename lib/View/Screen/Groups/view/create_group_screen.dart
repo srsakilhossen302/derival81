@@ -29,8 +29,8 @@ class CreateGroupScreen extends StatelessWidget {
                 child: controller.currentStep.value == 1
                     ? _buildBasicInfoForm(controller)
                     : controller.currentStep.value == 2
-                        ? _buildContributionSettingsForm(controller)
-                        : _buildReviewDetailsForm(controller, groupController),
+                    ? _buildContributionSettingsForm(controller)
+                    : _buildReviewDetailsForm(controller, groupController),
               );
             }),
           ),
@@ -47,10 +47,7 @@ class CreateGroupScreen extends StatelessWidget {
         gradient: const RadialGradient(
           center: Alignment(0.5, -0.6),
           radius: 1.2,
-          colors: [
-            Color(0xFF6773FF),
-            Color(0xFF1A227F),
-          ],
+          colors: [Color(0xFF6773FF), Color(0xFF1A227F)],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(32.r),
@@ -65,7 +62,7 @@ class CreateGroupScreen extends StatelessWidget {
           ),
           SizedBox(width: 8.w),
           Text(
-            'Create Group',
+            'create_group'.tr,
             style: TextStyle(
               color: Colors.white,
               fontSize: 24.sp,
@@ -110,14 +107,18 @@ class CreateGroupScreen extends StatelessWidget {
         width: 32.w,
         height: 32.h,
         decoration: BoxDecoration(
-          color: isActive || isCompleted ? const Color(0xFF1A227F) : const Color(0xFFE2E8F0),
+          color: isActive || isCompleted
+              ? const Color(0xFF1A227F)
+              : const Color(0xFFE2E8F0),
           shape: BoxShape.circle,
         ),
         child: Center(
           child: Text(
             '$step',
             style: TextStyle(
-              color: isActive || isCompleted ? Colors.white : const Color(0xFF94A3B8),
+              color: isActive || isCompleted
+                  ? Colors.white
+                  : const Color(0xFF94A3B8),
               fontWeight: FontWeight.bold,
               fontSize: 14.sp,
             ),
@@ -148,7 +149,7 @@ class CreateGroupScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Basic Information',
+            'basic_info'.tr,
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
@@ -157,22 +158,22 @@ class CreateGroupScreen extends StatelessWidget {
           ),
           SizedBox(height: 24.h),
           _buildTextField(
-            label: 'Group Name',
-            hint: 'e.g., Family Savings Circle',
+            label: 'group_name'.tr,
+            hint: 'group_name_hint'.tr,
             icon: Icons.groups_outlined,
             controller: controller.groupNameController,
           ),
           SizedBox(height: 24.h),
           _buildTextField(
-            label: 'Description',
-            hint: 'Describe the purpose of this group...',
+            label: 'description'.tr,
+            hint: 'description_hint'.tr,
             icon: Icons.description_outlined,
             controller: controller.descriptionController,
             maxLines: 4,
           ),
           SizedBox(height: 32.h),
           _buildPrimaryButton(
-            text: 'Continue',
+            text: 'continue'.tr,
             onPressed: () => controller.goToNextStep(),
           ),
         ],
@@ -191,7 +192,7 @@ class CreateGroupScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Contribution Settings',
+            'contribution_settings'.tr,
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
@@ -224,10 +225,7 @@ class CreateGroupScreen extends StatelessWidget {
           SizedBox(height: 12.h),
           Text(
             'Each member will contribute \$0 monthly',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: const Color(0xFF94A3B8),
-            ),
+            style: TextStyle(fontSize: 14.sp, color: const Color(0xFF94A3B8)),
           ),
           SizedBox(height: 32.h),
           Row(
@@ -252,7 +250,10 @@ class CreateGroupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReviewDetailsForm(CreateGroupController controller, GroupController groupController) {
+  Widget _buildReviewDetailsForm(
+    CreateGroupController controller,
+    GroupController groupController,
+  ) {
     return Container(
       padding: EdgeInsets.all(24.r),
       decoration: BoxDecoration(
@@ -272,10 +273,22 @@ class CreateGroupScreen extends StatelessWidget {
           ),
           SizedBox(height: 24.h),
           _buildReviewItem('Group Name', controller.groupNameController.text),
-          _buildReviewItem('Description', controller.descriptionController.text),
-          _buildReviewItem('Contribution A', '\$${controller.amountController.text} / monthly'),
-          _buildReviewItem('Contribution F', '\$${(double.tryParse(controller.amountController.text) ?? 0) * (int.tryParse(controller.groupSizeController.text) ?? 1)}'),
-          _buildReviewItem('Group Size', '${controller.groupSizeController.text} Members'),
+          _buildReviewItem(
+            'Description',
+            controller.descriptionController.text,
+          ),
+          _buildReviewItem(
+            'Contribution A',
+            '\$${controller.amountController.text} / monthly',
+          ),
+          _buildReviewItem(
+            'Contribution F',
+            '\$${(double.tryParse(controller.amountController.text) ?? 0) * (int.tryParse(controller.groupSizeController.text) ?? 1)}',
+          ),
+          _buildReviewItem(
+            'Group Size',
+            '${controller.groupSizeController.text} Members',
+          ),
           SizedBox(height: 24.h),
           Container(
             padding: EdgeInsets.all(16.r),
@@ -286,7 +299,11 @@ class CreateGroupScreen extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.lightbulb_outline, color: const Color(0xFF6366F1), size: 20.sp),
+                Icon(
+                  Icons.lightbulb_outline,
+                  color: const Color(0xFF6366F1),
+                  size: 20.sp,
+                ),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Text(
@@ -321,8 +338,12 @@ class CreateGroupScreen extends StatelessWidget {
                         description: controller.descriptionController.text,
                         status: 'Active',
                         membersCount: 1, // Start with 1 member
-                        totalMembers: int.tryParse(controller.groupSizeController.text) ?? 10,
-                        amount: double.tryParse(controller.amountController.text) ?? 500.0,
+                        totalMembers:
+                            int.tryParse(controller.groupSizeController.text) ??
+                            10,
+                        amount:
+                            double.tryParse(controller.amountController.text) ??
+                            500.0,
                         position: 1, // Initial position
                         nextDate: "5/1/2026", // Mock date
                         progress: 0.1, // Initial progress
@@ -406,9 +427,15 @@ class CreateGroupScreen extends StatelessWidget {
             decoration: InputDecoration(
               prefixIcon: Icon(icon, color: const Color(0xFF94A3B8)),
               hintText: hint,
-              hintStyle: TextStyle(color: const Color(0xFF94A3B8), fontSize: 14.sp),
+              hintStyle: TextStyle(
+                color: const Color(0xFF94A3B8),
+                fontSize: 14.sp,
+              ),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+                vertical: 12.h,
+              ),
             ),
           ),
         ),
@@ -416,7 +443,10 @@ class CreateGroupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPrimaryButton({required String text, required VoidCallback onPressed}) {
+  Widget _buildPrimaryButton({
+    required String text,
+    required VoidCallback onPressed,
+  }) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -438,7 +468,10 @@ class CreateGroupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSecondaryButton({required String text, required VoidCallback onPressed}) {
+  Widget _buildSecondaryButton({
+    required String text,
+    required VoidCallback onPressed,
+  }) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(

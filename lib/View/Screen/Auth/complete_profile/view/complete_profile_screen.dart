@@ -54,10 +54,10 @@ class CompleteProfileScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Title
-              const Text(
-                'Complete your profile',
+              Text(
+                'complete_profile_title'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF0F172A),
@@ -66,10 +66,10 @@ class CompleteProfileScreen extends StatelessWidget {
               const SizedBox(height: 8),
 
               // Subtitle
-              const Text(
-                'Help us know you better',
+              Text(
+                'complete_profile_subtitle'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Color(0xFF4A5565),
                   fontWeight: FontWeight.w400,
@@ -125,9 +125,9 @@ class CompleteProfileScreen extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 12),
-                      const Text(
-                        'Upload profile picture',
-                        style: TextStyle(
+                      Text(
+                        'upload_picture'.tr,
+                        style: const TextStyle(
                           fontSize: 12,
                           color: Color(0xFF94A3B8), // Muted grey color
                           fontWeight: FontWeight.w500,
@@ -141,7 +141,7 @@ class CompleteProfileScreen extends StatelessWidget {
 
               // Form fields
               CustomTextField(
-                label: 'Date of Birth',
+                label: 'dob'.tr,
                 hintText: '',
                 controller: controller.dobController,
                 readOnly: true,
@@ -149,8 +149,8 @@ class CompleteProfileScreen extends StatelessWidget {
                 prefixIcon: const Icon(Icons.calendar_today_outlined, size: 20, color: Color(0xFF94A3B8)),
               ),
               CustomTextField(
-                label: 'Occupation',
-                hintText: 'Enter your occupation',
+                label: 'occupation'.tr,
+                hintText: 'occupation_hint'.tr,
                 controller: controller.occupationController,
                 prefixIcon: SvgPicture.asset(
                   AppIcons.profileIcons, // Fallback using profile icon
@@ -160,8 +160,8 @@ class CompleteProfileScreen extends StatelessWidget {
                 ),
               ),
               CustomTextField(
-                label: 'Street address',
-                hintText: 'Enter your address',
+                label: 'address'.tr,
+                hintText: 'address_hint'.tr,
                 controller: controller.addressController,
                 prefixIcon: SvgPicture.asset(
                   AppIcons.locationIcons, // Location icon from AppIcons
@@ -171,18 +171,18 @@ class CompleteProfileScreen extends StatelessWidget {
                 ),
               ),
               CustomTextField(
-                label: 'City',
-                hintText: 'City',
+                label: 'city'.tr,
+                hintText: 'city'.tr,
                 controller: controller.cityController,
               ),
               CustomTextField(
-                label: 'State',
-                hintText: 'State',
+                label: 'state'.tr,
+                hintText: 'state'.tr,
                 controller: controller.stateController,
               ),
               CustomTextField(
-                label: 'ZIP Code',
-                hintText: 'ZIP',
+                label: 'zip_code'.tr,
+                hintText: 'zip_code'.tr,
                 controller: controller.zipController,
               ),
 
@@ -209,9 +209,9 @@ class CompleteProfileScreen extends StatelessWidget {
                               strokeWidth: 2,
                             ),
                           )
-                        : const Text(
-                            'Continue',
-                            style: TextStyle(
+                        : Text(
+                            'continue'.tr,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),

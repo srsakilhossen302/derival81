@@ -100,9 +100,9 @@ class _HomeView extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Welcome back,',
-                    style: TextStyle(color: Colors.white70, fontSize: 16),
+                  Text(
+                    'welcome_back'.tr,
+                    style: const TextStyle(color: Colors.white70, fontSize: 16),
                   ),
                   Obx(
                     () => Text(
@@ -162,14 +162,14 @@ class _HomeView extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildHeaderStatCard(
-                  label: 'Total Saved',
+                  label: 'total_saved'.tr,
                   value: '\$${controller.totalSaved.value}',
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: _buildHeaderStatCard(
-                  label: 'Active Groups',
+                  label: 'active_groups'.tr,
                   value: '${controller.activeGroups.value}',
                 ),
               ),
@@ -214,9 +214,9 @@ class _HomeView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Quick Actions',
-            style: TextStyle(
+          Text(
+            'quick_actions'.tr,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Color(0xFF0F172A),
@@ -229,7 +229,7 @@ class _HomeView extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () => Get.to(() => const CreateGroupScreen()),
                   child: _buildActionCard(
-                    label: 'Create Group',
+                    label: 'create_group'.tr,
                     iconPath: AppIcons.plasIcons,
                     color: const Color(0xFF1A227F),
                     bgColor: const Color(0xFFEEF2FF),
@@ -241,7 +241,7 @@ class _HomeView extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () => Get.to(() => JoinGroupScreen()),
                   child: _buildActionCard(
-                    label: 'Join Group',
+                    label: 'join_group'.tr,
                     iconPath: AppIcons.groupsIcons,
                     color: const Color(0xFF00A63E),
                     bgColor: const Color(0xFFF0FDF4),
@@ -304,9 +304,9 @@ class _HomeView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'My Groups',
-                style: TextStyle(
+              Text(
+                'my_groups'.tr,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF0F172A),
@@ -314,9 +314,9 @@ class _HomeView extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () => Get.to(() => const AllGroupsScreen()),
-                child: const Text(
-                  'See All →',
-                  style: TextStyle(
+                child: Text(
+                  'see_all'.tr + ' →',
+                  style: const TextStyle(
                     color: Color(0xFF1A227F),
                     fontWeight: FontWeight.w600,
                   ),
@@ -349,10 +349,13 @@ class _HomeView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      "You haven't joined any groups yet",
+                    Text(
+                      'no_groups_joined'.tr,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Color(0xFF64748B), fontSize: 14),
+                      style: const TextStyle(
+                        color: Color(0xFF64748B),
+                        fontSize: 14,
+                      ),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
@@ -368,7 +371,7 @@ class _HomeView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text('Create Your First Group'),
+                      child: Text('create_first_group'.tr),
                     ),
                   ],
                 ),
@@ -416,9 +419,9 @@ class _HomeView extends StatelessWidget {
                                   color: const Color(0xFFDCFCE7),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-                                child: const Text(
-                                  'Active',
-                                  style: TextStyle(
+                                child: Text(
+                                  'active'.tr,
+                                  style: const TextStyle(
                                     color: Color(0xFF166534),
                                     fontSize: 10,
                                     fontWeight: FontWeight.w600,
@@ -447,7 +450,8 @@ class _HomeView extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
-                                    '${group.membersCount}/${group.totalMembers} members',
+                                    '${group.membersCount}/${group.totalMembers} ' +
+                                        'members'.tr,
                                     style: const TextStyle(
                                       fontSize: 12,
                                       color: Color(0xFF64748B),
@@ -465,7 +469,7 @@ class _HomeView extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
-                                    'Position ${group.position}',
+                                    'position'.tr + ' ${group.position}',
                                     style: const TextStyle(
                                       fontSize: 12,
                                       color: Color(0xFF64748B),
@@ -480,7 +484,7 @@ class _HomeView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '\$${group.amount.toInt()}/monthly',
+                                '\$${group.amount.toInt()}/' + 'monthly'.tr,
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,

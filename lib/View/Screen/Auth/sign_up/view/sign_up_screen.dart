@@ -47,10 +47,10 @@ class SignUpScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               // Title
-              const Text(
-                'Sign Up For Savings',
+              Text(
+                'signup_title'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF0F172A),
@@ -58,10 +58,10 @@ class SignUpScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               // Subtitle
-              const Text(
-                'Start saving with your friends and family.',
+              Text(
+                'signup_subtitle'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Color(0xFF4A5565),
                   fontWeight: FontWeight.w400,
@@ -71,28 +71,28 @@ class SignUpScreen extends StatelessWidget {
 
               // Form fields
               CustomTextField(
-                label: 'Full Name',
+                label: 'full_name'.tr,
                 hintText: 'John Doe',
                 controller: controller.fullNameController,
               ),
               CustomTextField(
-                label: 'Email Address',
+                label: 'email_address'.tr,
                 hintText: 'email@example.com',
                 controller: controller.emailController,
               ),
               CustomTextField(
-                label: 'Phone Number',
+                label: 'phone_number'.tr,
                 hintText: '+1 (555) 000-0000',
                 controller: controller.phoneController,
               ),
               CustomTextField(
-                label: 'Password',
+                label: 'password'.tr,
                 hintText: '76543',
                 isPassword: true,
                 controller: controller.passwordController,
               ),
               CustomTextField(
-                label: 'Confirm New Password',
+                label: 'confirm_password'.tr,
                 hintText: '76543',
                 isPassword: true,
                 controller: controller.confirmPasswordController,
@@ -122,25 +122,25 @@ class SignUpScreen extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: RichText(
-                      text: const TextSpan(
-                        text: 'I agree to the ',
-                        style: TextStyle(
+                      text: TextSpan(
+                        text: 'agree_terms'.tr,
+                        style: const TextStyle(
                           color: Color(0xFF4A5565),
                           fontSize: 13,
                           height: 1.4,
                         ),
                         children: [
                           TextSpan(
-                            text: 'Terms and Conditions\n',
-                            style: TextStyle(
+                            text: 'terms_conditions'.tr,
+                            style: const TextStyle(
                               color: Color(0xFF155DFC),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          TextSpan(text: 'and '),
+                          TextSpan(text: 'and'.tr),
                           TextSpan(
-                            text: 'Privacy Policy',
-                            style: TextStyle(
+                            text: 'privacy_policy'.tr,
+                            style: const TextStyle(
                               color: Color(0xFF155DFC),
                               fontWeight: FontWeight.w600,
                             ),
@@ -179,9 +179,9 @@ class SignUpScreen extends StatelessWidget {
                             strokeWidth: 2,
                           ),
                         )
-                      : const Text(
-                          'Sign Up',
-                          style: TextStyle(
+                      : Text(
+                          'signup_link'.tr,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -195,13 +195,13 @@ class SignUpScreen extends StatelessWidget {
                 onTap: () => Get.to(() => LoginScreen()),
                 child: Center(
                   child: RichText(
-                    text: const TextSpan(
-                      text: 'Already have an account? ',
-                      style: TextStyle(color: Color(0xFF4A5565), fontSize: 14),
+                    text: TextSpan(
+                      text: 'already_account'.tr,
+                      style: const TextStyle(color: Color(0xFF4A5565), fontSize: 14),
                       children: [
                         TextSpan(
-                          text: 'Login',
-                          style: TextStyle(
+                          text: 'login_button'.tr,
+                          style: const TextStyle(
                             color: Color(0xFF1A227F),
                             fontWeight: FontWeight.w700,
                           ),

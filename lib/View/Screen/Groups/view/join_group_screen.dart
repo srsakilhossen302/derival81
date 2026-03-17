@@ -59,7 +59,7 @@ class JoinGroupScreen extends StatelessWidget {
           ),
           SizedBox(width: 8.w),
           Text(
-            'Join Group',
+            'join_group'.tr,
             style: TextStyle(
               color: Colors.white,
               fontSize: 24.sp,
@@ -90,7 +90,7 @@ class JoinGroupScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Enter Invite Code',
+            'enter_invite_code'.tr,
             style: TextStyle(
               color: const Color(0xFF0F172A),
               fontSize: 20.sp,
@@ -99,7 +99,7 @@ class JoinGroupScreen extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           Text(
-            'Ask the group admin for the invite code to join their savings group',
+            'invite_code_subtitle'.tr,
             style: TextStyle(
               color: const Color(0xFF64748B),
               fontSize: 14.sp,
@@ -134,7 +134,7 @@ class JoinGroupScreen extends StatelessWidget {
                           controller: searchController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'ENTER CODE',
+                            hintText: 'enter_code_hint'.tr,
                             hintStyle: TextStyle(
                               color: const Color(0xFF94A3B8),
                               fontSize: 14.sp,
@@ -170,7 +170,7 @@ class JoinGroupScreen extends StatelessWidget {
                         Icon(Icons.search, color: Colors.white, size: 20.sp),
                         SizedBox(width: 8.w),
                         Text(
-                          'Search',
+                          'search'.tr,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16.sp,
@@ -195,7 +195,7 @@ class JoinGroupScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Try these demo codes:',
+                  'demo_codes'.tr,
                   style: TextStyle(
                     color: const Color(0xFF64748B),
                     fontSize: 12.sp,

@@ -27,12 +27,12 @@ class PaymentScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildSectionTitle(
-                    title: 'Payment Methods',
+                    title: 'payment_methods'.tr,
                     trailing: GestureDetector(
                       onTap: () => controller.addNewPaymentMethod(),
-                      child: const Text(
-                        '+ Add New',
-                        style: TextStyle(
+                      child: Text(
+                        'add_new'.tr,
+                        style: const TextStyle(
                           color: Color(0xFF1A227F),
                           fontWeight: FontWeight.w600,
                         ),
@@ -55,7 +55,7 @@ class PaymentScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  _buildSectionTitle(title: 'Recent Payments'),
+                  _buildSectionTitle(title: 'recent_payments'.tr),
                   const SizedBox(height: 12),
                   _buildInfoCard(),
                   const SizedBox(height: 100),
@@ -88,9 +88,9 @@ class PaymentScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Payments',
-                style: TextStyle(
+              Text(
+                'payments'.tr,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -118,7 +118,7 @@ class PaymentScreen extends StatelessWidget {
               Expanded(
                 child: Obx(
                   () => _buildHeaderStatCard(
-                    label: 'This Month',
+                    label: 'this_month'.tr,
                     value: '\$${controller.thisMonthSpent.value}',
                   ),
                 ),
@@ -127,7 +127,7 @@ class PaymentScreen extends StatelessWidget {
               Expanded(
                 child: Obx(
                   () => _buildHeaderStatCard(
-                    label: 'Pending',
+                    label: 'pending'.tr,
                     value: '${controller.pendingPayments.value}',
                   ),
                 ),
@@ -267,19 +267,19 @@ class PaymentScreen extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
-            'Automatic Payments Enabled',
-            style: TextStyle(
+            'auto_payments_enabled'.tr,
+            style: const TextStyle(
               color: Color(0xFF0F172A),
               fontWeight: FontWeight.w700,
               fontSize: 16,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
-            "Your contributions are automatically deducted based on your group's schedule. You'll receive a notification before each payment.",
-            style: TextStyle(
+            'auto_payments_desc'.tr,
+            style: const TextStyle(
               color: Color(0xFF64748B),
               fontSize: 13,
               height: 1.45,

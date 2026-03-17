@@ -42,10 +42,10 @@ class SetPasswordScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Title
-              const Text(
-                'Set Password for Savings',
+              Text(
+                'set_password_title'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF0F172A),
@@ -54,10 +54,10 @@ class SetPasswordScreen extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Subtitle
-              const Text(
-                'Start saving with your friends and family.',
+              Text(
+                'signup_subtitle'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   color: Color(0xFF4A5565),
                   fontWeight: FontWeight.w400,
@@ -67,14 +67,14 @@ class SetPasswordScreen extends StatelessWidget {
 
               // Input Fields
               CustomTextField(
-                label: 'New Password',
+                label: 'new_password'.tr,
                 hintText: '76543',
                 controller: controller.newPasswordController,
                 isPassword: true,
               ),
               const SizedBox(height: 8),
               CustomTextField(
-                label: 'Confirm New Password',
+                label: 'confirm_password'.tr,
                 hintText: '76543',
                 controller: controller.confirmPasswordController,
                 isPassword: true,
@@ -95,9 +95,9 @@ class SetPasswordScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(
+                  child: Text(
+                    'save'.tr,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),

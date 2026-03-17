@@ -5,7 +5,9 @@ import '../controller/payment_history_controller.dart';
 class PaymentHistoryScreen extends StatelessWidget {
   PaymentHistoryScreen({Key? key}) : super(key: key);
 
-  final PaymentHistoryController controller = Get.put(PaymentHistoryController());
+  final PaymentHistoryController controller = Get.put(
+    PaymentHistoryController(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -52,16 +54,12 @@ class PaymentHistoryScreen extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () => Get.back(),
-            child: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-              size: 24,
-            ),
+            child: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
           ),
           const SizedBox(width: 16),
-          const Text(
-            'Payment History',
-            style: TextStyle(
+          Text(
+            'payment_history'.tr,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -83,9 +81,14 @@ class PaymentHistoryScreen extends StatelessWidget {
               onTap: () => controller.setFilter(filter),
               child: Container(
                 margin: const EdgeInsets.only(right: 12),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF2563EB) : const Color(0xFFE2E8F0),
+                  color: isSelected
+                      ? const Color(0xFF2563EB)
+                      : const Color(0xFFE2E8F0),
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: Text(
@@ -123,9 +126,9 @@ class PaymentHistoryScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Total Contributed',
-            style: TextStyle(
+          Text(
+            'total_contributed'.tr,
+            style: const TextStyle(
               color: Color(0xFF64748B),
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -145,11 +148,8 @@ class PaymentHistoryScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Obx(
             () => Text(
-              '${controller.paymentsCount} payments',
-              style: const TextStyle(
-                color: Color(0xFF64748B),
-                fontSize: 14,
-              ),
+              '${controller.paymentsCount} ' + 'payments'.tr,
+              style: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
             ),
           ),
         ],
@@ -175,10 +175,10 @@ class PaymentHistoryScreen extends StatelessWidget {
             ],
             border: Border.all(color: const Color(0xFFF1F5F9)),
           ),
-          child: const Center(
+          child: Center(
             child: Text(
-              'No payments found',
-              style: TextStyle(
+              'no_payments_found'.tr,
+              style: const TextStyle(
                 color: Color(0xFF64748B),
                 fontSize: 16,
                 fontWeight: FontWeight.w500,

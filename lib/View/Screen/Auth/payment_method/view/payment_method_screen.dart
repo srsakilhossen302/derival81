@@ -62,10 +62,10 @@ class PaymentMethodScreen extends StatelessWidget {
                     const SizedBox(height: 32),
 
                     // Title
-                    const Text(
-                      'Link your payment method',
+                    Text(
+                      'link_payment_title'.tr,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
                         color: Color(0xFF0F172A),
@@ -74,10 +74,10 @@ class PaymentMethodScreen extends StatelessWidget {
                     const SizedBox(height: 12),
 
                     // Subtitle
-                    const Text(
-                      'Add a bank account or card for\nautomatic contributions',
+                    Text(
+                      'link_payment_subtitle'.tr,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Color(0xFF4A5565),
                         fontWeight: FontWeight.w400,
@@ -93,13 +93,13 @@ class PaymentMethodScreen extends StatelessWidget {
                           if (controller.isBankAdded.value)
                             _buildSuccessCard(
                               icon: AppIcons.bankIcons,
-                              title: 'Bank Account',
+                              title: 'bank_account'.tr,
                               subtitle: '****${controller.bankLast4.value}',
                             ),
                           if (controller.isCardAdded.value)
                             _buildSuccessCard(
                               icon: AppIcons.debitCreditCardIcon,
-                              title: 'Credit Card',
+                              title: 'credit_card'.tr,
                               subtitle: '****${controller.cardLast4.value}',
                             ),
                           if (controller.isBankAdded.value ||
@@ -120,13 +120,13 @@ class PaymentMethodScreen extends StatelessWidget {
                           children: [
                             _buildPaymentOption(
                               icon: AppIcons.bankIcons,
-                              title: 'Link Bank Account',
+                              title: 'link_bank'.tr,
                               onTap: () => controller.linkBankAccount(),
                             ),
                             const SizedBox(height: 16),
                             _buildPaymentOption(
                               icon: AppIcons.debitCreditCardIcon,
-                              title: 'Add Debit/Credit Card',
+                              title: 'add_card'.tr,
                               onTap: () => controller.addCreditCard(),
                             ),
                           ],
@@ -153,7 +153,7 @@ class PaymentMethodScreen extends StatelessWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'Your banking information is encrypted and secure. We use bank-level security to protect your data.',
+                              'security_note'.tr,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: const Color(0xFF4A5565).withOpacity(0.8),

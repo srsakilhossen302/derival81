@@ -1,8 +1,11 @@
+import 'package:derival81/Utils/AppIcons/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/profile_controller.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../Utils/AppIcons/app_icons.dart';
+import '../../Language/view/language_selection_screen.dart';
+import '../../Language/controller/language_controller.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -73,7 +76,8 @@ class ProfileScreen extends StatelessWidget {
             child: const CircleAvatar(
               radius: 46,
               backgroundImage: NetworkImage(
-                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80'),
+                'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80',
+              ),
               backgroundColor: Colors.grey,
             ),
           ),
@@ -92,10 +96,7 @@ class ProfileScreen extends StatelessWidget {
           Obx(
             () => Text(
               controller.userEmail.value,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
+              style: const TextStyle(color: Colors.white70, fontSize: 16),
             ),
           ),
         ],
@@ -120,50 +121,47 @@ class ProfileScreen extends StatelessWidget {
         children: [
           _buildInfoTile(
             iconPath: AppIcons.messgIcons,
-            title: 'Email',
-            subtitle: Obx(() => Text(
-                  controller.userEmail.value,
-                  style: const TextStyle(
-                    color: Color(0xFF0F172A),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                )),
-            trailingIconPath: AppIcons.editIcons,
-            trailingColor: const Color(0xFF1A227F),
+            title: 'email'.tr,
+            subtitle: Obx(
+              () => Text(
+                controller.userEmail.value,
+                style: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
+              ),
+            ),
+            trailingIconPath: '', // No chevron for static info
+            trailingColor: Colors.transparent,
             onTap: () {},
           ),
           const Divider(height: 1, color: Color(0xFFF1F5F9)),
           _buildInfoTile(
             iconPath: AppIcons.phoneIcons,
-            title: 'Phone',
-            subtitle: Obx(() => Text(
-                  controller.userPhone.value,
-                  style: const TextStyle(
-                    color: Color(0xFF0F172A),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                )),
-            trailingIconPath: AppIcons.editIcons,
-            trailingColor: const Color(0xFF1A227F),
+            title: 'phone'.tr,
+            subtitle: Obx(
+              () => Text(
+                controller.userPhone.value,
+                style: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
+              ),
+            ),
+            trailingIconPath: '',
+            trailingColor: Colors.transparent,
             onTap: () {},
           ),
           const Divider(height: 1, color: Color(0xFFF1F5F9)),
           _buildInfoTile(
-            iconPath: AppIcons.paymentNavBar,
-            title: 'Payment Methods',
-            subtitle: Obx(() => Text(
-                  '${controller.linkedPaymentMethodsCount.value} linked',
-                  style: const TextStyle(
-                    color: Color(0xFF0F172A),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                )),
-            trailingIconPath: AppIcons.rtIcons, // We don't have a correct chevron, using rtIcons temporarily but typically we'll change it later if we need. Wait let me change the implementation
+            iconPath: AppIcons.debitCreditCardIcon,
+            title: 'payment_methods'.tr,
+            subtitle: Obx(
+              () => Text(
+                '${controller.linkedPaymentMethodsCount.value} ${'linked'.tr}',
+                style: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
+              ),
+            ),
+            trailingIconPath: AppIcons.dwIcons,
             trailingColor: const Color(0xFF94A3B8),
-            onTap: () {},
+            isSubtitleSmaller: true,
+            onTap: () {
+              // Navigate to Payment Methods screen
+            },
           ),
         ],
       ),
@@ -172,11 +170,9 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildSecuritySettingsCard(ProfileController controller) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
@@ -188,31 +184,59 @@ class ProfileScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Security & Settings',
-              style: TextStyle(
-                fontSize: 16,
+              'security_settings'.tr,
+              style: const TextStyle(
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF0F172A),
               ),
             ),
           ),
+          const Divider(height: 1, color: Color(0xFFF1F5F9)),
           _buildInfoTile(
             iconPath: AppIcons.twoFactorIcons,
-            title: 'Two-Factor Authentication',
-            subtitle: Obx(() => Text(
-                  controller.twoFactorEnabled.value ? 'Enabled' : 'Disabled',
-                  style: const TextStyle(
-                    color: Color(0xFF64748B),
-                    fontSize: 14,
-                  ),
-                )),
+            title: 'two_factor'.tr,
+            subtitle: Obx(
+              () => Text(
+                controller.twoFactorEnabled.value
+                    ? 'enabled'.tr
+                    : 'disabled'.tr,
+                style: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
+              ),
+            ),
             trailingIconPath: AppIcons.dwIcons, // Placeholder for chevron
             trailingColor: const Color(0xFF94A3B8),
             isSubtitleSmaller: true,
             onTap: () {},
+          ),
+          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+          _buildInfoTile(
+            iconPath: AppIcons
+                .appsIcons, // Using apps icon as placeholder for language
+            title: 'language'.tr,
+            subtitle: Obx(() {
+              final languageCode = Get.find<LanguageController>()
+                  .currentLocale
+                  .value
+                  .languageCode;
+              String languageName = 'English';
+              if (languageCode == 'es') languageName = 'Español';
+              if (languageCode == 'fr') languageName = 'Français';
+              if (languageCode == 'ht') languageName = 'Kreyòl Ayisyen';
+              return Text(
+                languageName,
+                style: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
+              );
+            }),
+            trailingIconPath: AppIcons.dwIcons,
+            trailingColor: const Color(0xFF94A3B8),
+            isSubtitleSmaller: true,
+            onTap: () {
+              Get.to(() => LanguageSelectionScreen(isFirstTime: false));
+            },
           ),
         ],
       ),
@@ -237,11 +261,11 @@ class ProfileScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Text(
-              'Support',
-              style: TextStyle(
+              'support'.tr,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF0F172A),
@@ -250,13 +274,13 @@ class ProfileScreen extends StatelessWidget {
           ),
           _buildSimpleTile(
             iconPath: AppIcons.helpIcons,
-            title: 'Help Center',
+            title: 'help_center'.tr,
             onTap: () {},
           ),
           const SizedBox(height: 8), // small space
           _buildSimpleTile(
             iconPath: AppIcons.termsIcons,
-            title: 'Terms & Privacy',
+            title: 'terms_privacy'.tr,
             onTap: () {},
           ),
         ],
@@ -275,17 +299,25 @@ class ProfileScreen extends StatelessWidget {
           color: const Color(0xFFFEF2F2),
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.logout, color: Color(0xFFEF4444), size: 20),
-            SizedBox(width: 8),
+            SvgPicture.asset(
+              AppIcons.logoutIcons,
+              height: 24,
+              width: 24,
+              colorFilter: const ColorFilter.mode(
+                Color(0xFFEF4444),
+                BlendMode.srcIn,
+              ),
+            ),
+            const SizedBox(width: 8),
             Text(
-              'Logout',
-              style: TextStyle(
+              'logout'.tr,
+              style: const TextStyle(
                 color: Color(0xFFEF4444),
+                fontWeight: FontWeight.w600,
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
               ),
             ),
           ],
@@ -309,7 +341,15 @@ class ProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Row(
           children: [
-            SvgPicture.asset(iconPath, colorFilter: const ColorFilter.mode(Color(0xFF64748B), BlendMode.srcIn), width: 24, height: 24),
+            SvgPicture.asset(
+              iconPath,
+              colorFilter: const ColorFilter.mode(
+                Color(0xFF64748B),
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
+            ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -332,7 +372,13 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SvgPicture.asset(trailingIconPath, colorFilter: ColorFilter.mode(trailingColor, BlendMode.srcIn), width: 20, height: 20),
+            if (trailingIconPath.isNotEmpty)
+              SvgPicture.asset(
+                trailingIconPath,
+                colorFilter: ColorFilter.mode(trailingColor, BlendMode.srcIn),
+                width: 20,
+                height: 20,
+              ),
           ],
         ),
       ),
@@ -350,7 +396,15 @@ class ProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         child: Row(
           children: [
-            SvgPicture.asset(iconPath, colorFilter: const ColorFilter.mode(Color(0xFF64748B), BlendMode.srcIn), width: 24, height: 24),
+            SvgPicture.asset(
+              iconPath,
+              colorFilter: const ColorFilter.mode(
+                Color(0xFF64748B),
+                BlendMode.srcIn,
+              ),
+              width: 24,
+              height: 24,
+            ),
             const SizedBox(width: 16),
             Expanded(
               child: Text(

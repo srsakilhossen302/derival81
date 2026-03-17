@@ -51,10 +51,10 @@ class ForgotPasswordScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Title
-              const Text(
-                'Reset Password',
+              Text(
+                'reset_password'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF0F172A),
@@ -63,10 +63,10 @@ class ForgotPasswordScreen extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Subtitle
-              const Text(
-                'Enter your email address for reset password',
+              Text(
+                'reset_subtitle'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Color(0xFF4A5565),
                   fontWeight: FontWeight.w400,
@@ -76,7 +76,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
               // Input Field
               CustomTextField(
-                label: 'Email adress',
+                label: 'email_address'.tr,
                 hintText: 'email@example.com',
                 controller: controller.emailController,
               ),
@@ -96,9 +96,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Text(
-                    'Send Reset Link',
-                    style: TextStyle(
+                  child: Text(
+                    'send_reset_link'.tr,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -113,11 +113,11 @@ class ForgotPasswordScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.arrow_back, size: 18, color: Color(0xFF4A5565)),
+                    const Icon(Icons.arrow_back, size: 18, color: Color(0xFF4A5565)),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Back to Login',
-                      style: TextStyle(
+                    Text(
+                      'back_login'.tr,
+                      style: const TextStyle(
                         color: Color(0xFF4A5565),
                         fontWeight: FontWeight.w600,
                         fontSize: 16,

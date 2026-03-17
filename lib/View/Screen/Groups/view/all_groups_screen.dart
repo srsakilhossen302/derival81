@@ -28,7 +28,8 @@ class AllGroupsScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final group = controller.groups[index];
                   return GestureDetector(
-                    onTap: () => Get.to(() => ActiveGroupDetailsScreen(group: group)),
+                    onTap: () =>
+                        Get.to(() => ActiveGroupDetailsScreen(group: group)),
                     child: _buildGroupCard(group),
                   );
                 },
@@ -67,7 +68,7 @@ class AllGroupsScreen extends StatelessWidget {
               ),
               SizedBox(width: 6.w),
               Text(
-                'My Groups',
+                'my_groups'.tr,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24.sp,
@@ -75,21 +76,27 @@ class AllGroupsScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Obx(() => Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20.r),
+              Obx(
+                () => Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 6.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    '${controller.groups.length} ' +
+                        'my_groups'.tr.split(' ').last,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w600,
                     ),
-                    child: Text(
-                      '${controller.groups.length} Groups',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  )),
+                  ),
+                ),
+              ),
             ],
           ),
           SizedBox(height: 16.h),
@@ -103,31 +110,35 @@ class AllGroupsScreen extends StatelessWidget {
   Widget _buildFilterRow(GroupController controller) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Obx(() => Row(
-            children: controller.filters.map((filter) {
-              final isSelected = controller.selectedFilter.value == filter;
-              return GestureDetector(
-                onTap: () => controller.setFilter(filter),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  margin: EdgeInsets.only(right: 10.w),
-                  padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-                  decoration: BoxDecoration(
-                    color: isSelected ? Colors.white : Colors.white.withOpacity(0.18),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Text(
-                    filter,
-                    style: TextStyle(
-                      color: isSelected ? const Color(0xFF1A227F) : Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13.sp,
-                    ),
+      child: Obx(
+        () => Row(
+          children: controller.filters.map((filter) {
+            final isSelected = controller.selectedFilter.value == filter;
+            return GestureDetector(
+              onTap: () => controller.setFilter(filter),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                margin: EdgeInsets.only(right: 10.w),
+                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? Colors.white
+                      : Colors.white.withOpacity(0.18),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Text(
+                  filter,
+                  style: TextStyle(
+                    color: isSelected ? const Color(0xFF1A227F) : Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13.sp,
                   ),
                 ),
-              );
-            }).toList(),
-          )),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 
@@ -190,9 +201,15 @@ class AllGroupsScreen extends StatelessWidget {
           SizedBox(height: 14.h),
           Row(
             children: [
-              _buildInfoChip(Icons.groups_outlined, '${group.membersCount}/${group.totalMembers} members'),
+              _buildInfoChip(
+                Icons.groups_outlined,
+                '${group.membersCount}/${group.totalMembers} members',
+              ),
               SizedBox(width: 16.w),
-              _buildInfoChip(Icons.calendar_today_outlined, 'Pos. ${group.position}'),
+              _buildInfoChip(
+                Icons.calendar_today_outlined,
+                'Pos. ${group.position}',
+              ),
             ],
           ),
           SizedBox(height: 14.h),
@@ -209,7 +226,10 @@ class AllGroupsScreen extends StatelessWidget {
               ),
               Text(
                 'Next: ${group.nextDate}',
-                style: TextStyle(fontSize: 12.sp, color: const Color(0xFF64748B)),
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: const Color(0xFF64748B),
+                ),
               ),
             ],
           ),
@@ -219,7 +239,9 @@ class AllGroupsScreen extends StatelessWidget {
             child: LinearProgressIndicator(
               value: group.progress,
               backgroundColor: const Color(0xFFE2E8F0),
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1A227F)),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                Color(0xFF1A227F),
+              ),
               minHeight: 6,
             ),
           ),
@@ -245,7 +267,10 @@ class AllGroupsScreen extends StatelessWidget {
       children: [
         Icon(icon, size: 14, color: const Color(0xFF94A3B8)),
         SizedBox(width: 5.w),
-        Text(label, style: TextStyle(fontSize: 12.sp, color: const Color(0xFF64748B))),
+        Text(
+          label,
+          style: TextStyle(fontSize: 12.sp, color: const Color(0xFF64748B)),
+        ),
       ],
     );
   }
@@ -255,7 +280,11 @@ class AllGroupsScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.group_off_outlined, size: 64.sp, color: const Color(0xFFCBD5E1)),
+          Icon(
+            Icons.group_off_outlined,
+            size: 64.sp,
+            color: const Color(0xFFCBD5E1),
+          ),
           SizedBox(height: 16.h),
           Text(
             "You haven't joined any groups yet",

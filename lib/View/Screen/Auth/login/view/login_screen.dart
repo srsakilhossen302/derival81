@@ -7,6 +7,8 @@ import '../../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../Widgegt/custom_textfield.dart';
 import '../controller/login_controller.dart';
 
+import '../../../Language/view/language_selection_screen.dart';
+
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
@@ -44,10 +46,10 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Title
-              const Text(
-                'Log In For Savings',
+              Text(
+                'login_title'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF0F172A),
@@ -56,10 +58,10 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Subtitle
-              const Text(
-                'Start saving with your friends and family.',
+              Text(
+                'login_subtitle'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   color: Color(0xFF4A5565),
                   fontWeight: FontWeight.w400,
@@ -69,14 +71,14 @@ class LoginScreen extends StatelessWidget {
 
               // Input Fields
               CustomTextField(
-                label: 'Email or phone number',
+                label: 'email_phone'.tr,
                 hintText: 'email@example.com',
                 controller: controller.emailController,
               ),
               const SizedBox(height: 4),
 
               CustomTextField(
-                label: 'Password',
+                label: 'password'.tr,
                 hintText: '76543',
                 controller: controller.passwordController,
                 isPassword: true,
@@ -87,9 +89,9 @@ class LoginScreen extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () => Get.to(() => ForgotPasswordScreen()),
-                  child: const Text(
-                    'Forgot Password?',
-                    style: TextStyle(
+                  child: Text(
+                    'forgot_password'.tr,
+                    style: const TextStyle(
                       color: Color(0xFF1A227F),
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
@@ -113,9 +115,12 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Text(
-                    'Log In',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  child: Text(
+                    'login_button'.tr,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -125,15 +130,20 @@ class LoginScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Don't have an account? ",
-                    style: TextStyle(color: Color(0xFF64748B), fontSize: 14),
+                  Text(
+                    'no_account'.tr,
+                    style: const TextStyle(
+                      color: Color(0xFF64748B),
+                      fontSize: 14,
+                    ),
                   ),
                   GestureDetector(
-                    onTap: () => Get.to(() => SignUpScreen()),
-                    child: const Text(
-                      'Sign Up',
-                      style: TextStyle(
+                    onTap: () => Get.to(
+                      () => LanguageSelectionScreen(isSignUpFlow: true),
+                    ),
+                    child: Text(
+                      'signup_link'.tr,
+                      style: const TextStyle(
                         color: Color(0xFF1A227F),
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
@@ -151,7 +161,7 @@ class LoginScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      'OR CONTINUE WITH',
+                      'or_continue'.tr,
                       style: TextStyle(
                         fontSize: 12,
                         color: const Color(0xFF94A3B8).withOpacity(0.8),
