@@ -43,6 +43,7 @@ class AppTranslations extends Translations {
       'signup_subtitle': 'Start saving with your friends and family.',
       'full_name': 'Full Name',
       'phone_number': 'Phone Number',
+      'password_hint': '8+ chars, alphanumeric & special',
       'confirm_password': 'Confirm New Password',
       'agree_terms': 'I agree to the ',
       'terms_conditions': 'Terms and Conditions\n',

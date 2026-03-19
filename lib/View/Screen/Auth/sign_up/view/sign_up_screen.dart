@@ -87,13 +87,13 @@ class SignUpScreen extends StatelessWidget {
               ),
               CustomTextField(
                 label: 'password'.tr,
-                hintText: '76543',
+                hintText: 'password_hint'.tr,
                 isPassword: true,
                 controller: controller.passwordController,
               ),
               CustomTextField(
                 label: 'confirm_password'.tr,
-                hintText: '76543',
+                hintText: 'password_hint'.tr,
                 isPassword: true,
                 controller: controller.confirmPasswordController,
               ),

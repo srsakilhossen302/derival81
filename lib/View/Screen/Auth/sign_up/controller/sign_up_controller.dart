@@ -9,7 +9,8 @@ class SignUpController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   // Observable variable for Terms and Conditions checkbox
   var isChecked = false.obs;
@@ -44,19 +45,44 @@ class SignUpController extends GetxController {
       return;
     }
 
+    // Password validation: 8+ characters, letters, numbers, and special characters
+    String password = passwordController.text;
+    if (password.length < 8) {
+      CustomToast.showWarning(
+        "Too Short",
+        "Password must be at least 8 characters long",
+      );
+      return;
+    }
+
+    bool hasLetter = password.contains(RegExp(r'[a-zA-Z]'));
+    bool hasNumber = password.contains(RegExp(r'[0-9]'));
+    bool hasSpecialChar = password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
+
+    if (!hasLetter || !hasNumber || !hasSpecialChar) {
+      CustomToast.showWarning(
+        "Weak Password",
+        "Password must contain a mix of letters, numbers, and special characters",
+      );
+      return;
+    }
+
     if (passwordController.text != confirmPasswordController.text) {
-      CustomToast.showError("Error", "Passwords do not match");
+      CustomToast.showError("", "Passwords do not match");
       return;
     }
 
     if (!isChecked.value) {
-      CustomToast.showWarning("Hold On! ✋", "Please agree to the Terms and Conditions before proceeding.");
+      CustomToast.showWarning(
+        "Hold On! ✋",
+        "Please agree to the Terms and Conditions before proceeding.",
+      );
       return;
     }
 
     try {
       isLoading.value = true;
-      
+
       // Simulating API network delay
       await Future.delayed(const Duration(seconds: 2));
 
@@ -72,9 +98,11 @@ class SignUpController extends GetxController {
 
       // Navigate to OTP screen
       Get.to(() => OtpScreen(), arguments: 'signup');
-
     } catch (e) {
-      CustomToast.showError("Oh Snap!", "Something went wrong while signing up. Please try again.");
+      CustomToast.showError(
+        "Oh Snap!",
+        "Something went wrong while signing up. Please try again.",
+      );
     } finally {
       isLoading.value = false;
     }
