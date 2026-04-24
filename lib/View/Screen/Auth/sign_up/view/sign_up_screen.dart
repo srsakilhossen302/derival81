@@ -5,6 +5,7 @@ import '../../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../Widgegt/custom_textfield.dart';
 import '../controller/sign_up_controller.dart';
 import '../../login/view/login_screen.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({Key? key}) : super(key: key);
@@ -80,10 +81,54 @@ class SignUpScreen extends StatelessWidget {
                 hintText: 'email@example.com',
                 controller: controller.emailController,
               ),
-              CustomTextField(
-                label: 'phone_number'.tr,
-                hintText: '+1 (555) 000-0000',
-                controller: controller.phoneController,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'phone_number'.tr,
+                    style: const TextStyle(
+                      color: Color(0xFF0F172A),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  IntlPhoneField(
+                    controller: controller.phoneController,
+                    decoration: InputDecoration(
+                      hintText: '+1 (555) 000-0000',
+                      hintStyle: const TextStyle(
+                        color: Color(0xFF94A3B8), 
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Color(0xFF1A227F)),
+                      ),
+                    ),
+                    initialCountryCode: 'US', // You can change default country here
+                    onChanged: (phone) {
+                      controller.fullPhoneNumber = phone.completeNumber;
+                    },
+                    style: const TextStyle(
+                      color: Color(0xFF0F172A),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    dropdownIconPosition: IconPosition.trailing,
+                    flagsButtonPadding: const EdgeInsets.only(left: 16),
+                  ),
+                ],
               ),
               CustomTextField(
                 label: 'password'.tr,

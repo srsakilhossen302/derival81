@@ -109,8 +109,8 @@ class OtpScreen extends StatelessWidget {
               // Confirm OTP Button
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => controller.confirmOtp(),
+                child: Obx(() => ElevatedButton(
+                  onPressed: controller.isLoading.value ? null : () => controller.confirmOtp(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1A227F),
                     foregroundColor: Colors.white,
@@ -120,14 +120,48 @@ class OtpScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: Text(
-                    'confirm_otp'.tr,
+                  child: controller.isLoading.value
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Text(
+                          'confirm_otp'.tr,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                )),
+              ),
+              const SizedBox(height: 24),
+              // Resend OTP Link
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Didn't receive the code? ",
                     style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF4A5565),
+                      fontSize: 14,
                     ),
                   ),
-                ),
+                  GestureDetector(
+                    onTap: () => controller.resendOtp(),
+                    child: Text(
+                      "Resend",
+                      style: const TextStyle(
+                        color: Color(0xFF1A227F),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
 

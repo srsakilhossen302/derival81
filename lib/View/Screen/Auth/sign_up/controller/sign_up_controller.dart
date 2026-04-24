@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../Utils/ToastMessage/custom_toast.dart';
 import '../../otp/view/otp_screen.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../../../../../service/api_url.dart';
 
 class SignUpController extends GetxController {
   // Text Editing Controllers for all input fields
@@ -11,6 +14,7 @@ class SignUpController extends GetxController {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
+  String fullPhoneNumber = '';
 
   // Observable variable for Terms and Conditions checkbox
   var isChecked = false.obs;
@@ -38,7 +42,7 @@ class SignUpController extends GetxController {
     // Basic validation check
     if (fullNameController.text.isEmpty ||
         emailController.text.isEmpty ||
-        phoneController.text.isEmpty ||
+        fullPhoneNumber.isEmpty ||
         passwordController.text.isEmpty ||
         confirmPasswordController.text.isEmpty) {
       CustomToast.showWarning("Required", "Please fill in all the fields");
@@ -83,21 +87,61 @@ class SignUpController extends GetxController {
     try {
       isLoading.value = true;
 
-      // Simulating API network delay
-      await Future.delayed(const Duration(seconds: 2));
+      var response = await http.post(
+        Uri.parse(ApiUrl.registerUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "fullName": fullNameController.text,
+          "email": emailController.text,
+          "phone": fullPhoneNumber,
+          "password": passwordController.text,
+          "agreeToTerms": isChecked.value,
+        }),
+      );
 
-      // Assuming successful registration
-      CustomToast.showSuccess("Success", "Account created successfully!");
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        CustomToast.showSuccess("Success", "Account created successfully!");
 
-      // Clear fields
-      fullNameController.clear();
-      emailController.clear();
-      phoneController.clear();
-      passwordController.clear();
-      confirmPasswordController.clear();
+        String userEmail = emailController.text;
 
-      // Navigate to OTP screen
-      Get.to(() => OtpScreen(), arguments: 'signup');
+        // Clear fields
+        fullNameController.clear();
+        emailController.clear();
+        phoneController.clear();
+        passwordController.clear();
+        confirmPasswordController.clear();
+        fullPhoneNumber = '';
+
+        // Navigate to OTP screen
+        Get.to(() => OtpScreen(), arguments: {
+          'type': 'signup',
+          'email': userEmail,
+        });
+      } else {
+        var data = jsonDecode(response.body);
+        print("API Error Response: ${response.body}");
+        
+        String errorMessage = data['message'] ?? "Registration failed. Please try again.";
+        
+        // Extract detailed validation message if it's a Zod Error
+        if (data['errorSources'] != null && data['errorSources'] is List && data['errorSources'].isNotEmpty) {
+          errorMessage = data['errorSources'][0]['message'] ?? errorMessage;
+        } else if (data['errors'] != null && data['errors'] is List && data['errors'].isNotEmpty) {
+          var firstError = data['errors'][0];
+          if (firstError is Map && firstError['message'] != null) {
+            errorMessage = firstError['message'];
+          } else if (firstError is String) {
+            errorMessage = firstError;
+          }
+        }
+
+        CustomToast.showError(
+          "Registration Failed",
+          errorMessage,
+        );
+      }
     } catch (e) {
       CustomToast.showError(
         "Oh Snap!",
