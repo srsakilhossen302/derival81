@@ -103,8 +103,8 @@ class LoginScreen extends StatelessWidget {
               // Log In Button
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => controller.login(),
+                child: Obx(() => ElevatedButton(
+                  onPressed: controller.isLoading.value ? null : () => controller.login(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1A227F),
                     foregroundColor: Colors.white,
@@ -114,14 +114,23 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: Text(
-                    'login_button'.tr,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                  child: controller.isLoading.value
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Text(
+                          'login_button'.tr,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                )),
               ),
               const SizedBox(height: 24),
 
