@@ -15,8 +15,6 @@ class LanguageSelectionScreen extends StatelessWidget {
     this.isSignUpFlow = false,
   }) : super(key: key);
 
-  final LanguageController _languageController = Get.put(LanguageController());
-
   final List<Map<String, String>> languages = [
     {'name': 'English', 'code': 'en'},
     {'name': 'Español', 'code': 'es'},
@@ -26,6 +24,7 @@ class LanguageSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final LanguageController _languageController = Get.put(LanguageController());
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -76,7 +75,7 @@ class LanguageSelectionScreen extends StatelessWidget {
                             language['code']!,
                           );
                           if (isSignUpFlow) {
-                            Get.to(() => SignUpScreen());
+                            Get.off(() => SignUpScreen());
                           } else if (isFirstTime) {
                             Get.offAll(() => LoginScreen());
                           } else {

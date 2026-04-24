@@ -8,10 +8,9 @@ import '../controller/otp_controller.dart';
 class OtpScreen extends StatelessWidget {
   OtpScreen({Key? key}) : super(key: key);
 
-  final OtpController controller = Get.put(OtpController());
-
   @override
   Widget build(BuildContext context) {
+    final OtpController controller = Get.put(OtpController());
     final defaultPinTheme = PinTheme(
       width: 64,
       height: 64,

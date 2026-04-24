@@ -12,10 +12,9 @@ import '../../../Language/view/language_selection_screen.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
-  final LoginController controller = Get.put(LoginController());
-
   @override
   Widget build(BuildContext context) {
+    final LoginController controller = Get.put(LoginController());
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

@@ -10,11 +10,10 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({Key? key}) : super(key: key);
 
-  // Initialize the Controller
-  final SignUpController controller = Get.put(SignUpController());
-
   @override
   Widget build(BuildContext context) {
+    // Initialize the Controller
+    final SignUpController controller = Get.put(SignUpController());
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -237,7 +236,7 @@ class SignUpScreen extends StatelessWidget {
 
               // Login Text
               GestureDetector(
-                onTap: () => Get.to(() => LoginScreen()),
+                onTap: () => Get.offAll(() => LoginScreen()),
                 child: Center(
                   child: RichText(
                     text: TextSpan(
