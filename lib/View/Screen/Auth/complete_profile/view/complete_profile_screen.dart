@@ -9,10 +9,9 @@ import '../controller/complete_profile_controller.dart';
 class CompleteProfileScreen extends StatelessWidget {
   CompleteProfileScreen({Key? key}) : super(key: key);
 
-  final CompleteProfileController controller = Get.put(CompleteProfileController());
-
   @override
   Widget build(BuildContext context) {
+    final CompleteProfileController controller = Get.put(CompleteProfileController());
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -99,9 +98,16 @@ class CompleteProfileScreen extends StatelessWidget {
                                         )
                                       : null,
                                 ),
-                                child: controller.imagePath.value.isEmpty
-                                    ? Center(
-                                        child: SvgPicture.asset(
+                                child: controller.isImageUploading.value
+                                    ? const Center(
+                                        child: CircularProgressIndicator(
+                                          color: Color(0xFF1A227F),
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : controller.imagePath.value.isEmpty
+                                        ? Center(
+                                            child: SvgPicture.asset(
                                           AppIcons.profileIcons,
                                           height: 40,
                                           width: 40,

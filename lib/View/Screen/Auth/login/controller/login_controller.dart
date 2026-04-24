@@ -44,7 +44,8 @@ class LoginController extends GetxController {
         if (responseData != null) {
           String? accessToken = responseData['accessToken'];
           String? refreshToken = responseData['refreshToken'];
-          bool? isUpdatedProfile = responseData['user']?['isUpdatedProfile'];
+          var userObj = responseData['user'];
+          bool? isUpdatedProfile = userObj?['isUpdatedProfile'];
           
           SharedPreferences prefs = await SharedPreferences.getInstance();
           if (accessToken != null) {
@@ -52,6 +53,9 @@ class LoginController extends GetxController {
           }
           if (refreshToken != null) {
             await prefs.setString('refreshToken', refreshToken);
+          }
+          if (userObj != null) {
+            await prefs.setString('userData', jsonEncode(userObj));
           }
           
           CustomToast.showSuccess(
