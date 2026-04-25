@@ -115,14 +115,61 @@ class CompleteProfileController extends GetxController {
 
     try {
       isLoading.value = true;
-      // TODO: API Call to POST profile data
-      await Future.delayed(const Duration(seconds: 2));
+      
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('accessToken');
+      String? userDataString = prefs.getString('userData');
+      
+      if (token == null || userDataString == null) {
+        CustomToast.showError("Error", "Authentication token or user data not found. Please login again.");
+        return;
+      }
+      
+      var userData = jsonDecode(userDataString);
+      String? userId = userData['_id'] ?? userData['id'];
+      
+      if (userId == null) {
+        CustomToast.showError("Error", "User ID not found.");
+        return;
+      }
 
-      CustomToast.showSuccess("Success", "Profile completed successfully!");
+      var requestBody = {
+        "fullName": userData['fullName'], // Sending existing fullName if required by backend, though usually PATCH means partial update
+        "occupation": occupationController.text,
+        "address": addressController.text,
+        "dob": dobController.text,
+        "city": cityController.text,
+        "state": stateController.text,
+        "zipCode": zipController.text,
+      };
 
-      // Navigate to Payment Method Screen
-      Get.to(() => PaymentMethodScreen());
+      var response = await http.patch(
+        Uri.parse(ApiUrl.updateProfileUrl(userId)),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        CustomToast.showSuccess("Success", "Profile completed successfully!");
+        
+        // Update local SharedPreferences data
+        userData['isUpdatedProfile'] = true;
+        userData['occupation'] = occupationController.text;
+        userData['address'] = addressController.text;
+        await prefs.setString('userData', jsonEncode(userData));
+
+        // Navigate to Payment Method Screen
+        Get.to(() => PaymentMethodScreen());
+      } else {
+        var data = jsonDecode(response.body);
+        print("Update Profile Error: ${response.body}");
+        CustomToast.showError("Error", data['message'] ?? "Failed to update profile");
+      }
     } catch (e) {
+      print("Update Profile Exception: $e");
       CustomToast.showError("Error", "Failed to update profile");
     } finally {
       isLoading.value = false;

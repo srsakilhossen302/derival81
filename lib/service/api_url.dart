@@ -5,4 +5,5 @@ class ApiUrl {
   static const String resendVerificationCodeUrl = '$baseUrl/api/v1/auth/resend-verification-code';
   static const String loginUrl = '$baseUrl/api/v1/auth/login';
   static const String uploadProfileImageUrl = '$baseUrl/api/v1/user/upload-profile-image';
+  static String updateProfileUrl(String userId) => '$baseUrl/api/v1/user/$userId';
 }
