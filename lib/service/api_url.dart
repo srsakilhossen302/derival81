@@ -17,4 +17,6 @@ class ApiUrl {
   static const String myGroupsUrl = '$baseUrl/api/v1/group-members/my-groups';
   static String groupMembersUrl(String groupId) =>
       '$baseUrl/api/v1/group-members/$groupId';
+  static String groupMessagesUrl(String groupId) =>
+      '$baseUrl/api/v1/chat/group/$groupId/messages';
 }
