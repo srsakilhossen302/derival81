@@ -15,37 +15,42 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildProfileHeader(controller),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-              child: Column(
-                children: [
-                  _buildPersonalInfoCard(controller),
-                  const SizedBox(height: 24),
-                  _buildSecuritySettingsCard(controller),
-                  const SizedBox(height: 24),
-                  _buildSupportCard(),
-                  const SizedBox(height: 32),
-                  _buildLogoutButton(controller),
-                  const SizedBox(height: 24),
-                  Obx(
-                    () => Text(
-                      'Version ${controller.appVersion.value}',
-                      style: const TextStyle(
-                        color: Color(0xFF64748B),
-                        fontSize: 14,
+      body: Obx(
+        () => controller.isLoading.value
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildProfileHeader(controller),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 24),
+                      child: Column(
+                        children: [
+                          _buildPersonalInfoCard(controller),
+                          const SizedBox(height: 24),
+                          _buildSecuritySettingsCard(controller),
+                          const SizedBox(height: 24),
+                          _buildSupportCard(),
+                          const SizedBox(height: 32),
+                          _buildLogoutButton(controller),
+                          const SizedBox(height: 24),
+                          Obx(
+                            () => Text(
+                              'Version ${controller.appVersion.value}',
+                              style: const TextStyle(
+                                color: Color(0xFF64748B),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 120), // Bottom navbar padding
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 120), // Bottom navbar padding
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -73,12 +78,16 @@ class ProfileScreen extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 2),
             ),
-            child: const CircleAvatar(
-              radius: 46,
-              backgroundImage: NetworkImage(
-                'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80',
+            child: Obx(
+              () => CircleAvatar(
+                radius: 46,
+                backgroundImage: controller.profileImage.value.isNotEmpty
+                    ? NetworkImage(controller.profileImage.value)
+                    : const NetworkImage(
+                        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80',
+                      ),
+                backgroundColor: Colors.grey,
               ),
-              backgroundColor: Colors.grey,
             ),
           ),
           const SizedBox(height: 16),

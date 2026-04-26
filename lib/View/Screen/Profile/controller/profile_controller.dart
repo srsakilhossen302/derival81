@@ -1,13 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../../service/api_url.dart';
+
+import '../../Auth/login/view/login_screen.dart';
 
 class ProfileController extends GetxController {
-  final userName = 'Jerin'.obs;
-  final userEmail = 'ibrahim1@gmail.com'.obs;
-  final userPhone = '+66-45678978'.obs;
+  final userName = ''.obs;
+  final userEmail = ''.obs;
+  final userPhone = ''.obs;
+  final profileImage = ''.obs;
   final twoFactorEnabled = false.obs;
   final appVersion = '1.0.0'.obs;
-  final linkedPaymentMethodsCount = 2.obs;
+  final linkedPaymentMethodsCount = 0.obs;
+  final isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    getProfile();
+  }
+
+  Future<void> getProfile() async {
+    try {
+      isLoading.value = true;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('accessToken');
+
+      if (token == null) {
+        print("No access token found");
+        return;
+      }
+
+      var response = await http.get(
+        Uri.parse(ApiUrl.getProfileUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var data = jsonDecode(response.body);
+        var userData = data['data'];
+        
+        if (userData != null) {
+          userName.value = userData['fullName'] ?? '';
+          userEmail.value = userData['email'] ?? '';
+          userPhone.value = userData['phone'] ?? '';
+          profileImage.value = userData['profileImage'] ?? '';
+          twoFactorEnabled.value = userData['twoFactorEnabled'] ?? false;
+          // You can add more fields if needed
+        }
+      } else {
+        print("Failed to fetch profile: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      print("Error fetching profile: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   void logout() {
     Get.dialog(
@@ -43,9 +98,10 @@ class ProfileController extends GetxController {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Add logout logic here
-                        Get.back();
+                      onPressed: () async {
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        await prefs.clear();
+                        Get.offAll(() =>  LoginScreen());
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFE50914),

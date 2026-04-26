@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../Home/view/home_screen.dart';
 import '../../Auth/login/view/login_screen.dart';
 import '../../Language/controller/language_controller.dart';
-import '../../Language/view/language_selection_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,8 +25,14 @@ class _SplashScreenState extends State<SplashScreen> {
     // Show splash for at least 2 seconds
     await Future.delayed(const Duration(seconds: 2));
 
-    // Always navigate to Login Screen
-    Get.off(() => LoginScreen());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('accessToken');
+
+    if (token != null && token.isNotEmpty) {
+      Get.offAll(() => HomeScreen());
+    } else {
+      Get.offAll(() =>  LoginScreen());
+    }
   }
 
   @override
