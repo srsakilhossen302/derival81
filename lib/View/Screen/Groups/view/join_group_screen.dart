@@ -371,7 +371,12 @@ class JoinGroupScreen extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                Get.to(() => ActiveGroupDetailsScreen(group: group));
+                if (group.inviteCode != null) {
+                  controller.joinGroup(group.inviteCode!);
+                } else {
+                  // Fallback to search controller if inviteCode is missing in model
+                  controller.joinGroup(searchController.text);
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF10B981),

@@ -9,10 +9,12 @@ class ApiUrl {
   static const String uploadProfileImageUrl =
       '$baseUrl/api/v1/user/upload-profile-image';
   static const String groupsUrl = '$baseUrl/api/v1/groups';
+  static const String joinGroupUrl = '$baseUrl/api/v1/group-members/join';
   static String getInviteGroupUrl(String inviteCode) =>
       '$baseUrl/api/v1/groups/invite/$inviteCode';
   static String updateProfileUrl(String userId) =>
       '$baseUrl/api/v1/user/$userId';
   static const String myGroupsUrl = '$baseUrl/api/v1/group-members/my-groups';
-  static String groupMembersUrl(String groupId) => '$baseUrl/api/v1/group-members/$groupId';
+  static String groupMembersUrl(String groupId) =>
+      '$baseUrl/api/v1/group-members/$groupId';
 }

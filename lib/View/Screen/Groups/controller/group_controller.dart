@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:derival81/View/Screen/Groups/view/active_group_details_screen.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -216,6 +217,60 @@ class GroupController extends GetxController {
         "Something went wrong while fetching group",
       );
       searchedGroup.value = null;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> joinGroup(String inviteCode) async {
+    try {
+      isLoading.value = true;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('accessToken');
+
+      if (token == null) {
+        CustomToast.showError("Error", "Authentication token not found");
+        return;
+      }
+
+      var response = await http.post(
+        Uri.parse(ApiUrl.joinGroupUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({"inviteCode": inviteCode}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          CustomToast.showSuccess(
+            "Success",
+            data['message'] ?? "Joined group successfully",
+          );
+          // Optionally refresh groups list or navigate
+          if (searchedGroup.value != null) {
+            Get.to(() => ActiveGroupDetailsScreen(group: searchedGroup.value!));
+          }
+        } else {
+          CustomToast.showError(
+            "Error",
+            data['message'] ?? "Failed to join group",
+          );
+        }
+      } else {
+        var data = jsonDecode(response.body);
+        CustomToast.showError(
+          "Error",
+          data['message'] ?? "Failed to join group",
+        );
+      }
+    } catch (e) {
+      CustomToast.showError(
+        "Error",
+        "Something went wrong while joining group",
+      );
     } finally {
       isLoading.value = false;
     }
