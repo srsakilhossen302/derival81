@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../model/group_model.dart';
 import '../controller/group_chat_controller.dart';
 
@@ -17,21 +16,13 @@ class GroupChatScreen extends StatelessWidget {
       tag: group.id,
     );
 
-    // Let's get current user ID to distinguish incoming/outgoing messages
-    // Since we don't have it explicitly stored easily available, we'll wait for a way or just use a future builder to get prefs.
-    // For now we can fetch the user ID or just use an empty string and rely on some logic if needed. Let's do a simple FutureBuilder.
     return Scaffold(
       backgroundColor: Colors.white,
-      body: FutureBuilder<SharedPreferences>(
-        future: SharedPreferences.getInstance(),
-        builder: (context, snapshot) {
-          final userId = snapshot.data?.getString('userId') ?? '';
-          
-          return Column(
-            children: [
-              _buildHeader(),
-              Expanded(
-                child: Obx(() {
+      body: Column(
+        children: [
+          _buildHeader(),
+          Expanded(
+            child: Obx(() {
                   if (controller.isLoading.value) {
                     return const Center(child: CircularProgressIndicator());
                   }
@@ -55,10 +46,7 @@ class GroupChatScreen extends StatelessWidget {
                       // API might return oldest first. If we want them at bottom, we can just not use reverse and let it build.
                       // Let's just use normal list.
                       final message = controller.messages[index];
-                      final isMe = message.senderId == userId; // Requires userId to be saved in SharedPreferences during login!
-                      
-                      // For now, if senderName is "You" or if we don't have user ID, just assume incoming if not matching some logic.
-                      // Since we might not have `userId` saved in prefs, let's also check if senderName matches logged in user, or just pass `isMe` safely.
+                      final isMe = message.senderId == controller.myUserId.value;
                       
                       if (isMe) {
                         return Padding(
@@ -91,11 +79,9 @@ class GroupChatScreen extends StatelessWidget {
                   );
                 }),
               ),
-              _buildMessageInput(),
+              _buildMessageInput(controller),
             ],
-          );
-        }
-      ),
+          ),
     );
   }
 
@@ -103,10 +89,9 @@ class GroupChatScreen extends StatelessWidget {
     if (isoTime.isEmpty) return '';
     try {
       final date = DateTime.parse(isoTime).toLocal();
-      String ampm = date.hour >= 12 ? 'PM' : 'AM';
-      int hour = date.hour > 12 ? date.hour - 12 : (date.hour == 0 ? 12 : date.hour);
+      String hour = date.hour.toString().padLeft(2, '0');
       String minute = date.minute.toString().padLeft(2, '0');
-      return '$hour:$minute $ampm';
+      return '$hour:$minute';
     } catch (e) {
       return '';
     }
@@ -311,7 +296,7 @@ class GroupChatScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMessageInput() {
+  Widget _buildMessageInput(GroupChatController controller) {
     return Container(
       padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 32.h),
       decoration: BoxDecoration(
@@ -336,6 +321,7 @@ class GroupChatScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: controller.messageController,
                       decoration: InputDecoration(
                         hintText: 'Write your message',
                         hintStyle: TextStyle(
@@ -358,13 +344,26 @@ class GroupChatScreen extends StatelessWidget {
             ),
           ),
           SizedBox(width: 12.w),
-          Container(
-            padding: EdgeInsets.all(12.r),
-            decoration: const BoxDecoration(
-              color: Color(0xFF1A227F),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.send, color: Colors.white, size: 20.sp),
+          GestureDetector(
+            onTap: () {
+              if (!controller.isSending.value) {
+                controller.sendMessage();
+              }
+            },
+            child: Obx(() => Container(
+              padding: EdgeInsets.all(12.r),
+              decoration: const BoxDecoration(
+                color: Color(0xFF1A227F),
+                shape: BoxShape.circle,
+              ),
+              child: controller.isSending.value
+                  ? SizedBox(
+                      width: 20.sp,
+                      height: 20.sp,
+                      child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                    )
+                  : Icon(Icons.send, color: Colors.white, size: 20.sp),
+            )),
           ),
         ],
       ),
