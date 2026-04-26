@@ -6,5 +6,6 @@ class ApiUrl {
   static const String loginUrl = '$baseUrl/api/v1/auth/login';
   static const String getProfileUrl = '$baseUrl/api/v1/user/me';
   static const String uploadProfileImageUrl = '$baseUrl/api/v1/user/upload-profile-image';
+  static const String groupsUrl = '$baseUrl/api/v1/groups';
   static String updateProfileUrl(String userId) => '$baseUrl/api/v1/user/$userId';
 }

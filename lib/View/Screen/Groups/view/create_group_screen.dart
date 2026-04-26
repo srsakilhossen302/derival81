@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -156,6 +157,58 @@ class CreateGroupScreen extends StatelessWidget {
               color: const Color(0xFF0F172A),
             ),
           ),
+          Center(
+            child: GestureDetector(
+              onTap: () => controller.pickImage(),
+              child: Obx(() {
+                return Container(
+                  width: 100.w,
+                  height: 100.w,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F5F9),
+                    shape: BoxShape.circle,
+                    image: controller.imagePath.value.isNotEmpty
+                        ? DecorationImage(
+                            image: FileImage(File(controller.imagePath.value)),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
+                  ),
+                  child: controller.imagePath.value.isEmpty
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.camera_alt_outlined,
+                              color: const Color(0xFF94A3B8),
+                              size: 32.sp,
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              'Add Photo',
+                              style: TextStyle(
+                                color: const Color(0xFF94A3B8),
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ],
+                        )
+                      : null,
+                );
+              }),
+            ),
+          ),
+          Obx(() {
+            if (controller.isImageUploading.value) {
+              return Padding(
+                padding: EdgeInsets.only(top: 8.h),
+                child: const Center(
+                    child: Text("Uploading image...",
+                        style: TextStyle(color: Colors.blue))),
+              );
+            }
+            return const SizedBox.shrink();
+          }),
           SizedBox(height: 24.h),
           _buildTextField(
             label: 'group_name'.tr,
@@ -208,11 +261,17 @@ class CreateGroupScreen extends StatelessWidget {
             keyboardType: TextInputType.number,
           ),
           SizedBox(height: 24.h),
-          _buildTextField(
+          _buildDropdown(
             label: 'Contribution Frequency',
-            hint: 'Monthly',
+            value: controller.selectedFrequency.value,
+            items: controller.frequencies,
             icon: Icons.calendar_today_outlined,
-            controller: controller.frequencyController,
+            onChanged: (val) {
+              if (val != null) {
+                controller.selectedFrequency.value = val;
+                controller.frequencyController.text = val;
+              }
+            },
           ),
           SizedBox(height: 24.h),
           _buildTextField(
@@ -279,11 +338,11 @@ class CreateGroupScreen extends StatelessWidget {
           ),
           _buildReviewItem(
             'Contribution A',
-            '\$${controller.amountController.text} / monthly',
+            '\$${controller.amountController.text} / ${controller.selectedFrequency.value}',
           ),
           _buildReviewItem(
             'Contribution F',
-            '\$${(double.tryParse(controller.amountController.text) ?? 0) * (int.tryParse(controller.groupSizeController.text) ?? 1)}',
+            '\$${(double.tryParse(controller.amountController.text) ?? 0) * (int.tryParse(controller.groupSizeController.text) ?? 1)} total',
           ),
           _buildReviewItem(
             'Group Size',
@@ -328,30 +387,13 @@ class CreateGroupScreen extends StatelessWidget {
               ),
               SizedBox(width: 16.w),
               Expanded(
-                child: _buildPrimaryButton(
-                  text: 'Create Group',
-                  onPressed: () {
-                    if (controller.groupNameController.text.isNotEmpty) {
-                      final newGroup = GroupModel(
-                        id: DateTime.now().toString(),
-                        name: controller.groupNameController.text,
-                        description: controller.descriptionController.text,
-                        status: 'Active',
-                        membersCount: 1, // Start with 1 member
-                        totalMembers:
-                            int.tryParse(controller.groupSizeController.text) ??
-                            10,
-                        amount:
-                            double.tryParse(controller.amountController.text) ??
-                            500.0,
-                        position: 1, // Initial position
-                        nextDate: "5/1/2026", // Mock date
-                        progress: 0.1, // Initial progress
-                      );
-                      groupController.groups.add(newGroup);
-                      Get.off(() => GroupDetailsScreen(group: newGroup));
-                    }
-                  },
+                child: Obx(
+                  () => _buildPrimaryButton(
+                    text: controller.isLoading.value ? 'Creating...' : 'Create Group',
+                    onPressed: controller.isLoading.value
+                        ? () {}
+                        : () => controller.createGroup(),
+                  ),
                 ),
               ),
             ],
@@ -392,6 +434,55 @@ class CreateGroupScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDropdown({
+    required String label,
+    required String value,
+    required List<String> items,
+    required IconData icon,
+    required Function(String?) onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF475569),
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: const Color(0xFFE2E8F0)),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButtonFormField<String>(
+              value: value,
+              decoration: InputDecoration(
+                prefixIcon: Icon(icon, color: const Color(0xFF94A3B8)),
+                border: InputBorder.none,
+              ),
+              items: items.map((String freq) {
+                return DropdownMenuItem<String>(
+                  value: freq,
+                  child: Text(
+                    freq.capitalizeFirst!,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                );
+              }).toList(),
+              onChanged: onChanged,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
