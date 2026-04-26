@@ -23,23 +23,31 @@ class GroupScreen extends StatelessWidget {
         children: [
           _buildHeader(),
           Expanded(
-            child: Obx(() => controller.groups.isEmpty
-                ? SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-                    child: Column(
-                      children: [
-                        _buildFilters(controller),
-                        SizedBox(height: 24.h),
-                        _buildActionButtons(),
-                        SizedBox(height: 40.h),
-                        _buildEmptyState(),
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return RefreshIndicator(
+                onRefresh: controller.fetchMyGroups,
+                color: const Color(0xFF1A227F),
+                child: controller.filteredGroups.isEmpty
+                    ? SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+                        child: Column(
+                          children: [
+                            _buildFilters(controller),
+                            SizedBox(height: 24.h),
+                            _buildActionButtons(),
+                            SizedBox(height: 40.h),
+                            _buildEmptyState(),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
                     itemBuilder: (context, index) {
-                      final displayGroups = controller.groups.take(2).toList();
+                          final displayGroups = controller.filteredGroups.take(2).toList();
                       if (index == 0) {
                         return Column(
                           children: [
@@ -91,8 +99,10 @@ class GroupScreen extends StatelessWidget {
                         child: _buildGroupCard(group),
                       );
                     },
-                    itemCount: controller.groups.take(2).length + 3,
-                  )),
+                    itemCount: controller.filteredGroups.take(2).length + 3,
+                  ),
+              );
+            }),
           ),
           SizedBox(height: 100.h), // Space for bottom nav bar
         ],
@@ -121,14 +131,28 @@ class GroupScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                group.name,
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF0F172A),
+              if (group.adminImage != null && group.adminImage!.isNotEmpty)
+                Padding(
+                  padding: EdgeInsets.only(right: 12.w),
+                  child: CircleAvatar(
+                    radius: 18.r,
+                    backgroundImage: NetworkImage(group.adminImage!),
+                    backgroundColor: const Color(0xFFE2E8F0),
+                  ),
+                ),
+              Expanded(
+                child: Text(
+                  group.name,
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF0F172A),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              SizedBox(width: 8.w),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                 decoration: BoxDecoration(
@@ -136,7 +160,7 @@ class GroupScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Text(
-                  group.status,
+                  group.status.capitalizeFirst ?? group.status,
                   style: TextStyle(
                     color: const Color(0xFF166534),
                     fontSize: 12.sp,
@@ -167,7 +191,7 @@ class GroupScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '\$${group.amount.toInt()}/monthly',
+                '\$${group.amount.toInt()}/${group.contributionFrequency ?? 'monthly'}',
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
