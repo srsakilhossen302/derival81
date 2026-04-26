@@ -3,43 +3,69 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
+import '../controller/group_controller.dart';
 import '../model/group_model.dart';
 import 'group_chat_screen.dart';
 import '../../../Widgegt/invite_dialog.dart';
 
-class ActiveGroupDetailsScreen extends StatelessWidget {
+class ActiveGroupDetailsScreen extends StatefulWidget {
   final GroupModel group;
 
   const ActiveGroupDetailsScreen({Key? key, required this.group}) : super(key: key);
 
   @override
+  State<ActiveGroupDetailsScreen> createState() => _ActiveGroupDetailsScreenState();
+}
+
+class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
+  late final GroupController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<GroupController>();
+    // Fetch fresh group details using the passed group ID
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchGroupDetails(widget.group.id);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      body: Column(
-        children: [
-          _buildHeader(context),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(20.r),
-              child: Column(
-                children: [
-                  _buildStatusCard(),
-                  SizedBox(height: 20.h),
-                  _buildStatCards(),
-                  SizedBox(height: 20.h),
-                  _buildTurnQueue(),
-                  SizedBox(height: 40.h),
-                ],
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator(color: Color(0xFF1A227F)));
+        }
+        
+        final currentGroup = controller.activeGroupDetails.value ?? widget.group;
+        
+        return Column(
+          children: [
+            _buildHeader(context, currentGroup),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(20.r),
+                child: Column(
+                  children: [
+                    _buildStatusCard(currentGroup),
+                    SizedBox(height: 20.h),
+                    _buildStatCards(currentGroup),
+                    SizedBox(height: 20.h),
+                    _buildTurnQueue(),
+                    SizedBox(height: 40.h),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, GroupModel currentGroup) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(12.w, 50.h, 24.w, 32.h),
@@ -65,13 +91,25 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
                 onPressed: () => Get.back(),
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
               ),
-              SizedBox(width: 8.w),
-              Text(
-                '${group.name}',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.bold,
+              if (currentGroup.adminImage != null && currentGroup.adminImage!.isNotEmpty)
+                Padding(
+                  padding: EdgeInsets.only(right: 12.w),
+                  child: CircleAvatar(
+                    radius: 20.r,
+                    backgroundImage: NetworkImage(currentGroup.adminImage!),
+                    backgroundColor: Colors.white.withOpacity(0.2),
+                  ),
+                ),
+              Expanded(
+                child: Text(
+                  '${currentGroup.name}',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -83,7 +121,7 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
                 child: _buildHeaderBtn(
                   AppIcons.inviteIcons,
                   'Invite',
-                  onTap: () => _showInviteDialog(context),
+                  onTap: () => _showInviteDialog(context, currentGroup),
                 ),
               ),
               SizedBox(width: 12.w),
@@ -91,7 +129,7 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
                 child: _buildHeaderBtn(
                   AppIcons.chatIcons,
                   'Chat',
-                  onTap: () => Get.to(() => GroupChatScreen(group: group)),
+                  onTap: () => Get.to(() => GroupChatScreen(group: currentGroup)),
                 ),
               ),
             ],
@@ -133,7 +171,7 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusCard() {
+  Widget _buildStatusCard(GroupModel currentGroup) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.r),
@@ -151,7 +189,7 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
-              'Active',
+              currentGroup.status.capitalizeFirst ?? 'Active',
               style: TextStyle(
                 color: const Color(0xFF166534),
                 fontSize: 12.sp,
@@ -161,7 +199,7 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           Text(
-            group.description,
+            currentGroup.description,
             style: TextStyle(
               color: const Color(0xFF64748B),
               fontSize: 14.sp,
@@ -172,14 +210,14 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCards() {
+  Widget _buildStatCards(GroupModel currentGroup) {
     return Row(
       children: [
         Expanded(
           child: _buildStatCard(
             'Contribution',
-            '\$${group.amount.toInt()}',
-            'per monthly',
+            '\$${currentGroup.amount.toInt()}',
+            'per ${currentGroup.contributionFrequency ?? "monthly"}',
             iconPath: AppIcons.dollerIcon,
           ),
         ),
@@ -187,10 +225,10 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
         Expanded(
           child: _buildStatCard(
             'Members',
-            '${group.membersCount}/${group.totalMembers}',
+            '${currentGroup.membersCount}/${currentGroup.totalMembers}',
             null,
             iconPath: AppIcons.groupsIcons,
-            progress: group.progress,
+            progress: currentGroup.progress,
           ),
         ),
       ],
@@ -371,7 +409,7 @@ class ActiveGroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  void _showInviteDialog(BuildContext context) {
-    InviteDialog.show(context, groupName: group.name, inviteCode: 'FAM2026XYZ');
+  void _showInviteDialog(BuildContext context, GroupModel currentGroup) {
+    InviteDialog.show(context, groupName: currentGroup.name, inviteCode: currentGroup.inviteCode ?? 'No Code Available');
   }
 }

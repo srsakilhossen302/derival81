@@ -545,9 +545,7 @@ class GroupDetailsScreen extends StatelessWidget {
                         onPressed: () {
                           // Actual delete logic
                           final groupController = Get.find<GroupController>();
-                          groupController.groups.removeWhere((g) => g.id == group.id);
-                          Get.back(); // Close dialog
-                          Get.back(); // Go back to GroupScreen
+                          groupController.deleteGroup(group.id);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFEF4444),

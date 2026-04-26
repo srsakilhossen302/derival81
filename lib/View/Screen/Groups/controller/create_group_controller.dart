@@ -140,7 +140,7 @@ class CreateGroupController extends GetxController {
           totalMembers: groupData['totalMembers'] ?? (int.tryParse(groupSizeController.text) ?? 10),
           amount: (groupData['contributionAmount'] ?? (double.tryParse(amountController.text) ?? 500.0)).toDouble(),
           position: 1,
-          nextDate: groupData['startDate'] ?? "5/1/2026",
+          nextDate: groupData['startDate'] ?? "",
           progress: 0.1,
         );
         groupController.groups.add(newGroup);

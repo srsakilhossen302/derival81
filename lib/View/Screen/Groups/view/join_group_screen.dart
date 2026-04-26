@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../model/group_model.dart';
+import '../controller/group_controller.dart';
 import 'active_group_details_screen.dart';
 
 class JoinGroupScreen extends StatelessWidget {
   JoinGroupScreen({Key? key}) : super(key: key);
 
-  final RxBool showSearchResult = false.obs;
+  final GroupController controller = Get.put(GroupController());
   final TextEditingController searchController = TextEditingController();
 
   @override
@@ -23,7 +24,22 @@ class JoinGroupScreen extends StatelessWidget {
               child: Column(
                 children: [
                   _buildJoinCard(),
-                  Obx(() => showSearchResult.value ? _buildSearchResult() : const SizedBox.shrink()),
+                  Obx(() {
+                    if (controller.isLoading.value) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                    if (controller.searchedGroup.value != null) {
+                      return _buildSearchResult(
+                        controller.searchedGroup.value!,
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }),
                 ],
               ),
             ),
@@ -41,10 +57,7 @@ class JoinGroupScreen extends StatelessWidget {
         gradient: const RadialGradient(
           center: Alignment(0.5, -0.6),
           radius: 1.2,
-          colors: [
-            Color(0xFF6773FF),
-            Color(0xFF1A227F),
-          ],
+          colors: [Color(0xFF6773FF), Color(0xFF1A227F)],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(32.r),
@@ -155,7 +168,7 @@ class JoinGroupScreen extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () {
                     if (searchController.text.isNotEmpty) {
-                      showSearchResult.value = true;
+                      controller.fetchGroupByInviteCode(searchController.text);
                     }
                   },
                   child: Container(
@@ -214,7 +227,7 @@ class JoinGroupScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchResult() {
+  Widget _buildSearchResult(GroupModel group) {
     return Container(
       margin: EdgeInsets.only(top: 20.h),
       padding: EdgeInsets.all(24.r),
@@ -235,10 +248,14 @@ class JoinGroupScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.check_circle_outline, color: const Color(0xFF10B981), size: 24.sp),
+              Icon(
+                Icons.check_circle_outline,
+                color: const Color(0xFF10B981),
+                size: 24.sp,
+              ),
               SizedBox(width: 12.w),
               Text(
-                'Family Savings Circle',
+                group.name,
                 style: TextStyle(
                   color: const Color(0xFF0F172A),
                   fontSize: 18.sp,
@@ -251,11 +268,8 @@ class JoinGroupScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 36.w),
             child: Text(
-              'Monthly savings for family members',
-              style: TextStyle(
-                color: const Color(0xFF64748B),
-                fontSize: 14.sp,
-              ),
+              group.description,
+              style: TextStyle(color: const Color(0xFF64748B), fontSize: 14.sp),
             ),
           ),
           SizedBox(height: 20.h),
@@ -269,22 +283,36 @@ class JoinGroupScreen extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.groups_outlined, size: 16.sp, color: const Color(0xFF94A3B8)),
+                    Icon(
+                      Icons.groups_outlined,
+                      size: 16.sp,
+                      color: const Color(0xFF94A3B8),
+                    ),
                     SizedBox(width: 6.w),
                     Text(
-                      '7/10 members',
-                      style: TextStyle(color: const Color(0xFF64748B), fontSize: 13.sp),
+                      '${group.membersCount}/${group.totalMembers} members',
+                      style: TextStyle(
+                        color: const Color(0xFF64748B),
+                        fontSize: 13.sp,
+                      ),
                     ),
                   ],
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.attach_money, size: 16.sp, color: const Color(0xFF94A3B8)),
+                    Icon(
+                      Icons.attach_money,
+                      size: 16.sp,
+                      color: const Color(0xFF94A3B8),
+                    ),
                     SizedBox(width: 4.w),
                     Text(
-                      '\$500/monthly',
-                      style: TextStyle(color: const Color(0xFF64748B), fontSize: 13.sp),
+                      '\$${group.amount}/${group.contributionFrequency}',
+                      style: TextStyle(
+                        color: const Color(0xFF64748B),
+                        fontSize: 13.sp,
+                      ),
                     ),
                   ],
                 ),
@@ -296,25 +324,44 @@ class JoinGroupScreen extends StatelessWidget {
           SizedBox(height: 12.h),
           Padding(
             padding: EdgeInsets.only(left: 36.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
-                Text(
-                  'Admin',
-                  style: TextStyle(
-                    color: const Color(0xFF94A3B8),
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
+                CircleAvatar(
+                  radius: 20.r,
+                  backgroundImage:
+                      group.adminImage != null && group.adminImage!.isNotEmpty
+                      ? NetworkImage(group.adminImage!)
+                      : null,
+                  child: group.adminImage == null || group.adminImage!.isEmpty
+                      ? Icon(
+                          Icons.person,
+                          size: 20.sp,
+                          color: const Color(0xFF94A3B8),
+                        )
+                      : null,
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  'John Doe',
-                  style: TextStyle(
-                    color: const Color(0xFF0F172A),
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
+                SizedBox(width: 12.w),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Admin',
+                      style: TextStyle(
+                        color: const Color(0xFF94A3B8),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      group.adminName ?? 'N/A',
+                      style: TextStyle(
+                        color: const Color(0xFF0F172A),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -324,18 +371,6 @@ class JoinGroupScreen extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                final group = GroupModel(
-                  id: 'fam2026xyz',
-                  name: 'Family Savings Circle',
-                  description: 'Monthly savings for family members',
-                  status: 'active',
-                  membersCount: 7,
-                  totalMembers: 10,
-                  amount: 500,
-                  position: 3,
-                  nextDate: '4/1/2026',
-                  progress: 0.7,
-                );
                 Get.to(() => ActiveGroupDetailsScreen(group: group));
               },
               style: ElevatedButton.styleFrom(
@@ -362,7 +397,7 @@ class JoinGroupScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         searchController.text = code;
-        showSearchResult.value = true;
+        controller.fetchGroupByInviteCode(code);
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),

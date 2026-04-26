@@ -1,51 +1,173 @@
+import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../model/group_model.dart';
+import '../../../../../service/api_url.dart';
+import '../../../../../Utils/ToastMessage/custom_toast.dart';
 
 class GroupController extends GetxController {
-  var groups = <GroupModel>[
-    GroupModel(
-      id: "1",
-      name: "Labib Circle",
-      description: "Monthly savings for family members",
-      status: "Active",
-      membersCount: 9,
-      totalMembers: 10,
-      amount: 100.0,
-      position: 8,
-      nextDate: "4/1/2026",
-      progress: 0.9,
-    ),
-    GroupModel(
-      id: "2",
-      name: "Family Savings",
-      description: "Local community fund group",
-      status: "Active",
-      membersCount: 4,
-      totalMembers: 6,
-      amount: 250.0,
-      position: 2,
-      nextDate: "4/15/2026",
-      progress: 0.3,
-    ),
-    GroupModel(
-      id: "3",
-      name: "Friends Fund",
-      description: "Monthly contribution for business",
-      status: "Active",
-      membersCount: 12,
-      totalMembers: 15,
-      amount: 500.0,
-      position: 10,
-      nextDate: "5/1/2026",
-      progress: 0.6,
-    ),
-  ].obs;
+  var groups = <GroupModel>[].obs;
   
   var selectedFilter = "All".obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchMyGroups();
+  }
+
+  Future<void> fetchMyGroups() async {
+    try {
+      isLoading.value = true;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('accessToken');
+
+      if (token == null) {
+        return;
+      }
+
+      var response = await http.get(
+        Uri.parse(ApiUrl.myGroupsUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          var groupsList = data['data'] as List;
+          groups.value = groupsList.map((g) => GroupModel.fromJson(g)).toList();
+        }
+      } else {
+        var data = jsonDecode(response.body);
+        CustomToast.showError("Error", data['message'] ?? "Failed to fetch groups");
+      }
+    } catch (e) {
+      CustomToast.showError("Error", "Something went wrong while fetching groups");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   
+  var isLoading = false.obs;
+  var activeGroupDetails = Rxn<GroupModel>();
+
+  Future<void> fetchGroupDetails(String id) async {
+    try {
+      isLoading.value = true;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('accessToken');
+
+      if (token == null) {
+        return;
+      }
+
+      var response = await http.get(
+        Uri.parse('${ApiUrl.groupsUrl}/$id'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          activeGroupDetails.value = GroupModel.fromJson(data['data']);
+        }
+      } else {
+        var data = jsonDecode(response.body);
+        CustomToast.showError("Error", data['message'] ?? "Failed to fetch group details");
+      }
+    } catch (e) {
+      CustomToast.showError("Error", "Something went wrong while fetching group details");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  var searchedGroup = Rxn<GroupModel>();
+
   final List<String> filters = ["All", "Active", "Pending", "Completed"];
 
   void setFilter(String filter) {
     selectedFilter.value = filter;
   }
+
+  Future<void> fetchGroupByInviteCode(String inviteCode) async {
+    try {
+      isLoading.value = true;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('accessToken');
+
+      if (token == null) {
+        CustomToast.showError("Error", "Authentication token not found");
+        return;
+      }
+
+      var response = await http.get(
+        Uri.parse(ApiUrl.getInviteGroupUrl(inviteCode)),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          searchedGroup.value = GroupModel.fromJson(data['data']);
+        } else {
+          CustomToast.showError("Error", data['message'] ?? "Failed to find group");
+          searchedGroup.value = null;
+        }
+      } else {
+        var data = jsonDecode(response.body);
+        CustomToast.showError("Error", data['message'] ?? "Failed to fetch group details");
+        searchedGroup.value = null;
+      }
+    } catch (e) {
+      CustomToast.showError("Error", "Something went wrong while fetching group");
+      searchedGroup.value = null;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> deleteGroup(String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('accessToken');
+
+      if (token == null) {
+        CustomToast.showError("Error", "Authentication token not found");
+        return;
+      }
+
+      var response = await http.delete(
+        Uri.parse('${ApiUrl.groupsUrl}/$id'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        groups.removeWhere((g) => g.id == id);
+        CustomToast.showSuccess("Success", "Group deleted successfully");
+        Get.back(); // Close dialog
+        Get.back(); // Go back to GroupScreen
+      } else {
+        var data = jsonDecode(response.body);
+        CustomToast.showError("Error", data['message'] ?? "Failed to delete group");
+      }
+    } catch (e) {
+      CustomToast.showError("Error", "Something went wrong while deleting group");
+    }
+  }
 }
+

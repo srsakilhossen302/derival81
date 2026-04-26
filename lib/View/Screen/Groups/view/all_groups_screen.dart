@@ -19,20 +19,27 @@ class AllGroupsScreen extends StatelessWidget {
           _buildHeader(controller),
           Expanded(
             child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
               if (controller.groups.isEmpty) {
                 return _buildEmptyState();
               }
-              return ListView.builder(
-                padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 100.h),
-                itemCount: controller.groups.length,
-                itemBuilder: (context, index) {
-                  final group = controller.groups[index];
-                  return GestureDetector(
-                    onTap: () =>
-                        Get.to(() => ActiveGroupDetailsScreen(group: group)),
-                    child: _buildGroupCard(group),
-                  );
-                },
+              return RefreshIndicator(
+                onRefresh: controller.fetchMyGroups,
+                color: const Color(0xFF1A227F),
+                child: ListView.builder(
+                  padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 100.h),
+                  itemCount: controller.groups.length,
+                  itemBuilder: (context, index) {
+                    final group = controller.groups[index];
+                    return GestureDetector(
+                      onTap: () =>
+                          Get.to(() => ActiveGroupDetailsScreen(group: group)),
+                      child: _buildGroupCard(group),
+                    );
+                  },
+                ),
               );
             }),
           ),
@@ -163,6 +170,15 @@ class AllGroupsScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              if (group.adminImage != null && group.adminImage!.isNotEmpty)
+                Padding(
+                  padding: EdgeInsets.only(right: 12.w),
+                  child: CircleAvatar(
+                    radius: 18.r,
+                    backgroundImage: NetworkImage(group.adminImage!),
+                    backgroundColor: const Color(0xFFE2E8F0),
+                  ),
+                ),
               Expanded(
                 child: Text(
                   group.name,
@@ -217,7 +233,7 @@ class AllGroupsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '\$${group.amount.toInt()}/monthly',
+                '\$${group.amount.toInt()}/${group.contributionFrequency ?? 'monthly'}',
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
