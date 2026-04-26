@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../model/group_model.dart';
 import '../model/group_member_model.dart';
+import '../model/group_model.dart';
 import '../../../../../service/api_url.dart';
 import '../../../../../Utils/ToastMessage/custom_toast.dart';
 
 class GroupController extends GetxController {
   var groups = <GroupModel>[].obs;
-  
+
   var selectedFilter = "All".obs;
 
   @override
@@ -44,16 +44,21 @@ class GroupController extends GetxController {
         }
       } else {
         var data = jsonDecode(response.body);
-        CustomToast.showError("Error", data['message'] ?? "Failed to fetch groups");
+        CustomToast.showError(
+          "Error",
+          data['message'] ?? "Failed to fetch groups",
+        );
       }
     } catch (e) {
-      CustomToast.showError("Error", "Something went wrong while fetching groups");
+      CustomToast.showError(
+        "Error",
+        "Something went wrong while fetching groups",
+      );
     } finally {
       isLoading.value = false;
     }
   }
 
-  
   var isLoading = false.obs;
   var activeGroupDetails = Rxn<GroupModel>();
 
@@ -82,10 +87,16 @@ class GroupController extends GetxController {
         }
       } else {
         var data = jsonDecode(response.body);
-        CustomToast.showError("Error", data['message'] ?? "Failed to fetch group details");
+        CustomToast.showError(
+          "Error",
+          data['message'] ?? "Failed to fetch group details",
+        );
       }
     } catch (e) {
-      CustomToast.showError("Error", "Something went wrong while fetching group details");
+      CustomToast.showError(
+        "Error",
+        "Something went wrong while fetching group details",
+      );
     } finally {
       isLoading.value = false;
     }
@@ -117,14 +128,22 @@ class GroupController extends GetxController {
         var data = jsonDecode(response.body);
         if (data['success'] == true) {
           var membersList = data['data'] as List;
-          groupMembers.value = membersList.map((m) => GroupMemberModel.fromJson(m)).toList();
+          groupMembers.value = membersList
+              .map((m) => GroupMemberModel.fromJson(m))
+              .toList();
         }
       } else {
         var data = jsonDecode(response.body);
-        CustomToast.showError("Error", data['message'] ?? "Failed to fetch members");
+        CustomToast.showError(
+          "Error",
+          data['message'] ?? "Failed to fetch members",
+        );
       }
     } catch (e) {
-      CustomToast.showError("Error", "Something went wrong while fetching members");
+      CustomToast.showError(
+        "Error",
+        "Something went wrong while fetching members",
+      );
     } finally {
       isMembersLoading.value = false;
     }
@@ -132,7 +151,13 @@ class GroupController extends GetxController {
 
   var searchedGroup = Rxn<GroupModel>();
 
-  final List<String> filters = ["All", "Active", "Upcoming", "Pending", "Completed"];
+  final List<String> filters = [
+    "All",
+    "Active",
+    "Upcoming",
+    "Pending",
+    "Completed",
+  ];
 
   void setFilter(String filter) {
     selectedFilter.value = filter;
@@ -140,7 +165,11 @@ class GroupController extends GetxController {
 
   List<GroupModel> get filteredGroups {
     if (selectedFilter.value == 'All') return groups;
-    return groups.where((g) => g.status.toLowerCase() == selectedFilter.value.toLowerCase()).toList();
+    return groups
+        .where(
+          (g) => g.status.toLowerCase() == selectedFilter.value.toLowerCase(),
+        )
+        .toList();
   }
 
   Future<void> fetchGroupByInviteCode(String inviteCode) async {
@@ -167,16 +196,25 @@ class GroupController extends GetxController {
         if (data['success'] == true) {
           searchedGroup.value = GroupModel.fromJson(data['data']);
         } else {
-          CustomToast.showError("Error", data['message'] ?? "Failed to find group");
+          CustomToast.showError(
+            "Error",
+            data['message'] ?? "Failed to find group",
+          );
           searchedGroup.value = null;
         }
       } else {
         var data = jsonDecode(response.body);
-        CustomToast.showError("Error", data['message'] ?? "Failed to fetch group details");
+        CustomToast.showError(
+          "Error",
+          data['message'] ?? "Failed to fetch group details",
+        );
         searchedGroup.value = null;
       }
     } catch (e) {
-      CustomToast.showError("Error", "Something went wrong while fetching group");
+      CustomToast.showError(
+        "Error",
+        "Something went wrong while fetching group",
+      );
       searchedGroup.value = null;
     } finally {
       isLoading.value = false;
@@ -208,11 +246,16 @@ class GroupController extends GetxController {
         Get.back(); // Go back to GroupScreen
       } else {
         var data = jsonDecode(response.body);
-        CustomToast.showError("Error", data['message'] ?? "Failed to delete group");
+        CustomToast.showError(
+          "Error",
+          data['message'] ?? "Failed to delete group",
+        );
       }
     } catch (e) {
-      CustomToast.showError("Error", "Something went wrong while deleting group");
+      CustomToast.showError(
+        "Error",
+        "Something went wrong while deleting group",
+      );
     }
   }
 }
-
