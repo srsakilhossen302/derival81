@@ -92,10 +92,15 @@ class GroupController extends GetxController {
 
   var searchedGroup = Rxn<GroupModel>();
 
-  final List<String> filters = ["All", "Active", "Pending", "Completed"];
+  final List<String> filters = ["All", "Active", "Upcoming", "Pending", "Completed"];
 
   void setFilter(String filter) {
     selectedFilter.value = filter;
+  }
+
+  List<GroupModel> get filteredGroups {
+    if (selectedFilter.value == 'All') return groups;
+    return groups.where((g) => g.status.toLowerCase() == selectedFilter.value.toLowerCase()).toList();
   }
 
   Future<void> fetchGroupByInviteCode(String inviteCode) async {

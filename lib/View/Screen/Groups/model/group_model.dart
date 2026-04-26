@@ -42,7 +42,8 @@ class GroupModel {
       totalMembers: json['totalMembers'] ?? 10,
       amount: (json['contributionAmount'] ?? 0).toDouble(),
       position: 1, // Default value as it's not in the invite API response
-      nextDate: json['startDate'] ?? 'N/A',
+      nextDate: _formatDate(json['startDate']),
+
       progress: (json['currentMembers'] ?? 0) / (json['totalMembers'] ?? 1),
       adminName: json['createdBy'] != null
           ? json['createdBy']['fullName']
@@ -53,5 +54,19 @@ class GroupModel {
       contributionFrequency: json['contributionFrequency'] ?? 'monthly',
       inviteCode: json['inviteCode'],
     );
+  }
+
+  static String _formatDate(String? isoDate) {
+    if (isoDate == null || isoDate.isEmpty || isoDate == 'N/A') return 'N/A';
+    try {
+      final date = DateTime.parse(isoDate).toLocal();
+      final months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      ];
+      return '${date.day} ${months[date.month - 1]}, ${date.year}';
+    } catch (e) {
+      return isoDate; // fallback to original string if parsing fails
+    }
   }
 }

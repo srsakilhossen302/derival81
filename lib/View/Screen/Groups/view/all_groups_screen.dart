@@ -22,7 +22,7 @@ class AllGroupsScreen extends StatelessWidget {
               if (controller.isLoading.value) {
                 return const Center(child: CircularProgressIndicator());
               }
-              if (controller.groups.isEmpty) {
+              if (controller.filteredGroups.isEmpty) {
                 return _buildEmptyState();
               }
               return RefreshIndicator(
@@ -30,9 +30,9 @@ class AllGroupsScreen extends StatelessWidget {
                 color: const Color(0xFF1A227F),
                 child: ListView.builder(
                   padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 100.h),
-                  itemCount: controller.groups.length,
+                  itemCount: controller.filteredGroups.length,
                   itemBuilder: (context, index) {
-                    final group = controller.groups[index];
+                    final group = controller.filteredGroups[index];
                     return GestureDetector(
                       onTap: () =>
                           Get.to(() => ActiveGroupDetailsScreen(group: group)),
@@ -94,7 +94,7 @@ class AllGroupsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
-                    '${controller.groups.length} ' +
+                    '${controller.filteredGroups.length} ' +
                         'my_groups'.tr.split(' ').last,
                     style: TextStyle(
                       color: Colors.white,
@@ -199,7 +199,7 @@ class AllGroupsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Text(
-                  group.status,
+                  group.status.capitalizeFirst ?? group.status,
                   style: TextStyle(
                     color: const Color(0xFF166534),
                     fontSize: 11.sp,
