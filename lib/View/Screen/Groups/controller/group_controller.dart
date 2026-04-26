@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/group_model.dart';
+import '../model/group_member_model.dart';
 import '../../../../../service/api_url.dart';
 import '../../../../../Utils/ToastMessage/custom_toast.dart';
 
@@ -87,6 +88,45 @@ class GroupController extends GetxController {
       CustomToast.showError("Error", "Something went wrong while fetching group details");
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  var groupMembers = <GroupMemberModel>[].obs;
+  var isMembersLoading = false.obs;
+
+  Future<void> fetchGroupMembers(String groupId) async {
+    try {
+      isMembersLoading.value = true;
+      groupMembers.clear();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('accessToken');
+
+      if (token == null) {
+        return;
+      }
+
+      var response = await http.get(
+        Uri.parse(ApiUrl.groupMembersUrl(groupId)),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          var membersList = data['data'] as List;
+          groupMembers.value = membersList.map((m) => GroupMemberModel.fromJson(m)).toList();
+        }
+      } else {
+        var data = jsonDecode(response.body);
+        CustomToast.showError("Error", data['message'] ?? "Failed to fetch members");
+      }
+    } catch (e) {
+      CustomToast.showError("Error", "Something went wrong while fetching members");
+    } finally {
+      isMembersLoading.value = false;
     }
   }
 

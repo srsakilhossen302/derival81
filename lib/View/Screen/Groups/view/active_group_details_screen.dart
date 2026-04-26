@@ -223,12 +223,15 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
         ),
         SizedBox(width: 16.w),
         Expanded(
-          child: _buildStatCard(
-            'Members',
-            '${currentGroup.membersCount}/${currentGroup.totalMembers}',
-            null,
-            iconPath: AppIcons.groupsIcons,
-            progress: currentGroup.progress,
+          child: GestureDetector(
+            onTap: () => _showMembersList(context, currentGroup),
+            child: _buildStatCard(
+              'Members',
+              '${currentGroup.membersCount}/${currentGroup.totalMembers}',
+              null,
+              iconPath: AppIcons.groupsIcons,
+              progress: currentGroup.progress,
+            ),
           ),
         ),
       ],
@@ -411,5 +414,120 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
 
   void _showInviteDialog(BuildContext context, GroupModel currentGroup) {
     InviteDialog.show(context, groupName: currentGroup.name, inviteCode: currentGroup.inviteCode ?? 'No Code Available');
+  }
+
+  void _showMembersList(BuildContext context, GroupModel group) {
+    controller.fetchGroupMembers(group.id);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.7,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+          ),
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 12.h, bottom: 20.h),
+                height: 4.h,
+                width: 40.w,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE2E8F0),
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              Text(
+                'Group Members',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF0F172A),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Expanded(
+                child: Obx(() {
+                  if (controller.isMembersLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (controller.groupMembers.isEmpty) {
+                    return const Center(child: Text("No members found."));
+                  }
+                  return ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    itemCount: controller.groupMembers.length,
+                    itemBuilder: (context, index) {
+                      final member = controller.groupMembers[index];
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 12.h),
+                        padding: EdgeInsets.all(12.r),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8FAFC),
+                          borderRadius: BorderRadius.circular(16.r),
+                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                        ),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 24.r,
+                              backgroundImage: member.profileImage.isNotEmpty ? NetworkImage(member.profileImage) : null,
+                              backgroundColor: const Color(0xFFCBD5E1),
+                              child: member.profileImage.isEmpty ? const Icon(Icons.person, color: Colors.white) : null,
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    member.fullName,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.sp,
+                                      color: const Color(0xFF0F172A),
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    'Joined: Month ${member.joinMonth} • Pos: ${member.position}',
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: const Color(0xFF64748B),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                              decoration: BoxDecoration(
+                                color: member.status == 'active' ? const Color(0xFFDCFCE7) : const Color(0xFFFEF9C3),
+                                borderRadius: BorderRadius.circular(20.r),
+                              ),
+                              child: Text(
+                                member.status.capitalizeFirst ?? member.status,
+                                style: TextStyle(
+                                  color: member.status == 'active' ? const Color(0xFF166534) : const Color(0xFF854D0E),
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

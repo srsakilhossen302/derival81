@@ -14,4 +14,5 @@ class ApiUrl {
   static String updateProfileUrl(String userId) =>
       '$baseUrl/api/v1/user/$userId';
   static const String myGroupsUrl = '$baseUrl/api/v1/group-members/my-groups';
+  static String groupMembersUrl(String groupId) => '$baseUrl/api/v1/group-members/$groupId';
 }
