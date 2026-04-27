@@ -1,49 +1,66 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../Utils/AppIcons/app_icons.dart';
-import '../model/payment_method_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../Auth/payment_method/model/payment_method_model.dart';
+import '../../../../service/api_url.dart';
 
 class PaymentController extends GetxController {
-  // Observable variables
   var thisMonthSpent = 0.obs;
   var pendingPayments = 0.obs;
-  
-  // List of payment methods
-  var paymentMethods = <PaymentMethodModel>[
-    PaymentMethodModel(
-      id: '1',
-      name: 'Bank Account',
-      lastDigits: '****1234',
-      iconPath: AppIcons.bankIcons,
-      isDefault: true,
-    ),
-    PaymentMethodModel(
-      id: '2',
-      name: 'Credit Card',
-      lastDigits: '****5678',
-      iconPath: AppIcons.debitCreditCardIcon,
-      isDefault: false,
-    ),
-  ].obs;
+  var isLoading = false.obs;
 
-  // Method to handle adding a new payment method
-  void addNewPaymentMethod() {
-    // Logic to navigate to add payment method screen or show dialog
-    Get.snackbar('Coming Soon', 'Add Payment Method feature is under development');
+  // Uses the same model as PaymentMethodController
+  var paymentMethods = <PaymentMethodModel>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchPaymentMethods();
   }
 
-  // Method to select a payment method
-  void selectPaymentMethod(String id) {
-    // Logic to set default payment method
-     // This is just a simulation, in a real app this would likely update the backend
-     var newMethods = paymentMethods.map((method) {
-        return PaymentMethodModel(
-          id: method.id,
-          name: method.name,
-          lastDigits: method.lastDigits,
-          iconPath: method.iconPath,
-          isDefault: method.id == id,
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('accessToken');
+  }
+
+  Future<void> fetchPaymentMethods() async {
+    try {
+      isLoading.value = true;
+      final token = await _getToken();
+      if (token == null) return;
+
+      final response = await http.get(
+        Uri.parse(ApiUrl.paymentMethodsUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      debugPrint('[PaymentController.fetchPaymentMethods] status: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // API returns: { "success": true, "data": [...] }
+        final List list = data['data'] ?? [];
+        paymentMethods.assignAll(
+          list.map((item) => PaymentMethodModel.fromJson(item)).toList(),
         );
-     }).toList();
-     paymentMethods.assignAll(newMethods);
+      }
+    } catch (e) {
+      debugPrint('[PaymentController.fetchPaymentMethods] error: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void selectPaymentMethod(String id) {
+    final updated = paymentMethods.map((method) {
+      return method.copyWith(isDefault: method.id == id);
+    }).toList();
+    paymentMethods.assignAll(updated);
+    // Optionally call PATCH API here to persist default on backend
   }
 }

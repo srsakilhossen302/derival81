@@ -91,14 +91,11 @@ class PaymentMethodController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // Adjust the key path to match your actual API response shape
-        final List list = data['data'] ?? data['paymentMethods'] ?? [];
-        savedMethods.assignAll(list.map((item) => PaymentMethodModel(
-              id: item['_id'] ?? item['id'] ?? '',
-              type: item['type'] ?? 'card',
-              last4: item['last4'] ?? '****',
-              isDefault: item['isDefault'] ?? false,
-            )));
+        // API returns: { "success": true, "data": [...] }
+        final List list = data['data'] ?? [];
+        savedMethods.assignAll(
+          list.map((item) => PaymentMethodModel.fromJson(item)).toList(),
+        );
       }
     } catch (e) {
       debugPrint('[fetchPaymentMethods] error: $e');

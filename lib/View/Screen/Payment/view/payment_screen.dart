@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../controller/payment_controller.dart';
-import '../model/payment_method_model.dart';
+import '../../Auth/payment_method/model/payment_method_model.dart';
 
 import '../../PaymentHistory/view/payment_history_screen.dart';
 import '../../Auth/payment_method/view/payment_method_screen.dart';
@@ -42,18 +42,50 @@ class PaymentScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Obx(
-                    () => Column(
-                      children: controller.paymentMethods.map((method) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: GestureDetector(
-                            onTap: () =>
-                                controller.selectPaymentMethod(method.id),
-                            child: _buildMethodCard(method),
+                    () {
+                      if (controller.isLoading.value) {
+                        return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(24),
+                            child: CircularProgressIndicator(
+                              color: Color(0xFF1A227F),
+                            ),
                           ),
                         );
-                      }).toList(),
-                    ),
+                      }
+                      if (controller.paymentMethods.isEmpty) {
+                        return Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFFE2E8F0)),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'No payment methods yet. Tap \'Add New\' to add one.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Color(0xFF64748B),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      return Column(
+                        children: controller.paymentMethods.map((method) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: GestureDetector(
+                              onTap: () =>
+                                  controller.selectPaymentMethod(method.id),
+                              child: _buildMethodCard(method),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
                   ),
                   const SizedBox(height: 24),
                   _buildSectionTitle(title: 'recent_payments'.tr),
@@ -254,6 +286,16 @@ class PaymentScreen extends StatelessWidget {
                     fontSize: 13,
                   ),
                 ),
+                if (method.expiryFormatted.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    'Exp: ${method.expiryFormatted}',
+                    style: const TextStyle(
+                      color: Color(0xFF94A3B8),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
