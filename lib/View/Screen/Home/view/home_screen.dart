@@ -32,22 +32,14 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      body: Stack(
-        children: [
-          Obx(() => _pages[controller.selectedIndex.value]),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Obx(
-              () => CustomBottomNavBar(
-                currentIndex: controller.selectedIndex.value,
-                onTap: (index) => controller.changeTabIndex(index),
-              ),
-            ),
-          ),
-        ],
+      extendBody: true,
+      bottomNavigationBar: Obx(
+        () => CustomBottomNavBar(
+          currentIndex: controller.selectedIndex.value,
+          onTap: (index) => controller.changeTabIndex(index),
+        ),
       ),
+      body: Obx(() => _pages[controller.selectedIndex.value]),
     );
   }
 }
