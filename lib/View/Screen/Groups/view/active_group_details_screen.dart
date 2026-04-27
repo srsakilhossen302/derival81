@@ -113,6 +113,27 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
+              if (Get.find<GroupController>().currentUserId.value == currentGroup.creatorId)
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert, color: Colors.white),
+                  onSelected: (value) {
+                    if (value == 'delete') {
+                      _showDeleteDialog(context, currentGroup);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                          SizedBox(width: 8),
+                          Text('Delete Group', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
           SizedBox(height: 20.h),
@@ -535,6 +556,16 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
                                 },
                                 itemBuilder: (BuildContext context) => [
                                   PopupMenuItem<String>(
+                                    value: 'notice',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.notification_important_outlined, color: const Color(0xFF1A227F), size: 20.sp),
+                                        SizedBox(width: 8.w),
+                                        const Text('Penalty Notice', style: TextStyle(color: Color(0xFF1A227F))),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem<String>(
                                     value: 'delete',
                                     child: Row(
                                       children: [
@@ -646,6 +677,89 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, GroupModel group) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24.r),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(24.r),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Delete Group?',
+                  style: TextStyle(
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF0F172A),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  'This action cannot be undone. All group data will be permanently deleted.',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: const Color(0xFF64748B),
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          final groupController = Get.find<GroupController>();
+                          groupController.deleteGroup(group.id);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFEF4444),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFE2E8F0),
+                          foregroundColor: const Color(0xFF475569),
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

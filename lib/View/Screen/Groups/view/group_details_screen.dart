@@ -76,15 +76,38 @@ class GroupDetailsScreen extends StatelessWidget {
                 onPressed: () => Get.back(),
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
               ),
-              SizedBox(width: 8.w),
-              Text(
-                '${group.name}.',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  '${group.name}.',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              if (Get.find<GroupController>().currentUserId.value == group.creatorId)
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert, color: Colors.white),
+                  onSelected: (value) {
+                    if (value == 'delete') {
+                      _showDeleteDialog(context);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                          SizedBox(width: 8),
+                          Text('Delete Group', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
           SizedBox(height: 20.h),
@@ -444,6 +467,16 @@ class GroupDetailsScreen extends StatelessWidget {
                     }
                   },
                   itemBuilder: (BuildContext context) => [
+                    PopupMenuItem<String>(
+                      value: 'notice',
+                      child: Row(
+                        children: [
+                          Icon(Icons.notification_important_outlined, color: const Color(0xFF1A227F), size: 20.sp),
+                          SizedBox(width: 8.w),
+                          const Text('Penalty Notice', style: TextStyle(color: Color(0xFF1A227F))),
+                        ],
+                      ),
+                    ),
                     PopupMenuItem<String>(
                       value: 'delete',
                       child: Row(
