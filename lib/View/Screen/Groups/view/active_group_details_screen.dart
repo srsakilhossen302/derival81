@@ -524,6 +524,28 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
                                 ),
                               ),
                             ),
+                            if (controller.currentUserId.value == group.creatorId && controller.currentUserId.value != member.id)
+                              PopupMenuButton<String>(
+                                icon: Icon(Icons.more_vert, color: const Color(0xFF64748B), size: 20.sp),
+                                padding: EdgeInsets.zero,
+                                onSelected: (value) {
+                                  if (value == 'delete') {
+                                    _showRemoveMemberDialog(context, group.id, member);
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) => [
+                                  PopupMenuItem<String>(
+                                    value: 'delete',
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                                        SizedBox(width: 8.w),
+                                        const Text('Remove Member', style: TextStyle(color: Colors.red)),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                           ],
                         ),
                       );
@@ -535,6 +557,95 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
           ),
         );
       },
+    );
+  }
+
+  void _showRemoveMemberDialog(BuildContext context, String groupId, GroupMemberModel member) {
+    final TextEditingController noteController = TextEditingController();
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        child: Padding(
+          padding: EdgeInsets.all(24.r),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Remove Member',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF0F172A),
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                'Are you sure you want to remove ${member.fullName} from the group?',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: const Color(0xFF64748B),
+                ),
+              ),
+              SizedBox(height: 20.h),
+              TextField(
+                controller: noteController,
+                decoration: InputDecoration(
+                  hintText: 'Add a note (optional)',
+                  hintStyle: TextStyle(fontSize: 14.sp, color: const Color(0xFF94A3B8)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: const BorderSide(color: Color(0xFF1A227F)),
+                  ),
+                ),
+                maxLines: 3,
+              ),
+              SizedBox(height: 24.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        side: const BorderSide(color: Color(0xFFE2E8F0)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                      ),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(color: Color(0xFF64748B)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => controller.removeMember(groupId, member.id, noteController.text),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE50914),
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                      ),
+                      child: const Text(
+                        'Remove',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

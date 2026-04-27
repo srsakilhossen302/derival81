@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../helper/shared_prefe/shared_prefe.dart';
 import '../model/group_member_model.dart';
 import '../model/group_model.dart';
 import '../../../../../service/api_url.dart';
@@ -12,11 +13,17 @@ class GroupController extends GetxController {
   var groups = <GroupModel>[].obs;
 
   var selectedFilter = "All".obs;
+  var currentUserId = "".obs;
 
   @override
   void onInit() {
     super.onInit();
+    _loadCurrentUserId();
     fetchMyGroups();
+  }
+
+  Future<void> _loadCurrentUserId() async {
+    currentUserId.value = await PrefsHelper.getString(PrefsHelper.userId) ?? "";
   }
 
   Future<void> fetchMyGroups() async {
@@ -278,8 +285,7 @@ class GroupController extends GetxController {
 
   Future<void> deleteGroup(String id) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('accessToken');
+      String? token = await PrefsHelper.getString(PrefsHelper.token);
 
       if (token == null) {
         CustomToast.showError("Error", "Authentication token not found");
@@ -311,6 +317,49 @@ class GroupController extends GetxController {
         "Error",
         "Something went wrong while deleting group",
       );
+    }
+  }
+
+  Future<void> removeMember(String groupId, String memberId, String note) async {
+    try {
+      isLoading.value = true;
+      String? token = await PrefsHelper.getString(PrefsHelper.token);
+
+      if (token == null) {
+        CustomToast.showError("Error", "Authentication token not found");
+        return;
+      }
+
+      // Updated to match backend API for member removal
+      var response = await http.delete(
+        Uri.parse('${ApiUrl.groupsUrl}/$groupId/members/$memberId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({"note": note}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        groupMembers.removeWhere((m) => m.id == memberId);
+        // Refresh group details to update currentMembers count
+        fetchGroupDetails(groupId);
+        CustomToast.showSuccess("Success", "Member removed successfully");
+        Get.back(); // Close popup
+      } else {
+        var data = jsonDecode(response.body);
+        CustomToast.showError(
+          "Error",
+          data['message'] ?? "Failed to remove member",
+        );
+      }
+    } catch (e) {
+      CustomToast.showError(
+        "Error",
+        "Something went wrong while removing member",
+      );
+    } finally {
+      isLoading.value = false;
     }
   }
 }

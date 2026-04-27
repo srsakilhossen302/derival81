@@ -30,10 +30,12 @@ class GroupModel {
     this.adminImage,
     this.contributionFrequency,
     this.inviteCode,
+    this.creatorId,
     this.members = const [],
   });
 
   final String? inviteCode;
+  final String? creatorId;
   final List<GroupMemberModel> members;
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
@@ -63,6 +65,7 @@ class GroupModel {
           : null,
       contributionFrequency: json['contributionFrequency'] ?? 'monthly',
       inviteCode: json['inviteCode'],
+      creatorId: json['createdBy'] != null ? json['createdBy']['_id'] : null,
       members: parsedMembers,
     );
   }

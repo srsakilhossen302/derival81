@@ -17,6 +17,7 @@ class GroupDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GroupController groupController = Get.find<GroupController>();
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: Column(
@@ -31,9 +32,14 @@ class GroupDetailsScreen extends StatelessWidget {
                   SizedBox(height: 20.h),
                   _buildStatCards(),
                   SizedBox(height: 20.h),
-                  _buildTurnQueue(),
+                  _buildTurnQueue(context),
                   SizedBox(height: 20.h),
-                  _buildAdminControls(context),
+                  Obx(() {
+                    if (groupController.currentUserId.value == group.creatorId) {
+                      return _buildAdminControls(context);
+                    }
+                    return const SizedBox.shrink();
+                  }),
                   SizedBox(height: 40.h),
                 ],
               ),
@@ -277,7 +283,7 @@ class GroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTurnQueue() {
+  Widget _buildTurnQueue(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.r),
@@ -300,7 +306,7 @@ class GroupDetailsScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                'Round 0',
+                '',
                 style: TextStyle(
                   color: const Color(0xFF94A3B8),
                   fontSize: 14.sp,
@@ -311,7 +317,7 @@ class GroupDetailsScreen extends StatelessWidget {
           SizedBox(height: 20.h),
           _buildQueueHighlightBox(),
           SizedBox(height: 16.h),
-          ...group.members.map((member) => _buildMemberItem(member)).toList(),
+          ...group.members.map((member) => _buildMemberItem(context, member)).toList(),
         ],
       ),
     );
@@ -361,7 +367,7 @@ class GroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMemberItem(GroupMemberModel member, {bool isYou = false}) {
+  Widget _buildMemberItem(BuildContext context, GroupMemberModel member, {bool isYou = false}) {
     bool isFirst = member.position == 1;
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h),
@@ -428,7 +434,119 @@ class GroupDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            if (Get.find<GroupController>().currentUserId.value == group.creatorId && Get.find<GroupController>().currentUserId.value != member.id)
+                PopupMenuButton<String>(
+                  icon: Icon(Icons.more_vert, color: const Color(0xFF64748B), size: 20.sp),
+                  padding: EdgeInsets.zero,
+                  onSelected: (value) {
+                    if (value == 'delete') {
+                      _showRemoveMemberDialog(context, group.id, member);
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    PopupMenuItem<String>(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                          SizedBox(width: 8.w),
+                          const Text('Remove Member', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void _showRemoveMemberDialog(BuildContext context, String groupId, GroupMemberModel member) {
+    final GroupController controller = Get.find<GroupController>();
+    final TextEditingController noteController = TextEditingController();
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        child: Padding(
+          padding: EdgeInsets.all(24.r),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Remove Member',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF0F172A),
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                'Are you sure you want to remove ${member.fullName} from the group?',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: const Color(0xFF64748B),
+                ),
+              ),
+              SizedBox(height: 20.h),
+              TextField(
+                controller: noteController,
+                decoration: InputDecoration(
+                  hintText: 'Add a note (optional)',
+                  hintStyle: TextStyle(fontSize: 14.sp, color: const Color(0xFF94A3B8)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: const BorderSide(color: Color(0xFF1A227F)),
+                  ),
+                ),
+                maxLines: 3,
+              ),
+              SizedBox(height: 24.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        side: const BorderSide(color: Color(0xFFE2E8F0)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                      ),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(color: Color(0xFF64748B)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => controller.removeMember(groupId, member.id, noteController.text),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE50914),
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                      ),
+                      child: const Text(
+                        'Remove',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
