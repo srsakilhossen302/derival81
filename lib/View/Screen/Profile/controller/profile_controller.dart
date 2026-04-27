@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../helper/shared_prefe/shared_prefe.dart';
 import '../../../../../service/api_url.dart';
 
 import '../../Auth/login/view/login_screen.dart';
@@ -26,8 +26,7 @@ class ProfileController extends GetxController {
   Future<void> getProfile() async {
     try {
       isLoading.value = true;
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('accessToken');
+      String? token = await PrefsHelper.getString(PrefsHelper.token);
 
       if (token == null) {
         print("No access token found");
@@ -99,8 +98,7 @@ class ProfileController extends GetxController {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
-                        SharedPreferences prefs = await SharedPreferences.getInstance();
-                        await prefs.clear();
+                        await PrefsHelper.clear();
                         Get.offAll(() =>  LoginScreen());
                       },
                       style: ElevatedButton.styleFrom(

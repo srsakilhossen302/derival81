@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../../helper/shared_prefe/shared_prefe.dart';
 import '../../../Home/view/home_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -47,17 +48,16 @@ class LoginController extends GetxController {
           var userObj = responseData['user'];
           bool? isUpdatedProfile = userObj?['isUpdatedProfile'];
 
-          SharedPreferences prefs = await SharedPreferences.getInstance();
           if (accessToken != null) {
-            await prefs.setString('accessToken', accessToken);
+            await PrefsHelper.setString(PrefsHelper.token, accessToken);
           }
           if (refreshToken != null) {
-            await prefs.setString('refreshToken', refreshToken);
+            await PrefsHelper.setString(PrefsHelper.refreshToken, refreshToken);
           }
           if (userObj != null) {
-            await prefs.setString('userData', jsonEncode(userObj));
+            await PrefsHelper.setString(PrefsHelper.userData, jsonEncode(userObj));
             if (userObj['_id'] != null) {
-              await prefs.setString('userId', userObj['_id'].toString());
+              await PrefsHelper.setString(PrefsHelper.userId, userObj['_id'].toString());
             }
           }
 

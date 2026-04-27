@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../helper/shared_prefe/shared_prefe.dart';
 import '../../Home/view/home_screen.dart';
 import '../../Auth/login/view/login_screen.dart';
 import '../../Language/controller/language_controller.dart';
@@ -25,8 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // Show splash for at least 2 seconds
     await Future.delayed(const Duration(seconds: 2));
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('accessToken');
+    String? token = await PrefsHelper.getString(PrefsHelper.token);
 
     if (token != null && token.isNotEmpty) {
       Get.offAll(() => HomeScreen());
