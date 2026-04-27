@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -249,6 +251,9 @@ class GroupController extends GetxController {
         body: jsonEncode({"inviteCode": inviteCode}),
       );
 
+      print("Join Group API Status: ${response.statusCode}");
+      print("Join Group API Body: ${response.body}");
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = jsonDecode(response.body);
         if (data['success'] == true) {
@@ -256,7 +261,9 @@ class GroupController extends GetxController {
             "Success",
             data['message'] ?? "Joined group successfully",
           );
-          // Optionally refresh groups list or navigate
+          // Refresh groups list so home screen updates in real-time
+          fetchMyGroups();
+          // Optionally navigate
           if (searchedGroup.value != null) {
             Get.to(() => ActiveGroupDetailsScreen(group: searchedGroup.value!));
           }
@@ -274,6 +281,7 @@ class GroupController extends GetxController {
         );
       }
     } catch (e) {
+      print("Join Group API Error: $e");
       CustomToast.showError(
         "Error",
         "Something went wrong while joining group",
@@ -285,6 +293,7 @@ class GroupController extends GetxController {
 
   Future<void> deleteGroup(String id) async {
     try {
+      isLoading.value = true;
       String? token = await PrefsHelper.getString(PrefsHelper.token);
 
       if (token == null) {
@@ -300,11 +309,14 @@ class GroupController extends GetxController {
         },
       );
 
+      print("Delete Group API Status: ${response.statusCode}");
+      print("Delete Group API Body: ${response.body}");
+
       if (response.statusCode == 200 || response.statusCode == 204) {
-        groups.removeWhere((g) => g.id == id);
         CustomToast.showSuccess("Success", "Group deleted successfully");
-        Get.back(); // Close dialog
-        Get.back(); // Go back to GroupScreen
+        // Refresh home list
+        fetchMyGroups();
+        Get.offAllNamed('/home');
       } else {
         var data = jsonDecode(response.body);
         CustomToast.showError(
@@ -313,10 +325,13 @@ class GroupController extends GetxController {
         );
       }
     } catch (e) {
+      print("Delete Group API Error: $e");
       CustomToast.showError(
         "Error",
         "Something went wrong while deleting group",
       );
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -330,20 +345,23 @@ class GroupController extends GetxController {
         return;
       }
 
-      // Updated to match backend API for member removal
-      var response = await http.delete(
-        Uri.parse('${ApiUrl.groupsUrl}/$groupId/members/$memberId'),
+      var response = await http.patch(
+        Uri.parse(ApiUrl.removeMemberUrl(memberId)),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode({"note": note}),
+        body: jsonEncode({"removalNote": note}),
       );
+
+      print("Remove Member API Status: ${response.statusCode}");
+      print("Remove Member API Body: ${response.body}");
 
       if (response.statusCode == 200 || response.statusCode == 204) {
         groupMembers.removeWhere((m) => m.id == memberId);
-        // Refresh group details to update currentMembers count
+        // Refresh group details to update currentMembers count locally and globally
         fetchGroupDetails(groupId);
+        fetchMyGroups();
         CustomToast.showSuccess("Success", "Member removed successfully");
         Get.back(); // Close popup
       } else {
@@ -354,10 +372,95 @@ class GroupController extends GetxController {
         );
       }
     } catch (e) {
+      print("Remove Member API Error: $e");
       CustomToast.showError(
         "Error",
         "Something went wrong while removing member",
       );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> sendPenaltyNotice(String memberId) async {
+    try {
+      isLoading.value = true;
+      String? token = await PrefsHelper.getString(PrefsHelper.token);
+
+      if (token == null) {
+        CustomToast.showError("Error", "Authentication token not found");
+        return;
+      }
+
+      var response = await http.patch(
+        Uri.parse(ApiUrl.penaltyNoticeUrl(memberId)),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({"noticeStatus": "NOTICE"}),
+      );
+
+      print("Penalty Notice API Status: ${response.statusCode}");
+      print("Penalty Notice API Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          CustomToast.showSuccess("Success", data['message'] ?? "Notice sent successfully");
+          // Optionally refresh groups
+        } else {
+          CustomToast.showError("Error", data['message'] ?? "Failed to send notice");
+        }
+      } else {
+        var data = jsonDecode(response.body);
+        CustomToast.showError("Error", data['message'] ?? "Failed to send notice");
+      }
+    } catch (e) {
+      print("Penalty Notice API Error: $e");
+      CustomToast.showError("Error", "Something went wrong while sending notice");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> startGroup(String groupId) async {
+    try {
+      isLoading.value = true;
+      String? token = await PrefsHelper.getString(PrefsHelper.token);
+
+      if (token == null) {
+        CustomToast.showError("Error", "Authentication token not found");
+        return;
+      }
+
+      var response = await http.post(
+        Uri.parse(ApiUrl.startGroupUrl(groupId)),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      print("Start Group API Status: ${response.statusCode}");
+      print("Start Group API Body: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var data = jsonDecode(response.body);
+        CustomToast.showSuccess(
+          "Success",
+          data['message'] ?? "Group started successfully",
+        );
+        // Refresh group details and global list
+        fetchGroupDetails(groupId);
+        fetchMyGroups();
+      } else {
+        var data = jsonDecode(response.body);
+        CustomToast.showError("Error", data['message'] ?? "Failed to start group");
+      }
+    } catch (e) {
+      print("Start Group API Error: $e");
+      CustomToast.showError("Error", "Something went wrong while starting group");
     } finally {
       isLoading.value = false;
     }

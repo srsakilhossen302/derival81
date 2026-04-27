@@ -19,6 +19,12 @@ class ApiUrl {
       '$baseUrl/api/v1/group-members/$groupId';
   static String groupMessagesUrl(String groupId) =>
       '$baseUrl/api/v1/chat/group/$groupId/messages';
+  static String removeMemberUrl(String memberId) =>
+      '$baseUrl/api/v1/group-members/$memberId/remove';
+  static String penaltyNoticeUrl(String memberId) =>
+      '$baseUrl/api/v1/group-members/$memberId/notice';
+  static String startGroupUrl(String groupId) =>
+      '$baseUrl/api/v1/groups/$groupId/start';
 
   // Payment Methods
   static const String paymentMethodsUrl = '$baseUrl/api/v1/payment-methods';

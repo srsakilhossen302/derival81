@@ -55,6 +55,9 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
                     _buildStatCards(currentGroup),
                     SizedBox(height: 20.h),
                     _buildTurnQueue(currentGroup),
+                    SizedBox(height: 20.h),
+                    if (controller.currentUserId.value == currentGroup.creatorId && currentGroup.status.toLowerCase() == 'upcoming')
+                      _buildAdminControls(context, currentGroup),
                     SizedBox(height: 40.h),
                   ],
                 ),
@@ -675,6 +678,79 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAdminControls(BuildContext context, GroupModel currentGroup) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(20.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Admin Controls',
+            style: TextStyle(
+              color: const Color(0xFF0F172A),
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 20.h),
+          _buildAdminBtn(
+            'Start Group',
+            const Color(0xFFE0F2FE),
+            const Color(0xFF0369A1),
+            icon: Icons.play_arrow_rounded,
+            onTap: () {
+              Get.find<GroupController>().startGroup(currentGroup.id);
+            },
+          ),
+          // Optionally other admin buttons can be placed here if needed in the future
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAdminBtn(String label, Color bgColor, Color textColor, {IconData? icon, String? iconPath, VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 16.h),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (iconPath != null) ...[
+              SvgPicture.asset(
+                iconPath,
+                colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
+                height: 20.h,
+              ),
+              SizedBox(width: 8.w),
+            ] else if (icon != null) ...[
+              Icon(icon, color: textColor, size: 20.sp),
+              SizedBox(width: 8.w),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                color: textColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.sp,
+              ),
+            ),
+          ],
         ),
       ),
     );

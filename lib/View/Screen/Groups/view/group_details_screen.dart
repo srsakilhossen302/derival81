@@ -605,6 +605,18 @@ class GroupDetailsScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20.h),
+          if (group.status.toLowerCase() == 'upcoming') ...[
+            _buildAdminBtn(
+              'Start Group',
+              const Color(0xFFE0F2FE),
+              const Color(0xFF0369A1),
+              icon: Icons.play_arrow_rounded,
+              onTap: () {
+                Get.find<GroupController>().startGroup(group.id);
+              },
+            ),
+            SizedBox(height: 12.h),
+          ],
           _buildAdminBtn(
             'View Invite Code',
             const Color(0xFFEEF2FF),
