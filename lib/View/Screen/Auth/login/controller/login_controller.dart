@@ -38,7 +38,7 @@ class LoginController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = jsonDecode(response.body);
-        
+
         // Save Tokens and Check Profile
         var responseData = data['data'];
         if (responseData != null) {
@@ -46,7 +46,7 @@ class LoginController extends GetxController {
           String? refreshToken = responseData['refreshToken'];
           var userObj = responseData['user'];
           bool? isUpdatedProfile = userObj?['isUpdatedProfile'];
-          
+
           SharedPreferences prefs = await SharedPreferences.getInstance();
           if (accessToken != null) {
             await prefs.setString('accessToken', accessToken);
@@ -57,34 +57,47 @@ class LoginController extends GetxController {
           if (userObj != null) {
             await prefs.setString('userData', jsonEncode(userObj));
           }
-          
+
           CustomToast.showSuccess(
             "Welcome Back!",
             data['message'] ?? "Logged in successfully.",
           );
-          
+
           if (isUpdatedProfile == false) {
-            Get.offAll(() => CompleteProfileScreen());
+            Future.delayed(const Duration(milliseconds: 500), () {
+              Get.offAll(() => CompleteProfileScreen());
+            });
           } else {
-            Get.offAll(() => HomeScreen());
+            Future.delayed(const Duration(milliseconds: 500), () {
+              Get.offAll(() => HomeScreen());
+            });
           }
         } else {
+          isLoading.value = false;
           CustomToast.showSuccess(
             "Welcome Back!",
             data['message'] ?? "Logged in successfully.",
           );
-          Get.offAll(() => HomeScreen());
+          Future.delayed(const Duration(milliseconds: 500), () {
+            Get.offAll(() => HomeScreen());
+          });
         }
       } else {
+        isLoading.value = false;
         var data = jsonDecode(response.body);
         print("API Error Response: ${response.body}");
 
-        String errorMessage = data['message'] ?? "Login failed. Please try again.";
+        String errorMessage =
+            data['message'] ?? "Login failed. Please try again.";
 
         // Extract detailed validation message if it's a Zod Error
-        if (data['errorSources'] != null && data['errorSources'] is List && data['errorSources'].isNotEmpty) {
+        if (data['errorSources'] != null &&
+            data['errorSources'] is List &&
+            data['errorSources'].isNotEmpty) {
           errorMessage = data['errorSources'][0]['message'] ?? errorMessage;
-        } else if (data['errors'] != null && data['errors'] is List && data['errors'].isNotEmpty) {
+        } else if (data['errors'] != null &&
+            data['errors'] is List &&
+            data['errors'].isNotEmpty) {
           var firstError = data['errors'][0];
           if (firstError is Map && firstError['message'] != null) {
             errorMessage = firstError['message'];
@@ -93,18 +106,18 @@ class LoginController extends GetxController {
           }
         }
 
-        CustomToast.showError(
-          "Login Failed",
-          errorMessage,
-        );
+        CustomToast.showError("Login Failed", errorMessage);
       }
     } catch (e) {
+      isLoading.value = false;
       CustomToast.showError(
         "Oh Snap!",
         "Something went wrong while logging in. Please try again.",
       );
     } finally {
-      isLoading.value = false;
+      if (!isClosed) {
+        isLoading.value = false;
+      }
     }
   }
 

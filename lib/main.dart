@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_stripe/flutter_stripe.dart'; // Added Stripe import
 
 import 'View/Screen/Splash/view/splash_screen.dart';
 import 'View/Screen/Language/controller/language_controller.dart';
@@ -8,6 +9,10 @@ import 'Utils/Translations/app_translations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Stripe
+  Stripe.publishableKey = 'pk_test_51PMl7aA8YgpuhNcIUjpXyNGiSUtjWHVMnPiPDiPYsSsy2cUH4O9hKRWvD8nHLw26nsSEfH6vr4r4UoLOdpCTwIow00pDm3FDpn'; // Replace with your actual publishable key
+  
   // Initialize LanguageController early to apply locale
   final languageController = Get.put(LanguageController());
   await languageController.loadLanguage();

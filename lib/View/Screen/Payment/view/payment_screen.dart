@@ -6,6 +6,7 @@ import '../controller/payment_controller.dart';
 import '../model/payment_method_model.dart';
 
 import '../../PaymentHistory/view/payment_history_screen.dart';
+import '../../Auth/payment_method/view/payment_method_screen.dart';
 
 class PaymentScreen extends StatelessWidget {
   PaymentScreen({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class PaymentScreen extends StatelessWidget {
                   _buildSectionTitle(
                     title: 'payment_methods'.tr,
                     trailing: GestureDetector(
-                      onTap: () => controller.addNewPaymentMethod(),
+                      onTap: () => Get.to(() => PaymentMethodScreen()),
                       child: Text(
                         'add_new'.tr,
                         style: const TextStyle(

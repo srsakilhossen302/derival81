@@ -1,0 +1,660 @@
+{
+	"info": {
+		"_postman_id": "61a9eabf-de54-4fc8-907f-33d6a9ae5903",
+		"name": "Community Savings App - Complete API A to Z",
+		"description": "Comprehensive API collection for the Community Savings Backend, including User flows, Group management, Transactions, and Super Admin Dashboard.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01. Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"url": "{{baseUrl}}/api/v1/auth/register",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"phone\": \"01712345678\",\n    \"password\": \"StrongPass123!\",\n    \"agreeToTerms\": true,\n    \"profileImage\": \"(optional) URL string\",\n    \"occupation\": \"(optional) string\",\n    \"address\": \"(optional) string\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Verify Email",
+					"request": {
+						"method": "POST",
+						"url": "{{baseUrl}}/api/v1/auth/verify-email",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john@example.com\",\n    \"code\": \"123456\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Resend Verification Code",
+					"request": {
+						"method": "POST",
+						"url": "{{baseUrl}}/api/v1/auth/resend-verification-code",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john@example.com\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"event": [{
+						"listen": "test",
+						"script": {
+							"exec": [
+								"var jsonData = pm.response.json();",
+								"if (jsonData.success) {",
+								"    pm.environment.set(\"accessToken\", jsonData.data.accessToken);",
+								"    pm.environment.set(\"refreshToken\", jsonData.data.refreshToken);",
+								"    pm.environment.set(\"userId\", jsonData.data.user._id);",
+								"    ",
+								"    // Automatically set adminToken if the user is an admin",
+								"    var role = jsonData.data.user.role;",
+								"    if (role === 'admin' || role === 'super_admin') {",
+								"        pm.environment.set(\"adminToken\", jsonData.data.accessToken);",
+								"    }",
+								"}"
+							]
+						}
+					}],
+					"request": {
+						"method": "POST",
+						"url": "{{baseUrl}}/api/v1/auth/login",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"StrongPass123!\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Login to Admin Dashboard",
+					"request": {
+						"method": "POST",
+						"url": "{{baseUrl}}/api/v1/auth/login",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@poolpay.com\",\n    \"password\": \"AdminStrongPass123!\",\n    \"isDashboardLogin\": true\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"url": "{{baseUrl}}/api/v1/auth/refresh-token",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"url": "{{baseUrl}}/api/v1/auth/forgot-password",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john@example.com\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"url": "{{baseUrl}}/api/v1/auth/reset-password",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"{{userId}}\",\n    \"code\": \"123456\",\n    \"newPassword\": \"NewStrongPass123!\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/auth/change-password",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oldPassword\": \"StrongPass123!\",\n    \"newPassword\": \"NewStrongPass123!\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Verify 2FA",
+					"request": {
+						"method": "POST",
+						"url": "{{baseUrl}}/api/v1/auth/verify-2fa",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john@example.com\",\n    \"code\": \"123456\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Set Password (for Social Login users)",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/auth/set-password",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newPassword\": \"StrongPass123!\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "02. User Profile",
+			"item": [
+				{
+					"name": "Get My Profile",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/user/me"
+					}
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/user/{{userId}}",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"John Updated\",\n    \"occupation\": \"Software Engineer\",\n    \"address\": \"New York, USA\",\n    \"phone\": \"01700000000\",\n    \"profileImage\": \"http://example.com/image.jpg\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Upload Profile Image",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/user/upload-profile-image",
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "image", "type": "file", "src": [] }
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Auth & Platform Status",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/settings/auth-status",
+						"description": "Used by frontend to check if 2FA is enabled globally and get platform name."
+					}
+				}
+			]
+		},
+		{
+			"name": "03. Group Management",
+			"item": [
+				{
+					"name": "Create Group",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/groups",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Savings Group Alpha\",\n    \"description\": \"(optional) saving for dream car\",\n    \"contributionAmount\": 1000,\n    \"contributionFrequency\": \"monthly\",\n    \"totalMembers\": 5,\n    \"totalCycles\": 2,\n    \"startDate\": \"2024-12-01\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Get Group Details",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/groups/{{groupId}}"
+					}
+				},
+				{
+					"name": "Search Group by Invite Code",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/groups/invite/{{inviteCode}}"
+					}
+				},
+				{
+					"name": "Join Group",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/group-members/join",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"inviteCode\": \"INV-ABCXYZ\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Get My Joined Groups",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/group-members/my-groups"
+					}
+				},
+				{
+					"name": "Get Group Members",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/group-members/{{groupId}}"
+					}
+				},
+				{
+					"name": "Start Group (Activate)",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/groups/{{groupId}}/start",
+						"description": "Only the group creator can start the group. This generates the payout turns and sets the startDate."
+					}
+				}
+			]
+		},
+		{
+			"name": "04. Payments & Transactions",
+			"item": [
+				{
+					"name": "Get All Transactions",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/transactions"
+					}
+				},
+				{
+					"name": "Add Payment Method (Stripe)",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/payment-methods",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"paymentMethodId\": \"pm_card_visa\",\n    \"type\": \"card\",\n    \"isDefault\": true,\n    \"autoPayEnabled\": true\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Get My Payment Methods",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/payment-methods"
+					}
+				},
+				{
+					"name": "Set Default Payment Method",
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/payment-methods/{{paymentMethodId}}/default"
+					}
+				},
+				{
+					"name": "Toggle Auto-Pay",
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/payment-methods/{{paymentMethodId}}/autopay",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"autoPayEnabled\": false\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Delete Payment Method",
+					"request": {
+						"method": "DELETE",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/payment-methods/{{paymentMethodId}}"
+					}
+				}
+			]
+		},
+		{
+			"name": "11. Stripe Connect (Payouts)",
+			"item": [
+				{
+					"name": "Create Onboarding Link",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/stripe/connect/account-link",
+						"description": "Generates a URL for the user to complete Stripe Connect Express onboarding. Redirect user to this URL."
+					}
+				},
+				{
+					"name": "Check Connect Status",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/stripe/connect/status",
+						"description": "Checks if the user has completed onboarding and is ready for payouts."
+					}
+				},
+				{
+					"name": "Create Login Link (Dashboard)",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/stripe/connect/login-link",
+						"description": "Generates a login link for the user to access their Stripe Express Dashboard."
+					}
+				}
+			]
+		},
+		{
+			"name": "05. Chat & Messages",
+			"item": [
+				{
+					"name": "Get Group Messages",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/chat/group/{{groupId}}/messages"
+					}
+				},
+				{
+					"name": "Send Group Message",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/chat/group/{{groupId}}/messages",
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "message", "value": "Hello team!", "type": "text" },
+								{ "key": "messageType", "value": "text", "type": "text", "description": "(optional) text | image | video | media" },
+								{ "key": "images", "type": "file", "src": [], "description": "(optional) multiple image files" },
+								{ "key": "videos", "type": "file", "src": [], "description": "(optional) multiple video files" }
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "06. Admin Dashboard",
+			"item": [
+				{
+					"name": "Summary Stats",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/dashboard/summary"
+					}
+				},
+				{
+					"name": "Revenue Chart",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/dashboard/revenue-chart"
+					}
+				},
+				{
+					"name": "User Growth",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/dashboard/user-growth"
+					}
+				},
+				{
+					"name": "Recent Activities",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/dashboard/recent-activities"
+					}
+				},
+				{
+					"name": "Pending Actions",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/pending-actions"
+					}
+				}
+			]
+		},
+		{
+			"name": "07. Admin User Management",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/users?page=1&limit=10&status=active&search=john"
+					}
+				},
+				{
+					"name": "Get User Stats",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/users/stats"
+					}
+				},
+				{
+					"name": "Update User Status",
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/users/{{userId}}/status",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"suspended\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Suspend User (Legacy)",
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/user/{{userId}}/suspend",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"Compliance violation\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "08. Admin Group & Funds",
+			"item": [
+				{
+					"name": "Get All Groups",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/groups"
+					}
+				},
+				{
+					"name": "Get Group Stats",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/groups/stats"
+					}
+				},
+				{
+					"name": "Funds Summary",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/funds/summary"
+					}
+				},
+				{
+					"name": "Financial Report",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/reports/financial"
+					}
+				},
+				{
+					"name": "Revenue Detailed Stats",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/revenue?page=1&limit=10"
+					}
+				},
+				{
+					"name": "Redistribution Bonuses",
+					"item": [
+						{
+							"name": "Get Failed Adjustments",
+							"request": {
+								"method": "GET",
+								"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+								"url": "{{baseUrl}}/api/v1/admin/adjustments?status=failed"
+							}
+						},
+						{
+							"name": "Retry Bonus Transfer",
+							"request": {
+								"method": "POST",
+								"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+								"url": "{{baseUrl}}/api/v1/admin/adjustments/{{adjustmentId}}/retry"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "09. Admin Settings & Logs",
+			"item": [
+				{
+					"name": "Get Platform Settings",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/settings"
+					}
+				},
+				{
+					"name": "Update Platform Settings",
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/settings",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transactionFeePercent\": 3,\n    \"lateFeePercent\": 3,\n    \"gracePeriodDays\": 5,\n    \"maxRetryCount\": 3,\n    \"supportEmail\": \"admin@poolpay.com\"\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Update Global Settings (Super Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/settings/update",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"platformName\": \"ROSCA Platform\",\n    \"transactionFeePercent\": 5,\n    \"lateFeePercent\": 3,\n    \"gracePeriodDays\": 3,\n    \"maxRetryCount\": 3,\n    \"minContribution\": 50,\n    \"maxContribution\": 10000,\n    \"supportEmail\": \"support@poolpay.com\",\n    \"isUserRegistrationEnabled\": true,\n    \"isSocialLoginEnabled\": true,\n    \"isTwoFactorAuthenticationEnabled\": true,\n    \"isEmailNotificationEnabled\": true,\n    \"isPushNotificationEnabled\": true\n}",
+							"options": { "raw": { "language": "json" } }
+						}
+					}
+				},
+				{
+					"name": "Activity Logs",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+						"url": "{{baseUrl}}/api/v1/admin/activity-logs"
+					}
+				}
+			]
+		},
+		{
+			"name": "10. Notifications",
+			"item": [
+				{
+					"name": "Get My Notifications",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/notifications?page=1&limit=10"
+					}
+				},
+				{
+					"name": "Mark All as Read",
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/notifications/mark-all-read"
+					}
+				},
+				{
+					"name": "Mark Specific as Read",
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+						"url": "{{baseUrl}}/api/v1/notifications/{{notificationId}}/read"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{ "key": "baseUrl", "value": "http://localhost:5000" },
+		{ "key": "accessToken", "value": "" },
+		{ "key": "refreshToken", "value": "" },
+		{ "key": "adminToken", "value": "" },
+		{ "key": "userId", "value": "" },
+		{ "key": "groupId", "value": "" },
+		{ "key": "inviteCode", "value": "" },
+		{ "key": "paymentMethodId", "value": "" },
+		{ "key": "transactionId", "value": "" },
+		{ "key": "notificationId", "value": "" }
+	]
+}

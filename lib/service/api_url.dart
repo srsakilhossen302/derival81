@@ -19,4 +19,19 @@ class ApiUrl {
       '$baseUrl/api/v1/group-members/$groupId';
   static String groupMessagesUrl(String groupId) =>
       '$baseUrl/api/v1/chat/group/$groupId/messages';
+
+  // Payment Methods
+  static const String paymentMethodsUrl = '$baseUrl/api/v1/payment-methods';
+  static String deletePaymentMethodUrl(String id) =>
+      '$baseUrl/api/v1/payment-methods/$id';
+  static String setDefaultPaymentMethodUrl(String id) =>
+      '$baseUrl/api/v1/payment-methods/$id/default';
+
+  // Stripe Connect
+  static const String stripeConnectAccountLinkUrl =
+      '$baseUrl/api/v1/stripe/connect/account-link';
+  static const String stripeConnectStatusUrl =
+      '$baseUrl/api/v1/stripe/connect/status';
+  static const String stripeConnectLoginLinkUrl =
+      '$baseUrl/api/v1/stripe/connect/login-link';
 }
