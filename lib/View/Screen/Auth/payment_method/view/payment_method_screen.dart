@@ -345,7 +345,7 @@ class PaymentMethodScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    method.name,
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -353,12 +353,20 @@ class PaymentMethodScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '****${method.last4}',
+                    method.lastDigits,
                     style: const TextStyle(
                       fontSize: 13,
                       color: Color(0xFF4A5565),
                     ),
                   ),
+                  if (method.expiryFormatted.isNotEmpty)
+                    Text(
+                      'Exp: ${method.expiryFormatted}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF94A3B8),
+                      ),
+                    ),
                 ],
               ),
             ),

@@ -1,3 +1,5 @@
+import 'group_member_model.dart';
+
 class GroupModel {
   final String id;
   final String name;
@@ -28,11 +30,19 @@ class GroupModel {
     this.adminImage,
     this.contributionFrequency,
     this.inviteCode,
+    this.members = const [],
   });
 
   final String? inviteCode;
+  final List<GroupMemberModel> members;
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
+    var membersList = json['members'] as List? ?? [];
+    List<GroupMemberModel> parsedMembers = membersList.map((m) => GroupMemberModel.fromJson(m)).toList();
+    
+    // Sort members by position for the turn queue
+    parsedMembers.sort((a, b) => a.position.compareTo(b.position));
+
     return GroupModel(
       id: json['_id'] ?? json['id'] ?? '',
       name: json['name'] ?? '',
@@ -53,6 +63,7 @@ class GroupModel {
           : null,
       contributionFrequency: json['contributionFrequency'] ?? 'monthly',
       inviteCode: json['inviteCode'],
+      members: parsedMembers,
     );
   }
 

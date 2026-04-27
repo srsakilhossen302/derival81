@@ -5,6 +5,8 @@ class GroupMemberModel {
   final int position;
   final String status;
   final int joinMonth;
+  final String paymentStatus;
+  final double totalPaidAmount;
 
   GroupMemberModel({
     required this.id,
@@ -13,16 +15,21 @@ class GroupMemberModel {
     required this.position,
     required this.status,
     required this.joinMonth,
+    this.paymentStatus = 'pending',
+    this.totalPaidAmount = 0.0,
   });
 
   factory GroupMemberModel.fromJson(Map<String, dynamic> json) {
+    final user = json['userId'] ?? {};
     return GroupMemberModel(
-      id: json['userId'] != null ? json['userId']['_id'] ?? '' : '',
-      fullName: json['userId'] != null ? json['userId']['fullName'] ?? 'Unknown' : 'Unknown',
-      profileImage: json['userId'] != null ? json['userId']['profileImage'] ?? '' : '',
+      id: user['_id'] ?? '',
+      fullName: user['fullName'] ?? 'Unknown',
+      profileImage: user['profileImage'] ?? '',
       position: json['position'] ?? 0,
       status: json['status'] ?? 'active',
       joinMonth: json['joinMonth'] ?? 1,
+      paymentStatus: json['paymentStatus'] ?? 'pending',
+      totalPaidAmount: (json['totalPaidAmount'] ?? 0).toDouble(),
     );
   }
 }

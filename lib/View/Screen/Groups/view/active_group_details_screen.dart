@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../controller/group_controller.dart';
 import '../model/group_model.dart';
+import '../model/group_member_model.dart';
 import 'group_chat_screen.dart';
 import '../../../Widgegt/invite_dialog.dart';
 
@@ -53,7 +54,7 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
                     SizedBox(height: 20.h),
                     _buildStatCards(currentGroup),
                     SizedBox(height: 20.h),
-                    _buildTurnQueue(),
+                    _buildTurnQueue(currentGroup),
                     SizedBox(height: 40.h),
                   ],
                 ),
@@ -304,7 +305,7 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
     );
   }
 
-  Widget _buildTurnQueue() {
+  Widget _buildTurnQueue(GroupModel currentGroup) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.r),
@@ -336,15 +337,21 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
             ],
           ),
           SizedBox(height: 20.h),
-          _buildMemberItem(1, 'John Doe', isYou: true, isFirst: true, isCompleted: true),
-          _buildMemberItem(2, 'Jane Smith', isCompleted: true),
-          _buildMemberItem(3, 'Mike Johnson', isCompleted: false),
+          if (currentGroup.members.isEmpty)
+            Text(
+              'No members in queue yet.',
+              style: TextStyle(color: const Color(0xFF64748B), fontSize: 14.sp),
+            )
+          else
+            ...currentGroup.members.map((member) => _buildMemberItem(currentGroup, member)).toList(),
         ],
       ),
     );
   }
 
-  Widget _buildMemberItem(int rank, String name, {bool isYou = false, bool isFirst = false, bool isCompleted = false}) {
+  Widget _buildMemberItem(GroupModel currentGroup, GroupMemberModel member, {bool isYou = false}) {
+    bool isFirst = member.position == 1;
+    bool isCompleted = member.paymentStatus == 'paid';
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12.h),
       child: Container(
@@ -364,7 +371,7 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
               ),
               child: Center(
                 child: Text(
-                  rank.toString(),
+                  member.position.toString(),
                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.sp),
                 ),
               ),
@@ -377,7 +384,7 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
                   Row(
                     children: [
                       Text(
-                        name,
+                        member.fullName,
                         style: TextStyle(
                           color: const Color(0xFF0F172A),
                           fontSize: 14.sp,
@@ -392,7 +399,7 @@ class _ActiveGroupDetailsScreenState extends State<ActiveGroupDetailsScreen> {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    'Contributed: \$1500 / 5 Months',
+                    'Contributed: \$${member.totalPaidAmount.toInt()} / ${currentGroup.totalMembers} Months',
                     style: TextStyle(
                       color: const Color(0xFF94A3B8),
                       fontSize: 12.sp,

@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../controller/group_controller.dart';
 import '../model/group_model.dart';
+import '../model/group_member_model.dart';
 import 'group_chat_screen.dart';
 import '../../../Widgegt/invite_dialog.dart';
 
@@ -310,7 +311,7 @@ class GroupDetailsScreen extends StatelessWidget {
           SizedBox(height: 20.h),
           _buildQueueHighlightBox(),
           SizedBox(height: 16.h),
-          _buildMemberItem(1, 'Ibrahim', isYou: true, isFirst: true),
+          ...group.members.map((member) => _buildMemberItem(member)).toList(),
         ],
       ),
     );
@@ -360,71 +361,75 @@ class GroupDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMemberItem(int rank, String name, {bool isYou = false, bool isFirst = false, bool isCompleted = false}) {
-    return Container(
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEEF2FF),
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.3)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40.w,
-            height: 40.h,
-            decoration: const BoxDecoration(
-              color: Color(0xFF818CF8),
-              shape: BoxShape.circle,
+  Widget _buildMemberItem(GroupMemberModel member, {bool isYou = false}) {
+    bool isFirst = member.position == 1;
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: Container(
+        padding: EdgeInsets.all(16.r),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEEF2FF),
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.3)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40.w,
+              height: 40.h,
+              decoration: const BoxDecoration(
+                color: Color(0xFF818CF8),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(member.position.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.sp)),
+              ),
             ),
-            child: Center(
-              child: Text(rank.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.sp)),
-            ),
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        color: const Color(0xFF0F172A),
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    if (isFirst) ...[
-                      SizedBox(width: 4.w),
-                      SvgPicture.asset(AppIcons.mukutIcon, height: 16.h),
-                    ],
-                    if (isYou) ...[
-                      SizedBox(width: 4.w),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
                       Text(
-                        '(You)',
+                        member.fullName,
                         style: TextStyle(
-                          color: const Color(0xFF6366F1),
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF0F172A),
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
+                      if (isFirst) ...[
+                        SizedBox(width: 4.w),
+                        SvgPicture.asset(AppIcons.mukutIcon, height: 16.h),
+                      ],
+                      if (isYou) ...[
+                        SizedBox(width: 4.w),
+                        Text(
+                          '(You)',
+                          style: TextStyle(
+                            color: const Color(0xFF6366F1),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  'Contributed: \$0 / 5 Months',
-                  style: TextStyle(
-                    color: const Color(0xFF94A3B8),
-                    fontSize: 12.sp,
                   ),
-                ),
-              ],
+                  SizedBox(height: 4.h),
+                  Text(
+                    'Contributed: \$${member.totalPaidAmount.toInt()} / ${group.totalMembers} Months',
+                    style: TextStyle(
+                      color: const Color(0xFF94A3B8),
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

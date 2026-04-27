@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:derival81/View/Screen/Groups/view/active_group_details_screen.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +6,7 @@ import '../model/group_member_model.dart';
 import '../model/group_model.dart';
 import '../../../../../service/api_url.dart';
 import '../../../../../Utils/ToastMessage/custom_toast.dart';
+import '../view/active_group_details_screen.dart';
 
 class GroupController extends GetxController {
   var groups = <GroupModel>[].obs;
