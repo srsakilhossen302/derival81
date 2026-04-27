@@ -56,6 +56,9 @@ class LoginController extends GetxController {
           }
           if (userObj != null) {
             await prefs.setString('userData', jsonEncode(userObj));
+            if (userObj['_id'] != null) {
+              await prefs.setString('userId', userObj['_id'].toString());
+            }
           }
 
           CustomToast.showSuccess(
