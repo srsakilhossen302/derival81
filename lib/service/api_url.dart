@@ -25,6 +25,7 @@ class ApiUrl {
       '$baseUrl/api/v1/group-members/$memberId/notice';
   static String startGroupUrl(String groupId) =>
       '$baseUrl/api/v1/groups/$groupId/start';
+  static const String notificationsUrl = '$baseUrl/api/v1/notifications';
 
   // Payment Methods
   static const String paymentMethodsUrl = '$baseUrl/api/v1/payment-methods';

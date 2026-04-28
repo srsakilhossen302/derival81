@@ -20,15 +20,40 @@ class NotificationScreen extends StatelessWidget {
         children: [
           _buildHeader(controller),
           Expanded(
-            child: Obx(
-              () => ListView.builder(
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator(color: Color(0xFF1A227F)));
+              }
+
+              if (controller.notifications.isEmpty) {
+                return Center(
+                  child: Text(
+                    'No notifications yet.',
+                    style: TextStyle(
+                      color: const Color(0xFF64748B),
+                      fontSize: 16.sp,
+                    ),
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                controller: controller.scrollController,
                 padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-                itemCount: controller.notifications.length,
+                itemCount: controller.notifications.length + (controller.isFetchingMore.value ? 1 : 0),
                 itemBuilder: (context, index) {
+                  if (index == controller.notifications.length) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      child: const Center(
+                        child: CircularProgressIndicator(color: Color(0xFF1A227F)),
+                      ),
+                    );
+                  }
                   return _buildNotificationCard(controller.notifications[index]);
                 },
-              ),
-            ),
+              );
+            }),
           ),
           SizedBox(height: 100.h), // Space for bottom nav bar
         ],
